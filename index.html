@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#f8f7f4" />
+  <meta name="theme-color" content="#f7f6f2" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -11,25 +11,30 @@
   <meta name="description" content="Portfolio of Varshan Gowda SR — a self-driven builder from Bengaluru who creates, experiments, and ships ideas to the world." />
   <meta property="og:title" content="Varshan Gowda SR — Portfolio" />
   <meta property="og:description" content="Builder. Tinkerer. Creator. Based in Bengaluru." />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/115567336?v=4" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- ── CURSOR ── -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
   <!-- ── NAV ── -->
   <nav id="navbar">
-    <div class="nav-inner">
-      <a href="#hero" class="nav-logo">VG<span>.</span></a>
+    <div class="nav-inner-wrap">
+      <a href="#hero" class="nav-logo">VG<span style="color:var(--accent)">.</span></a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="#about" id="nav-about">About</a></li>
-        <li><a href="#stats" id="nav-stats">Stats</a></li>
+        <li><a href="#about"    id="nav-about">About</a></li>
+        <li><a href="#stats"    id="nav-stats">Stats</a></li>
         <li><a href="#projects" id="nav-projects">Projects</a></li>
-        <li><a href="#skills" id="nav-skills">Skills</a></li>
-        <li><a href="#contact" id="nav-contact">Contact</a></li>
+        <li><a href="#skills"   id="nav-skills">Skills</a></li>
+        <li><a href="#contact"  id="nav-contact">Contact</a></li>
       </ul>
-      <a href="https://github.com/VarshuAi" target="_blank" class="nav-cta">GitHub ↗</a>
+      <a href="https://github.com/VarshuAi" target="_blank" class="nav-cta" id="nav-gh-cta">GitHub ↗</a>
       <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
@@ -40,11 +45,11 @@
   <!-- Mobile Nav Drawer -->
   <div class="nav-overlay" id="navOverlay"></div>
   <div class="nav-mobile-drawer" id="navDrawer">
-    <a href="#about" id="mob-about">About</a>
-    <a href="#stats" id="mob-stats">Stats</a>
+    <a href="#about"    id="mob-about">About</a>
+    <a href="#stats"    id="mob-stats">Stats</a>
     <a href="#projects" id="mob-projects">Projects</a>
-    <a href="#skills" id="mob-skills">Skills</a>
-    <a href="#contact" id="mob-contact">Contact</a>
+    <a href="#skills"   id="mob-skills">Skills</a>
+    <a href="#contact"  id="mob-contact">Contact</a>
     <a href="https://github.com/VarshuAi" target="_blank" id="mob-github" style="color:var(--accent)">GitHub ↗</a>
   </div>
 
@@ -54,37 +59,65 @@
       <div class="hero-orb orb-1"></div>
       <div class="hero-orb orb-2"></div>
       <div class="hero-orb orb-3"></div>
+      <canvas id="particles-canvas"></canvas>
       <div class="grid-overlay"></div>
     </div>
+
     <div class="hero-content">
       <div class="hero-badge reveal-up">
         <span class="badge-dot"></span>
         Available for interesting projects
       </div>
       <h1 class="hero-name reveal-up delay-1">
-        Varshan<br /><span class="name-accent">Gowda SR</span>
+        Varshan
+        <span class="name-line2">Gowda SR</span>
       </h1>
       <p class="hero-title reveal-up delay-2">
-        <span class="type-text" id="typeText"></span><span class="type-cursor">|</span>
+        <span id="typeText"></span><span class="type-cursor">|</span>
       </p>
       <p class="hero-bio reveal-up delay-3">
         I build things. Sometimes they work. Sometimes they break in interesting ways.<br />
         Based in <strong>Bengaluru</strong> — exploring ideas across code, tools, and systems.
       </p>
       <div class="hero-actions reveal-up delay-4">
-        <a href="#projects" class="btn-primary" id="hero-view-work">View My Work</a>
-        <a href="https://github.com/VarshuAi" target="_blank" class="btn-outline" id="hero-github">GitHub Profile ↗</a>
+        <a href="#projects" class="btn-primary" id="hero-view-work">
+          <span>View My Work</span>
+        </a>
+        <a href="https://github.com/VarshuAi" target="_blank" class="btn-outline" id="hero-github">
+          GitHub ↗
+        </a>
       </div>
       <div class="hero-scroll reveal-up delay-5">
         <div class="scroll-line"></div>
         <span>Scroll to explore</span>
       </div>
     </div>
+
     <div class="hero-avatar reveal-right delay-2">
-      <div class="avatar-ring">
-        <img src="https://avatars.githubusercontent.com/u/115567336?v=4" alt="Varshan Gowda SR" class="avatar-img" id="hero-avatar-img" />
+      <div class="avatar-outer">
+        <div class="avatar-ring">
+          <img src="https://avatars.githubusercontent.com/u/115567336?v=4" alt="Varshan Gowda SR" class="avatar-img" id="hero-avatar" />
+        </div>
+        <div class="avatar-glow"></div>
+        <div class="avatar-float-badge badge-repos">
+          <span class="badge-icon">📦</span>
+          <div>
+            <div style="font-size:0.65rem;color:var(--text-3);font-weight:600;letter-spacing:0.08em;text-transform:uppercase">Repos</div>
+            <div id="badge-repo-count">204+</div>
+          </div>
+        </div>
+        <div class="avatar-float-badge badge-follow">
+          <span class="badge-icon">👥</span>
+          <div>
+            <div style="font-size:0.65rem;color:var(--text-3);font-weight:600;letter-spacing:0.08em;text-transform:uppercase">Followers</div>
+            <div id="badge-follower-count">136</div>
+          </div>
+        </div>
+        <div class="avatar-float-badge badge-loc">
+          <span class="badge-icon">📍</span>
+          <div>Bengaluru, India</div>
+        </div>
       </div>
-      <div class="avatar-glow"></div>
     </div>
   </section>
 
@@ -96,10 +129,10 @@
         <div class="about-text reveal-left">
           <h2>I build because I <span class="highlight">can't stop</span> being curious.</h2>
           <p>
-            I'm Varshan Gowda SR, a self-taught builder based in Bengaluru. I don't follow a single lane — I jump between ideas, tools, and projects driven purely by curiosity and the urge to create something real. From scripts and apps to utilities and experiments, if it interests me, I build it.
+            I'm Varshan Gowda SR, a self-taught builder based in Bengaluru. I don't follow a single lane — I jump between ideas, tools, and projects driven purely by curiosity and the urge to create something real.
           </p>
           <p>
-            With over <strong>204 public repositories</strong> and a growing community of <strong>136 followers</strong> on GitHub, I'm always shipping something new. My work spans Python, JavaScript, Rust, and beyond — whatever the project calls for.
+            With over <strong>204 public repositories</strong> and a growing community of <strong>136 followers</strong> on GitHub, I'm always shipping something new. My work spans Python, JavaScript, Rust, Go and beyond — whatever the project calls for.
           </p>
           <p>
             I believe the best way to learn is to build, break, and rebuild. Every repo is a story. Every commit is a step forward.
@@ -109,6 +142,7 @@
             <span class="tag">🔬 Experimenter</span>
             <span class="tag">🌐 Open Source</span>
             <span class="tag">📍 Bengaluru</span>
+            <span class="tag">⚡ Always Shipping</span>
           </div>
         </div>
         <div class="about-visual reveal-right">
@@ -117,20 +151,21 @@
               <span class="dot red"></span>
               <span class="dot yellow"></span>
               <span class="dot green"></span>
-              <span class="terminal-title">varshan@bengaluru:~</span>
+              <span class="terminal-title">varshan@bengaluru ~ zsh</span>
             </div>
             <div class="terminal-body">
-              <div class="terminal-line"><span class="prompt">$</span> whoami</div>
+              <div class="terminal-line"><span class="prompt">❯</span>&nbsp;whoami</div>
               <div class="terminal-output">Varshan Gowda SR</div>
-              <div class="terminal-line"><span class="prompt">$</span> cat about.txt</div>
-              <div class="terminal-output">Builder. Tinkerer. Creator.</div>
-              <div class="terminal-output">Location: Bengaluru, India</div>
-              <div class="terminal-output">Status: Always building something</div>
-              <div class="terminal-line"><span class="prompt">$</span> git log --oneline</div>
-              <div class="terminal-output git-line">🚀 204 repos shipped</div>
-              <div class="terminal-output git-line">⭐ 136 followers gained</div>
-              <div class="terminal-output git-line">🔥 Active since 2022</div>
-              <div class="terminal-line blink"><span class="prompt">$</span> <span class="cursor-blink">_</span></div>
+              <div class="terminal-line"><span class="prompt">❯</span>&nbsp;cat about.txt</div>
+              <div class="terminal-output green-line">Builder · Tinkerer · Creator</div>
+              <div class="terminal-output">📍 Bengaluru, India</div>
+              <div class="terminal-output">🟢 Status: Always building something</div>
+              <div class="terminal-line"><span class="prompt">❯</span>&nbsp;git log --oneline --graph</div>
+              <div class="terminal-output git-line">* 🚀 204 repositories shipped</div>
+              <div class="terminal-output git-line">* ⭐ 136 followers earned</div>
+              <div class="terminal-output git-line">* 🔥 Active since Oct 2022</div>
+              <div class="terminal-output git-line">* 🌏 405 devs followed</div>
+              <div class="terminal-line"><span class="prompt">❯</span>&nbsp;<span class="cursor-blink">█</span></div>
             </div>
           </div>
         </div>
@@ -138,35 +173,36 @@
     </div>
   </section>
 
-  <!-- ── GITHUB STATS ── -->
+  <!-- ── STATS ── -->
   <section id="stats" class="stats-section section-pad">
+    <div class="stats-bg-accent"></div>
     <div class="container">
-      <div class="section-label reveal-up">GitHub Stats</div>
-      <h2 class="section-title reveal-up">Live from <span class="highlight">GitHub</span></h2>
-      <div class="stats-grid" id="statsGrid">
+      <div class="section-label reveal-up">Live Stats</div>
+      <h2 class="section-title reveal-up">By the <span class="highlight">Numbers</span></h2>
+      <div class="stats-grid">
         <div class="stat-card reveal-up delay-1" id="stat-repos">
-          <div class="stat-icon">📦</div>
+          <span class="stat-icon">📦</span>
           <div class="stat-number counter" data-target="204">0</div>
           <div class="stat-label">Public Repos</div>
         </div>
         <div class="stat-card reveal-up delay-2" id="stat-followers">
-          <div class="stat-icon">👥</div>
+          <span class="stat-icon">👥</span>
           <div class="stat-number counter" data-target="136">0</div>
           <div class="stat-label">Followers</div>
         </div>
         <div class="stat-card reveal-up delay-3" id="stat-following">
-          <div class="stat-icon">🔭</div>
+          <span class="stat-icon">🔭</span>
           <div class="stat-number counter" data-target="405">0</div>
           <div class="stat-label">Following</div>
         </div>
         <div class="stat-card reveal-up delay-4" id="stat-since">
-          <div class="stat-icon">📅</div>
+          <span class="stat-icon">📅</span>
           <div class="stat-number">2022</div>
           <div class="stat-label">Active Since</div>
         </div>
       </div>
       <div class="github-chart reveal-up">
-        <img src="https://ghchart.rshah.org/4f46e5/VarshuAi" alt="Varshan's GitHub Contribution Chart" class="contribution-chart" id="contribution-chart-img" />
+        <img src="https://ghchart.rshah.org/4f46e5/VarshuAi" alt="Varshan's GitHub Contribution Chart" class="contribution-chart" />
       </div>
     </div>
   </section>
@@ -175,24 +211,23 @@
   <section id="projects" class="projects-section section-pad">
     <div class="container">
       <div class="section-label reveal-up">Projects</div>
-      <h2 class="section-title reveal-up">Latest from <span class="highlight">GitHub</span></h2>
-      <p class="section-sub reveal-up">Synced live from the GitHub API — every card is a real repo.</p>
-
+      <h2 class="section-title reveal-up">Live from <span class="highlight">GitHub</span></h2>
+      <p class="section-sub reveal-up">Synced in real-time from the GitHub API — every card is a real repo.</p>
       <div class="projects-filter reveal-up" id="projectFilter">
-        <button class="filter-btn active" data-filter="all" id="filter-all">All</button>
-        <button class="filter-btn" data-filter="original" id="filter-original">Original</button>
-        <button class="filter-btn" data-filter="forked" id="filter-forked">Forked</button>
+        <button class="filter-btn active" data-filter="all"      id="filter-all">All</button>
+        <button class="filter-btn"        data-filter="original" id="filter-original">My Builds</button>
+        <button class="filter-btn"        data-filter="forked"   id="filter-forked">Forked</button>
       </div>
-
       <div class="projects-grid" id="projectsGrid">
         <div class="projects-loading" id="projectsLoading">
           <div class="loading-spinner"></div>
-          <p>Fetching repos from GitHub...</p>
+          <p>Fetching live from GitHub…</p>
         </div>
       </div>
-
       <div class="projects-more reveal-up" id="projectsMore" style="display:none">
-        <a href="https://github.com/VarshuAi?tab=repositories" target="_blank" class="btn-outline" id="view-all-repos">View All 204 Repos ↗</a>
+        <a href="https://github.com/VarshuAi?tab=repositories" target="_blank" class="btn-outline" id="view-all-repos">
+          View All Repos on GitHub ↗
+        </a>
       </div>
     </div>
   </section>
@@ -202,20 +237,26 @@
     <div class="container">
       <div class="section-label reveal-up">Skills</div>
       <h2 class="section-title reveal-up">What I <span class="highlight">Work With</span></h2>
-      <div class="skills-grid" id="skillsGrid">
+      <div class="skills-wrapper">
         <div class="skill-category reveal-up delay-1">
-          <h3 class="skill-cat-title">Languages</h3>
+          <div class="skill-cat-header">
+            <div class="skill-cat-icon">💻</div>
+            <div class="skill-cat-title">Languages</div>
+          </div>
           <div class="skill-pills">
             <span class="skill-pill">Python</span>
             <span class="skill-pill">JavaScript</span>
             <span class="skill-pill">Rust</span>
-            <span class="skill-pill">HTML/CSS</span>
+            <span class="skill-pill">HTML / CSS</span>
             <span class="skill-pill">Go</span>
             <span class="skill-pill">Shell</span>
           </div>
         </div>
         <div class="skill-category reveal-up delay-2">
-          <h3 class="skill-cat-title">Tools & Tech</h3>
+          <div class="skill-cat-header">
+            <div class="skill-cat-icon">🛠️</div>
+            <div class="skill-cat-title">Tools & Tech</div>
+          </div>
           <div class="skill-pills">
             <span class="skill-pill">Git & GitHub</span>
             <span class="skill-pill">Node.js</span>
@@ -226,7 +267,10 @@
           </div>
         </div>
         <div class="skill-category reveal-up delay-3">
-          <h3 class="skill-cat-title">Interests</h3>
+          <div class="skill-cat-header">
+            <div class="skill-cat-icon">🚀</div>
+            <div class="skill-cat-title">Interests</div>
+          </div>
           <div class="skill-pills">
             <span class="skill-pill">AI / ML</span>
             <span class="skill-pill">Open Source</span>
@@ -245,7 +289,7 @@
     <div class="container">
       <div class="section-label reveal-up">Contact</div>
       <h2 class="section-title reveal-up">Let's <span class="highlight">Connect</span></h2>
-      <p class="section-sub reveal-up">Have an idea? Want to collaborate? Just say hi.</p>
+      <p class="section-sub reveal-up">Have an idea? Want to collaborate? Just say hi — I'm always open.</p>
       <div class="contact-grid">
         <a href="https://github.com/VarshuAi" target="_blank" class="contact-card reveal-up delay-1" id="contact-github">
           <div class="contact-icon">
@@ -257,7 +301,7 @@
           </div>
           <div class="contact-arrow">↗</div>
         </a>
-        <a href="mailto:varshan@example.com" class="contact-card reveal-up delay-2" id="contact-email">
+        <a href="mailto:varshangowda@example.com" class="contact-card reveal-up delay-2" id="contact-email">
           <div class="contact-icon">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
           </div>
@@ -273,7 +317,7 @@
           </div>
           <div class="contact-info">
             <div class="contact-label">Location</div>
-            <div class="contact-value">Bengaluru, India</div>
+            <div class="contact-value">Bengaluru, India 🇮🇳</div>
           </div>
         </div>
       </div>
@@ -282,11 +326,21 @@
 
   <!-- ── FOOTER ── -->
   <footer class="footer">
+    <div class="footer-glow"></div>
     <div class="container">
       <div class="footer-inner">
-        <div class="footer-logo">VG<span>.</span></div>
-        <p class="footer-text">Built with ❤️ by Varshan Gowda SR · Synced live with GitHub API</p>
-        <p class="footer-copy">© 2026 Varshan Gowda SR. All rights reserved.</p>
+        <div class="footer-logo">VG.</div>
+        <p class="footer-tagline">"Build first. Ask questions later."</p>
+        <div class="footer-links">
+          <a href="#about"    class="footer-link" id="footer-about">About</a>
+          <a href="#projects" class="footer-link" id="footer-projects">Projects</a>
+          <a href="#skills"   class="footer-link" id="footer-skills">Skills</a>
+          <a href="#contact"  class="footer-link" id="footer-contact">Contact</a>
+          <a href="https://github.com/VarshuAi" target="_blank" class="footer-link" id="footer-github">GitHub ↗</a>
+        </div>
+        <div class="footer-divider"></div>
+        <p class="footer-built">Built with ❤️ · Synced live with the GitHub API</p>
+        <p class="footer-copy">© 2026 Varshan Gowda SR · All rights reserved.</p>
       </div>
     </div>
   </footer>
