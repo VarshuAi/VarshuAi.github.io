@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="850" height="298" viewBox="0 0 850 298">
+  <style>
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+    .lbl { font-family: 'Courier New', monospace; font-size: 12.5px; fill: #FFD700; font-weight: bold; }
+    .val { font-family: 'Courier New', monospace; font-size: 12.5px; fill: #8B949E; }
+    .asc { font-family: 'Courier New', monospace; font-size: 13px; fill: #FFD700; }
+  </style>
+
+  <rect width="850" height="298" fill="#0D1117"/>
+  <rect x="4" y="4" width="842" height="290" rx="8" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.25"/>
+
+  <text x="30" y="30" style="font-family:'Courier New',monospace;font-size:13px;fill:#FFD700;font-weight:bold;animation:fadeIn 0.3s forwards;opacity:0">varshuai@mass-coder:~$ neofetch</text>
+
+  <text x="50" y="68" class="asc" style="animation:fadeIn 0.3s 0.2s forwards;opacity:0">    .--.    </text>
+  <text x="50" y="86" class="asc" style="animation:fadeIn 0.3s 0.25s forwards;opacity:0">   |o_o |   </text>
+  <text x="50" y="104" class="asc" style="animation:fadeIn 0.3s 0.3s forwards;opacity:0">   |:_/ |   </text>
+  <text x="50" y="122" class="asc" style="animation:fadeIn 0.3s 0.35s forwards;opacity:0">  //   \ \ </text>
+  <text x="50" y="140" class="asc" style="animation:fadeIn 0.3s 0.4s forwards;opacity:0"> (|     | ) </text>
+  <text x="50" y="158" class="asc" style="animation:fadeIn 0.3s 0.45s forwards;opacity:0">/'\_ _/`\ </text>
+  <text x="50" y="176" class="asc" style="animation:fadeIn 0.3s 0.5s forwards;opacity:0">\___)=(___/</text>
+
+  <text x="240" y="58" style="font-family:'Courier New',monospace;font-size:13px;fill:#FFE066;font-weight:bold;animation:fadeIn 0.3s 0.3s forwards;opacity:0">varshuai@mass-coder</text>
+  <text x="240" y="68" style="font-family:'Courier New',monospace;font-size:12px;fill:#FFD700;opacity:0.4;animation:fadeIn 0.3s 0.35s forwards;opacity:0">───────────────────</text>
+
+  
+    <text x="240" y="75" style="animation:fadeIn 0.3s 0.4s forwards;opacity:0"><tspan class="lbl">OS      </tspan><tspan class="val">GoldRush OS v40.1 "Midas"</tspan></text>
+    <text x="240" y="97" style="animation:fadeIn 0.3s 0.55s forwards;opacity:0"><tspan class="lbl">Kernel  </tspan><tspan class="val">6.8.0-goldrush</tspan></text>
+    <text x="240" y="119" style="animation:fadeIn 0.3s 0.7s forwards;opacity:0"><tspan class="lbl">Shell   </tspan><tspan class="val">/bin/mass_code</tspan></text>
+    <text x="240" y="141" style="animation:fadeIn 0.3s 0.85s forwards;opacity:0"><tspan class="lbl">Repos   </tspan><tspan class="val">197+ (mass uploaded)</tspan></text>
+    <text x="240" y="163" style="animation:fadeIn 0.3s 1.0s forwards;opacity:0"><tspan class="lbl">Lang    </tspan><tspan class="val">Python JS TS Go Rust C++ Dart Java Kotlin Bash SQL</tspan></text>
+    <text x="240" y="185" style="animation:fadeIn 0.3s 1.15s forwards;opacity:0"><tspan class="lbl">Chai    </tspan><tspan class="val">filter > instant (always)</tspan></text>
+    <text x="240" y="207" style="animation:fadeIn 0.3s 1.2999999999999998s forwards;opacity:0"><tspan class="lbl">Editor  </tspan><tspan class="val">VS Code / Vim</tspan></text>
+    <text x="240" y="229" style="animation:fadeIn 0.3s 1.4500000000000002s forwards;opacity:0"><tspan class="lbl">Status  </tspan><tspan class="val">Ship it. Its Friday. YOLO.</tspan></text>
+
+  <g style="animation:fadeIn 0.3s 1.8s forwards;opacity:0">
+    <rect x="240" y="263" width="18" height="18" rx="2" fill="#0D1117" stroke="#333" stroke-width="0.5"/>
+    <rect x="262" y="263" width="18" height="18" rx="2" fill="#FF0000"/>
+    <rect x="284" y="263" width="18" height="18" rx="2" fill="#00FF41"/>
+    <rect x="306" y="263" width="18" height="18" rx="2" fill="#FFD700"/>
+    <rect x="328" y="263" width="18" height="18" rx="2" fill="#0074D9"/>
+    <rect x="350" y="263" width="18" height="18" rx="2" fill="#FF00FF"/>
+    <rect x="372" y="263" width="18" height="18" rx="2" fill="#00FFFF"/>
+    <rect x="394" y="263" width="18" height="18" rx="2" fill="#C9D1D9"/>
+  </g>
+</svg>
