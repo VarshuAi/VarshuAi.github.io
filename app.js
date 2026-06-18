@@ -445,3 +445,57 @@ setTimeout(() => {
 /* ── INIT ── */
 loadProfile();
 loadRepos();
+
+/* ══════════════════════════════════════
+   EASTER EGG — type "varshan" anywhere
+   ══════════════════════════════════════ */
+(function easterEgg() {
+  const SECRET = 'varshan';
+  let buffer = '';
+  const overlay = document.getElementById('egg-overlay');
+  const closeBtn = document.getElementById('eggClose');
+  if (!overlay) return;
+
+  function showEgg() {
+    overlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function hideEgg() {
+    overlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) return;
+    buffer += e.key.toLowerCase();
+    if (buffer.length > SECRET.length) buffer = buffer.slice(-SECRET.length);
+    if (buffer === SECRET) { buffer = ''; showEgg(); }
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', hideEgg);
+  overlay.addEventListener('click', e => { if (e.target === overlay) hideEgg(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') hideEgg(); });
+})();
+
+/* ══════════════════════════════════════
+   SECTION TRANSITIONS — stagger reveal on scroll
+   ══════════════════════════════════════ */
+(function sectionTransitions() {
+  const sections = document.querySelectorAll('.section');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+
+  sections.forEach(sec => {
+    sec.style.opacity = '0';
+    sec.style.transform = 'translateY(32px)';
+    sec.style.transition = 'opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)';
+    io.observe(sec);
+  });
+})();
