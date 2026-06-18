@@ -13,8 +13,199 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- INTRO CINEMA STYLES — inline so they load before anything else -->
+  <style>
+    /* Lock scroll during intro */
+    body.intro-on { overflow: hidden; }
+
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: 'JetBrains Mono', monospace;
+      transition: opacity 1s cubic-bezier(0.4,0,0.2,1);
+    }
+    #intro.exit { opacity: 0; pointer-events: none; }
+
+    /* Film grain */
+    #intro-grain {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      animation: grain 0.15s steps(1) infinite;
+    }
+    @keyframes grain {
+      0%  { background-position: 0 0; }
+      25% { background-position: -60px 40px; }
+      50% { background-position: 30px -50px; }
+      75% { background-position: -80px 20px; }
+      100%{ background-position: 50px -30px; }
+    }
+
+    /* Cinema letterbox bars */
+    .i-bar {
+      position: absolute; left: 0; right: 0;
+      background: #000; z-index: 5;
+    }
+    .i-bar-t {
+      top: 0; height: 0;
+      animation: bar-in-t 0.7s cubic-bezier(0.4,0,0.2,1) 0.1s forwards,
+                 bar-out-t 0.9s cubic-bezier(0.7,0,0.3,1) 3.4s forwards;
+    }
+    .i-bar-b {
+      bottom: 0; height: 0;
+      animation: bar-in-b 0.7s cubic-bezier(0.4,0,0.2,1) 0.1s forwards,
+                 bar-out-b 0.9s cubic-bezier(0.7,0,0.3,1) 3.4s forwards;
+    }
+    @keyframes bar-in-t  { to { height: 11.5vh; } }
+    @keyframes bar-in-b  { to { height: 11.5vh; } }
+    @keyframes bar-out-t { to { height: 0; } }
+    @keyframes bar-out-b { to { height: 0; } }
+
+    /* Center stage */
+    #intro-stage {
+      position: relative; z-index: 10;
+      text-align: center;
+      opacity: 0;
+      animation: stage-in 0.5s ease 0.7s forwards;
+    }
+    @keyframes stage-in { to { opacity: 1; } }
+
+    /* Logo */
+    .i-logo {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(5rem, 15vw, 10rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      color: #fff;
+      line-height: 1;
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      clip-path: inset(0 100% 0 0);
+      animation: logo-reveal 0.9s cubic-bezier(0.16,1,0.3,1) 0.9s forwards;
+    }
+    .i-logo span { color: #06B6D4; }
+    /* Light sweep across the logo */
+    .i-logo::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; bottom: 0; width: 60%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      animation: sweep 0.7s ease 1.7s forwards;
+    }
+    @keyframes logo-reveal {
+      to { clip-path: inset(0 0% 0 0); }
+    }
+    @keyframes sweep {
+      from { left: -60%; } to { left: 120%; }
+    }
+
+    /* Divider line */
+    .i-divider {
+      width: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      margin: 16px auto;
+      animation: div-grow 0.8s ease 1.65s forwards;
+    }
+    @keyframes div-grow { to { width: min(320px, 60vw); } }
+
+    /* Name */
+    .i-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(0.75rem, 2.5vw, 1.05rem);
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      overflow: hidden;
+      clip-path: inset(0 100% 0 0);
+      animation: name-reveal 0.9s cubic-bezier(0.16,1,0.3,1) 1.85s forwards;
+    }
+    @keyframes name-reveal { to { clip-path: inset(0 0% 0 0); } }
+
+    /* Sub tagline */
+    .i-sub {
+      margin-top: 10px;
+      font-size: clamp(0.6rem, 1.5vw, 0.72rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+      opacity: 0;
+      animation: fade-in 0.6s ease 2.5s forwards;
+    }
+    @keyframes fade-in { to { opacity: 1; } }
+
+    /* Full-screen flash (projector flare) */
+    #intro-flash {
+      position: absolute; inset: 0; z-index: 20;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      animation: flash 0.5s ease 3.0s;
+    }
+    @keyframes flash {
+      0%   { opacity: 0; }
+      15%  { opacity: 0.18; }
+      100% { opacity: 0; }
+    }
+
+    /* Skip hint */
+    #intro-skip {
+      position: absolute;
+      bottom: 14vh;
+      left: 50%; transform: translateX(-50%);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      z-index: 20;
+      opacity: 0;
+      animation: fade-in 0.5s ease 1.5s forwards;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    #intro-skip:hover { color: rgba(255,255,255,0.5); }
+
+    /* Year / studio text */
+    .i-meta {
+      position: absolute;
+      bottom: 14vh;
+      right: max(2rem, 4vw);
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.15);
+      z-index: 20;
+      opacity: 0;
+      animation: fade-in 0.5s ease 2.0s forwards;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- ══ CINEMA INTRO ══ -->
+  <div id="intro">
+    <div id="intro-grain"></div>
+    <div class="i-bar i-bar-t"></div>
+    <div class="i-bar i-bar-b"></div>
+    <div id="intro-stage">
+      <div class="i-logo">VG<span>.</span></div>
+      <div class="i-divider"></div>
+      <div class="i-name">Varshan Gowda SR</div>
+      <div class="i-sub">Builder &nbsp;·&nbsp; Creator &nbsp;·&nbsp; Tinkerer</div>
+    </div>
+    <div id="intro-flash"></div>
+    <span class="i-meta">Bengaluru &nbsp;·&nbsp; 2026</span>
+    <span id="intro-skip">tap to skip</span>
+  </div>
 
   <!-- CURSOR -->
   <div id="c-dot"></div>

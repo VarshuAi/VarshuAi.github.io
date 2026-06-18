@@ -83,6 +83,39 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
+/* ═══════════════════════════════
+   CINEMA INTRO CONTROLLER
+   Total runtime: ~4.4 seconds
+   ═══════════════════════════════ */
+(function introController() {
+  const intro = document.getElementById('intro');
+  const skip  = document.getElementById('intro-skip');
+  if (!intro) return;
+
+  // Lock scroll while intro plays
+  document.body.classList.add('intro-on');
+
+  // How long the full sequence runs before auto-exit
+  const DURATION = 4400;
+
+  function dismiss() {
+    intro.classList.add('exit');
+    document.body.classList.remove('intro-on');
+    // Remove from DOM fully after fade transition ends
+    setTimeout(() => intro.remove(), 1050);
+  }
+
+  // Auto-dismiss after full animation
+  const autoTimer = setTimeout(dismiss, DURATION);
+
+  // Skip on click anywhere on the intro or on the skip text
+  intro.addEventListener('click', () => {
+    clearTimeout(autoTimer);
+    dismiss();
+  });
+})();
+/* ═══════════════════════════════ */
+
 /* ── CURSOR — translate3d for pixel-perfect GPU tracking ── */
 const cDot  = document.getElementById('c-dot');
 const cRing = document.getElementById('c-ring');
