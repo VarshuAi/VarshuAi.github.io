@@ -1,12 +1,12 @@
-/* ==========================================
-   PORTFOLIO — APP.JS v3
-   Clean · Modular · Well-aligned
+﻿/* ==========================================
+   PORTFOLIO â€” APP.JS v3
+   Clean Â· Modular Â· Well-aligned
    ========================================== */
 
-/* ══════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    ANTI-DEVTOOLS SHIELD
-   Multiple detection layers — fires oops.html
-   ══════════════════════════════════════ */
+   Multiple detection layers â€” fires oops.html
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 ;(function devToolsShield() {
   const TROLL = '/oops.html';
   let fired = false;
@@ -19,7 +19,7 @@
     window.location.replace(TROLL);
   }
 
-  /* ── Layer 1: Block keyboard shortcuts ── */
+  /* â”€â”€ Layer 1: Block keyboard shortcuts â”€â”€ */
   document.addEventListener('keydown', e => {
     const K = e.key?.toUpperCase();
     if (
@@ -34,10 +34,10 @@
     }
   }, true);
 
-  /* ── Layer 2: Disable right-click ── */
+  /* â”€â”€ Layer 2: Disable right-click â”€â”€ */
   document.addEventListener('contextmenu', e => e.preventDefault());
 
-  /* ── Layer 3: Window size delta (docked DevTools) ── */
+  /* â”€â”€ Layer 3: Window size delta (docked DevTools) â”€â”€ */
   function sizeCheck() {
     const wDiff = window.outerWidth  - window.innerWidth;
     const hDiff = window.outerHeight - window.innerHeight;
@@ -45,9 +45,9 @@
   }
   setInterval(sizeCheck, 600);
 
-  /* ── Layer 4: Console getter trap (most reliable)
+  /* â”€â”€ Layer 4: Console getter trap (most reliable)
      DevTools auto-reads object properties when logging,
-     triggering the getter even before the user types anything ── */
+     triggering the getter even before the user types anything â”€â”€ */
   const trap = new Image();
   Object.defineProperty(trap, 'id', {
     get() { bust(); return ''; }
@@ -58,7 +58,7 @@
   }, 1500);
 
 })();
-/* ══════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 const GH_USER = 'VarshuAi';
 const GH_API  = `https://api.github.com/users/${GH_USER}`;
@@ -72,7 +72,7 @@ const LANG_COLORS = {
   Swift:'#FA7343', Kotlin:'#A97BFF',
 };
 
-/* ── SMOOTH ANCHOR SCROLL ── */
+/* â”€â”€ SMOOTH ANCHOR SCROLL â”€â”€ */
 document.querySelectorAll('a[href^="#"]').forEach(link => {
   link.addEventListener('click', e => {
     const id  = link.getAttribute('href').slice(1);
@@ -83,10 +83,10 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
-/* ═══════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CINEMA INTRO CONTROLLER
    Total runtime: ~4.4 seconds
-   ═══════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 (function introController() {
   const intro = document.getElementById('intro');
   const skip  = document.getElementById('intro-skip');
@@ -114,9 +114,9 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     dismiss();
   });
 })();
-/* ═══════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ── CURSOR — translate3d for pixel-perfect GPU tracking ── */
+/* â”€â”€ CURSOR â€” translate3d for pixel-perfect GPU tracking â”€â”€ */
 const cDot  = document.getElementById('c-dot');
 const cRing = document.getElementById('c-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
@@ -124,7 +124,7 @@ let mx = 0, my = 0, rx = 0, ry = 0;
 document.addEventListener('mousemove', e => {
   mx = e.clientX;
   my = e.clientY;
-  // Dot follows mouse instantly — no lag at all
+  // Dot follows mouse instantly â€” no lag at all
   if (cDot) cDot.style.transform = `translate3d(${mx}px,${my}px,0)`;
 }, { passive: true });
 
@@ -136,7 +136,7 @@ document.addEventListener('mousemove', e => {
   requestAnimationFrame(ringLoop);
 })();
 
-/* ── PARTICLES ── */
+/* â”€â”€ PARTICLES â”€â”€ */
 const canvas = document.getElementById('hero-canvas');
 const ctx    = canvas ? canvas.getContext('2d') : null;
 let pts = [];
@@ -204,7 +204,7 @@ function drawCanvas() {
 window.addEventListener('resize', resizeCanvas, { passive: true });
 if (window.matchMedia('(min-width: 768px)').matches) initCanvas();
 
-/* ── TYPEWRITER ── */
+/* â”€â”€ TYPEWRITER â”€â”€ */
 const phrases = [
   'Builder by instinct.',
   'Tinkerer by nature.',
@@ -226,7 +226,7 @@ function type() {
 }
 setTimeout(type, 500);
 
-/* ── NAV ── */
+/* â”€â”€ NAV â”€â”€ */
 const siteNav  = document.getElementById('site-nav');
 const navLine  = document.getElementById('navLine');
 const navLinks = document.querySelectorAll('.nav-links a');
@@ -248,7 +248,7 @@ window.addEventListener('scroll', () => {
   });
 }, { passive: true });
 
-/* ── MOBILE DRAWER ── */
+/* â”€â”€ MOBILE DRAWER â”€â”€ */
 const toggle  = document.getElementById('navToggle');
 const drawer  = document.getElementById('drawer');
 const overlay = document.getElementById('drawerOverlay');
@@ -264,7 +264,7 @@ toggle?.addEventListener('click', () => toggleDrawer(!toggle.classList.contains(
 overlay?.addEventListener('click', () => toggleDrawer(false));
 drawer?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggleDrawer(false)));
 
-/* ── SCROLL REVEAL ── */
+/* â”€â”€ SCROLL REVEAL â”€â”€ */
 const revObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); }
@@ -273,7 +273,7 @@ const revObs = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
-/* ── COUNTER ANIMATION ── */
+/* â”€â”€ COUNTER ANIMATION â”€â”€ */
 const cntObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (!e.isIntersecting) return;
@@ -293,7 +293,7 @@ const cntObs = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.counter').forEach(el => cntObs.observe(el));
 
-/* ── CARD SPOTLIGHT ── */
+/* â”€â”€ CARD SPOTLIGHT â”€â”€ */
 function attachSpotlight() {
   document.querySelectorAll('.proj-card').forEach(card => {
     card.addEventListener('mousemove', e => {
@@ -306,7 +306,7 @@ function attachSpotlight() {
   });
 }
 
-/* ── PROJECTS ── */
+/* â”€â”€ PROJECTS â”€â”€ */
 let repos = [], filter = 'all';
 
 function buildCard(repo, i) {
@@ -334,10 +334,10 @@ function buildCard(repo, i) {
       <span class="proj-name">${repo.name}</span>
       ${repo.fork ? '<span class="fork-badge">Fork</span>' : ''}
     </div>
-    <p class="proj-desc">${desc.length > 100 ? desc.slice(0, 100) + '…' : desc}</p>
+    <p class="proj-desc">${desc.length > 100 ? desc.slice(0, 100) + 'â€¦' : desc}</p>
     <div class="proj-foot">
       <div class="proj-lang">
-        ${lang ? `<span class="lang-dot lc-${lang}" style="background:${color}"></span><span>${lang}</span>` : '<span style="color:var(--text-3)">—</span>'}
+        ${lang ? `<span class="lang-dot lc-${lang}" style="background:${color}"></span><span>${lang}</span>` : '<span style="color:var(--text-3)">â€”</span>'}
       </div>
       <div class="proj-meta">
         <span class="proj-meta-item">
@@ -349,7 +349,7 @@ function buildCard(repo, i) {
           ${forks}
         </span>
       </div>
-      <span class="proj-arrow">↗</span>
+      <span class="proj-arrow">â†—</span>
     </div>`;
   return a;
 }
@@ -391,12 +391,12 @@ async function loadRepos() {
   } catch {
     grid.innerHTML = `<div class="proj-loading">
       <span>Could not load repos.</span>
-      <a href="https://github.com/${GH_USER}" target="_blank" style="color:var(--accent);font-weight:700">Visit GitHub ↗</a>
+      <a href="https://github.com/${GH_USER}" target="_blank" style="color:var(--accent);font-weight:700">Visit GitHub â†—</a>
     </div>`;
   }
 }
 
-/* ── GITHUB PROFILE ── */
+/* â”€â”€ GITHUB PROFILE â”€â”€ */
 async function loadProfile() {
   try {
     const data = await (await fetch(GH_API)).json();
@@ -418,7 +418,7 @@ async function loadProfile() {
   } catch(e) { /* fail silently */ }
 }
 
-/* ── PARALLAX ORBS ── */
+/* â”€â”€ PARALLAX ORBS â”€â”€ */
 let px = 0, py = 0, plx = 0, ply = 0;
 document.addEventListener('mousemove', e => {
   px = (e.clientX / window.innerWidth  - 0.5) * 30;
@@ -432,23 +432,23 @@ document.addEventListener('mousemove', e => {
   requestAnimationFrame(pLoop);
 })();
 
-/* Smooth scroll done natively via CSS — no JS needed */
+/* Smooth scroll done natively via CSS â€” no JS needed */
 
 
-/* ── HERO REVEAL ── */
+/* â”€â”€ HERO REVEAL â”€â”€ */
 setTimeout(() => {
   document.querySelectorAll('#top .reveal, #h-status, #h-name, #h-type, #h-bio, #h-ctas, #h-scroll, #h-right').forEach(el => {
     el.classList.add('visible');
   });
 }, 100);
 
-/* ── INIT ── */
+/* â”€â”€ INIT â”€â”€ */
 loadProfile();
 loadRepos();
 
-/* ══════════════════════════════════════
-   EASTER EGG — type "varshan" anywhere
-   ══════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   EASTER EGG â€” type "varshan" anywhere
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 (function easterEgg() {
   const SECRET = 'varshan';
   let buffer = '';
@@ -477,9 +477,9 @@ loadRepos();
   document.addEventListener('keydown', e => { if (e.key === 'Escape') hideEgg(); });
 })();
 
-/* ══════════════════════════════════════
-   SECTION TRANSITIONS — stagger reveal on scroll
-   ══════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION TRANSITIONS â€” stagger reveal on scroll
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 (function sectionTransitions() {
   const sections = document.querySelectorAll('.section');
   const io = new IntersectionObserver(entries => {
@@ -499,3 +499,31 @@ loadRepos();
     io.observe(sec);
   });
 })();
+
+
+/* ════════════════════════════════
+   EASTER EGG FIX — DOMContentLoaded ensures
+   the #egg-overlay element exists before binding
+   ════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function() {
+  var SECRET = 'varshan';
+  var buf = '';
+  var ov = document.getElementById('egg-overlay');
+  var cl = document.getElementById('eggClose');
+  if (!ov) return;
+
+  function showEgg() { ov.classList.add('show'); document.body.style.overflow = 'hidden'; }
+  function hideEgg() { ov.classList.remove('show'); document.body.style.overflow = ''; }
+
+  document.addEventListener('keydown', function(e) {
+    var tag = document.activeElement ? document.activeElement.tagName : '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    buf += (e.key || '').toLowerCase();
+    if (buf.length > SECRET.length) buf = buf.slice(-SECRET.length);
+    if (buf === SECRET) { buf = ''; showEgg(); }
+  });
+
+  if (cl) cl.addEventListener('click', hideEgg);
+  ov.addEventListener('click', function(e) { if (e.target === ov) hideEgg(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') hideEgg(); });
+});
