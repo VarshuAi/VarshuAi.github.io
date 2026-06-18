@@ -506,13 +506,27 @@ body:has(button:hover) #cursor-ring { width: 52px; height: 52px; border-color: v
   position: absolute;
   right: max(2rem, calc((100vw - 1200px) / 2 + 2rem));
   top: 50%;
-  transform: translateY(-50%);
+  /* Offset by half the navbar height (68px/2 = 34px) to compensate for padding-top */
+  transform: translateY(calc(-50% + 34px));
   z-index: 2;
 }
 
 .avatar-outer {
   position: relative;
   width: 400px; height: 400px;
+}
+
+/* Badge SVG icons */
+.badge-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  flex-shrink: 0;
+  color: var(--accent);
+}
+.badge-icon svg {
+  width: 20px; height: 20px;
 }
 
 .avatar-ring {
@@ -619,15 +633,27 @@ body:has(button:hover) #cursor-ring { width: 52px; height: 52px; border-color: v
 .about-text p strong { color: var(--text-1); }
 
 .about-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2.25rem; }
+
+/* About tags with SVG icons */
 .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   background: var(--bg);
   border: 1px solid var(--border-mid);
-  padding: 0.42rem 1rem;
+  padding: 0.42rem 0.9rem 0.42rem 0.7rem;
   border-radius: 99px;
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-2);
   transition: all 0.25s;
+  cursor: default;
+}
+.tag-icon {
+  width: 13px; height: 13px;
+  flex-shrink: 0;
+  stroke: var(--accent);
+  transition: stroke 0.25s;
 }
 .tag:hover {
   background: var(--accent-light);
@@ -635,6 +661,11 @@ body:has(button:hover) #cursor-ring { width: 52px; height: 52px; border-color: v
   border-color: rgba(79,70,229,0.3);
   transform: translateY(-2px);
 }
+.tag:hover .tag-icon { stroke: var(--accent); }
+
+/* Terminal color helpers */
+.t-accent { color: #818cf8; font-weight: 700; }
+.t-green  { color: #34d399; }
 
 /* Terminal */
 .terminal-card {
@@ -677,6 +708,19 @@ body:has(button:hover) #cursor-ring { width: 52px; height: 52px; border-color: v
 
 /* ── STATS ── */
 .stats-section { background: var(--bg); position: relative; overflow: hidden; }
+
+/* Stat icon SVG */
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px; height: 48px;
+  background: var(--accent-light);
+  border-radius: var(--radius-sm);
+  margin: 0 auto 1rem;
+  color: var(--accent);
+}
+.stat-icon svg { width: 24px; height: 24px; }
 
 .stats-bg-accent {
   position: absolute;
@@ -932,13 +976,17 @@ body:has(button:hover) #cursor-ring { width: 52px; height: 52px; border-color: v
 .skill-category:hover::after { transform: scaleX(1); }
 
 .skill-cat-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+/* Skill cat icon SVG */
 .skill-cat-icon {
   width: 38px; height: 38px;
   background: var(--accent-light);
   border-radius: var(--radius-xs);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem;
+  flex-shrink: 0;
+  color: var(--accent);
 }
+.skill-cat-icon svg { width: 18px; height: 18px; }
+
 .skill-cat-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 
 .skill-pills { display: flex; flex-wrap: wrap; gap: 0.55rem; }
@@ -1079,7 +1127,28 @@ body:has(button:hover) #cursor-ring { width: 52px; height: 52px; border-color: v
 
 .footer-divider { width: 60px; height: 1.5px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); margin: 0 auto 2rem; border-radius: 99px; }
 .footer-copy { color: rgba(255,255,255,0.25); font-size: 0.78rem; }
-.footer-built { color: rgba(255,255,255,0.35); font-size: 0.82rem; margin-bottom: 0.5rem; }
+.footer-built {
+  color: rgba(255,255,255,0.35);
+  font-size: 0.82rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.footer-heart {
+  width: 14px; height: 14px;
+  fill: #f43f5e;
+  flex-shrink: 0;
+  animation: heartbeat 1.8s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.25); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.15); }
+  60% { transform: scale(1); }
+}
 
 /* ── SCROLL ANIMATIONS ── */
 .reveal-up, .reveal-left, .reveal-right, .reveal-fade {
