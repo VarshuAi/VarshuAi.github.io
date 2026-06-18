@@ -3,382 +3,413 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#f7f6f2" />
-  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#F6F5F1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <title>Varshan Gowda SR — Builder. Tinkerer. Creator.</title>
-  <meta name="description" content="Portfolio of Varshan Gowda SR — a self-driven builder from Bengaluru who creates, experiments, and ships ideas to the world." />
-  <meta property="og:title" content="Varshan Gowda SR — Portfolio" />
-  <meta property="og:description" content="Builder. Tinkerer. Creator. Based in Bengaluru." />
+  <meta name="description" content="Portfolio of Varshan Gowda SR — a self-driven builder from Bengaluru who creates, experiments and ships ideas." />
+  <meta property="og:title" content="Varshan Gowda SR" />
   <meta property="og:image" content="https://avatars.githubusercontent.com/u/115567336?v=4" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- ── CURSOR ── -->
-  <div id="cursor-dot"></div>
-  <div id="cursor-ring"></div>
+  <!-- CURSOR -->
+  <div id="c-dot"></div>
+  <div id="c-ring"></div>
 
-  <!-- ── NAV ── -->
-  <nav id="navbar">
-    <div class="nav-inner-wrap">
-      <a href="#hero" class="nav-logo">VG<span style="color:var(--accent)">.</span></a>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#about"    id="nav-about">About</a></li>
-        <li><a href="#stats"    id="nav-stats">Stats</a></li>
-        <li><a href="#projects" id="nav-projects">Projects</a></li>
-        <li><a href="#skills"   id="nav-skills">Skills</a></li>
-        <li><a href="#contact"  id="nav-contact">Contact</a></li>
-      </ul>
-      <a href="https://github.com/VarshuAi" target="_blank" class="nav-cta" id="nav-gh-cta">GitHub ↗</a>
-      <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu">
+  <!-- NAV -->
+  <header id="site-nav">
+    <div class="nav-wrap">
+      <a href="#top" class="logo">VG<span>.</span></a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#stats">Stats</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a href="https://github.com/VarshuAi" target="_blank" rel="noopener" class="nav-gh">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.57v-2.23c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.21.69.82.57A12.01 12.01 0 0 0 24 12C24 5.37 18.63 0 12 0z"/></svg>
+        GitHub
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
     </div>
-    <div class="nav-progress" id="navProgress"></div>
-  </nav>
+    <div class="nav-line" id="navLine"></div>
+  </header>
 
-  <!-- Mobile Nav Drawer -->
-  <div class="nav-overlay" id="navOverlay"></div>
-  <div class="nav-mobile-drawer" id="navDrawer">
-    <a href="#about"    id="mob-about">About</a>
-    <a href="#stats"    id="mob-stats">Stats</a>
-    <a href="#projects" id="mob-projects">Projects</a>
-    <a href="#skills"   id="mob-skills">Skills</a>
-    <a href="#contact"  id="mob-contact">Contact</a>
-    <a href="https://github.com/VarshuAi" target="_blank" id="mob-github" style="color:var(--accent)">GitHub ↗</a>
+  <!-- MOBILE DRAWER -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="drawer">
+    <a href="#about">About</a>
+    <a href="#stats">Stats</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+    <a href="https://github.com/VarshuAi" target="_blank" class="drawer-gh">GitHub ↗</a>
   </div>
 
-  <!-- ── HERO ── -->
-  <section id="hero" class="hero-section">
-    <div class="hero-bg">
-      <div class="hero-orb orb-1"></div>
-      <div class="hero-orb orb-2"></div>
-      <div class="hero-orb orb-3"></div>
-      <canvas id="particles-canvas"></canvas>
-      <div class="grid-overlay"></div>
-    </div>
+  <!-- HERO -->
+  <section id="top" class="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-mesh"></div>
 
-    <div class="hero-content">
-      <div class="hero-badge reveal-up">
-        <span class="badge-dot"></span>
-        Available for interesting projects
-      </div>
-      <h1 class="hero-name reveal-up delay-1">
-        Varshan
-        <span class="name-line2">Gowda SR</span>
-      </h1>
-      <p class="hero-title reveal-up delay-2">
-        <span id="typeText"></span><span class="type-cursor">|</span>
-      </p>
-      <p class="hero-bio reveal-up delay-3">
-        I build things. Sometimes they work. Sometimes they break in interesting ways.<br />
-        Based in <strong>Bengaluru</strong> — exploring ideas across code, tools, and systems.
-      </p>
-      <div class="hero-actions reveal-up delay-4">
-        <a href="#projects" class="btn-primary" id="hero-view-work">
-          <span>View My Work</span>
-        </a>
-        <a href="https://github.com/VarshuAi" target="_blank" class="btn-outline" id="hero-github">
-          GitHub ↗
-        </a>
-      </div>
-      <div class="hero-scroll reveal-up delay-5">
-        <div class="scroll-line"></div>
-        <span>Scroll to explore</span>
-      </div>
-    </div>
+    <div class="hero-body">
+      <div class="hero-left">
+        <div class="hero-status" id="h-status">
+          <span class="status-dot"></span>
+          Available for interesting projects
+        </div>
 
-    <div class="hero-avatar reveal-right delay-2">
-      <div class="avatar-outer">
-        <div class="avatar-ring">
-          <img src="https://avatars.githubusercontent.com/u/115567336?v=4" alt="Varshan Gowda SR" class="avatar-img" id="hero-avatar" />
+        <h1 class="hero-name" id="h-name">
+          <span class="hn-plain">Varshan</span>
+          <span class="hn-grad">Gowda SR</span>
+        </h1>
+
+        <p class="hero-type" id="h-type">
+          <span id="typeTarget"></span><span class="type-bar">|</span>
+        </p>
+
+        <p class="hero-bio" id="h-bio">
+          I build things. Sometimes they work.<br/>
+          Based in <strong>Bengaluru</strong> — always shipping.
+        </p>
+
+        <div class="hero-ctas" id="h-ctas">
+          <a href="#projects" class="btn-solid">View Work</a>
+          <a href="https://github.com/VarshuAi" target="_blank" class="btn-ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.57v-2.23c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.21.69.82.57A12.01 12.01 0 0 0 24 12C24 5.37 18.63 0 12 0z"/></svg>
+            GitHub ↗
+          </a>
         </div>
-        <div class="avatar-glow"></div>
-        <div class="avatar-float-badge badge-repos">
-          <span class="badge-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-          </span>
-          <div>
-            <div style="font-size:0.65rem;color:var(--text-3);font-weight:600;letter-spacing:0.08em;text-transform:uppercase">Repos</div>
-            <div id="badge-repo-count">204+</div>
+
+        <div class="hero-scroll" id="h-scroll">
+          <div class="scroll-track"></div>
+          <span>Scroll to explore</span>
+        </div>
+      </div>
+
+      <div class="hero-right" id="h-right">
+        <div class="avatar-wrap">
+          <div class="avatar-ring-outer">
+            <img src="https://avatars.githubusercontent.com/u/115567336?v=4"
+                 alt="Varshan Gowda SR" class="avatar-photo" />
           </div>
-        </div>
-        <div class="avatar-float-badge badge-follow">
-          <span class="badge-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </span>
-          <div>
-            <div style="font-size:0.65rem;color:var(--text-3);font-weight:600;letter-spacing:0.08em;text-transform:uppercase">Followers</div>
-            <div id="badge-follower-count">136</div>
+
+          <div class="av-chip chip-top" id="chip-repos">
+            <div class="chip-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <div class="chip-text">
+              <div class="chip-label">Repos</div>
+              <div class="chip-val" id="chip-repo-val">204+</div>
+            </div>
           </div>
-        </div>
-        <div class="avatar-float-badge badge-loc">
-          <span class="badge-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          </span>
-          <div>Bengaluru, India</div>
+
+          <div class="av-chip chip-bottom" id="chip-followers">
+            <div class="chip-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="chip-text">
+              <div class="chip-label">Followers</div>
+              <div class="chip-val" id="chip-follow-val">136</div>
+            </div>
+          </div>
+
+          <div class="av-chip chip-left" id="chip-location">
+            <div class="chip-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="chip-text">
+              <div class="chip-label">Based in</div>
+              <div class="chip-val">Bengaluru</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── ABOUT ── -->
-  <section id="about" class="about-section section-pad">
-    <div class="container">
-      <div class="section-label reveal-up">About Me</div>
+  <!-- ABOUT -->
+  <section id="about" class="section">
+    <div class="wrap">
+      <div class="section-tag">About Me</div>
       <div class="about-grid">
-        <div class="about-text reveal-left">
-          <h2>I build because I <span class="highlight">can't stop</span> being curious.</h2>
-          <p>
-            I'm Varshan Gowda SR, a self-taught builder based in Bengaluru. I don't follow a single lane — I jump between ideas, tools, and projects driven purely by curiosity and the urge to create something real.
-          </p>
-          <p>
-            With over <strong>204 public repositories</strong> and a growing community of <strong>136 followers</strong> on GitHub, I'm always shipping something new. My work spans Python, JavaScript, Rust, Go and beyond — whatever the project calls for.
-          </p>
-          <p>
-            I believe the best way to learn is to build, break, and rebuild. Every repo is a story. Every commit is a step forward.
-          </p>
-          <div class="about-tags">
-            <span class="tag">
-              <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+
+        <div class="about-main card-base reveal">
+          <h2>I build because I <span class="grad-text">can't stop</span> being curious.</h2>
+          <p>Self-taught builder from Bengaluru. I don't follow a single lane — I jump between ideas, tools, and projects driven purely by curiosity and the urge to create something real.</p>
+          <p>Over <strong>204 public repos</strong>, <strong>136 followers</strong>, and always shipping the next thing.</p>
+          <div class="tag-row">
+            <span class="chip-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
               Builder
             </span>
-            <span class="tag">
-              <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
-              Experimenter
-            </span>
-            <span class="tag">
-              <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span class="chip-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               Open Source
             </span>
-            <span class="tag">
-              <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Bengaluru
-            </span>
-            <span class="tag">
-              <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span class="chip-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
               Always Shipping
             </span>
+            <span class="chip-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Bengaluru
+            </span>
           </div>
         </div>
-        <div class="about-visual reveal-right">
-          <div class="terminal-card">
-            <div class="terminal-header">
-              <span class="dot red"></span>
-              <span class="dot yellow"></span>
-              <span class="dot green"></span>
-              <span class="terminal-title">varshan@bengaluru ~ zsh</span>
+
+        <div class="about-term card-base reveal reveal-delay-1">
+          <div class="term-bar">
+            <div class="term-dots">
+              <span class="td td-r"></span>
+              <span class="td td-y"></span>
+              <span class="td td-g"></span>
             </div>
-            <div class="terminal-body">
-              <div class="terminal-line"><span class="prompt">❯</span>&nbsp;whoami</div>
-              <div class="terminal-output">Varshan Gowda SR</div>
-              <div class="terminal-line"><span class="prompt">❯</span>&nbsp;cat about.txt</div>
-              <div class="terminal-output green-line">Builder · Tinkerer · Creator</div>
-              <div class="terminal-output"><span class="t-accent">loc</span>  Bengaluru, India</div>
-              <div class="terminal-output"><span class="t-green">●</span> Status: Always building something</div>
-              <div class="terminal-line"><span class="prompt">❯</span>&nbsp;git log --oneline --graph</div>
-              <div class="terminal-output git-line">* [ship]  204 repositories shipped</div>
-              <div class="terminal-output git-line">* [star]  136 followers earned</div>
-              <div class="terminal-output git-line">* [init]  Active since Oct 2022</div>
-              <div class="terminal-output git-line">* [devs]  405 developers followed</div>
-              <div class="terminal-line"><span class="prompt">❯</span>&nbsp;<span class="cursor-blink">█</span></div>
-            </div>
+            <span class="term-title">varshan ~ zsh</span>
+          </div>
+          <div class="term-body">
+            <div class="tl"><span class="tp">❯</span> whoami</div>
+            <div class="to tc-dim">Varshan Gowda SR</div>
+            <div class="tl"><span class="tp">❯</span> cat status</div>
+            <div class="to tc-grn">● Active · Always building</div>
+            <div class="to tc-dim">📍 Bengaluru, India</div>
+            <div class="tl"><span class="tp">❯</span> git log</div>
+            <div class="to tc-pur">* 204 repositories shipped</div>
+            <div class="to tc-pur">* 136 followers · 405 following</div>
+            <div class="to tc-pur">* Active since Oct 2022</div>
+            <div class="tl"><span class="tp">❯</span> <span class="t-cur">█</span></div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- ── STATS ── -->
-  <section id="stats" class="stats-section section-pad">
-    <div class="stats-bg-accent"></div>
-    <div class="container">
-      <div class="section-label reveal-up">Live Stats</div>
-      <h2 class="section-title reveal-up">By the <span class="highlight">Numbers</span></h2>
-      <div class="stats-grid">
-        <div class="stat-card reveal-up delay-1" id="stat-repos">
-          <span class="stat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-          </span>
-          <div class="stat-number counter" data-target="204">0</div>
-          <div class="stat-label">Public Repos</div>
+  <!-- STATS -->
+  <section id="stats" class="section section-alt">
+    <div class="wrap">
+      <div class="section-tag">GitHub Stats</div>
+      <h2 class="section-title reveal">By the <span class="grad-text">Numbers</span></h2>
+
+      <div class="stats-row">
+
+        <div class="stat-card reveal">
+          <div class="stat-ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <div class="stat-num counter" data-target="204">0</div>
+          <div class="stat-lbl">Public Repos</div>
         </div>
-        <div class="stat-card reveal-up delay-2" id="stat-followers">
-          <span class="stat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </span>
-          <div class="stat-number counter" data-target="136">0</div>
-          <div class="stat-label">Followers</div>
+
+        <div class="stat-card reveal reveal-delay-1">
+          <div class="stat-ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="stat-num counter" data-target="136">0</div>
+          <div class="stat-lbl">Followers</div>
         </div>
-        <div class="stat-card reveal-up delay-3" id="stat-following">
-          <span class="stat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-          </span>
-          <div class="stat-number counter" data-target="405">0</div>
-          <div class="stat-label">Following</div>
+
+        <div class="stat-card reveal reveal-delay-2">
+          <div class="stat-ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </div>
+          <div class="stat-num counter" data-target="405">0</div>
+          <div class="stat-lbl">Following</div>
         </div>
-        <div class="stat-card reveal-up delay-4" id="stat-since">
-          <span class="stat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          </span>
-          <div class="stat-number">2022</div>
-          <div class="stat-label">Active Since</div>
+
+        <div class="stat-card reveal reveal-delay-3">
+          <div class="stat-ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="stat-num">2022</div>
+          <div class="stat-lbl">Active Since</div>
         </div>
+
       </div>
-      <div class="github-chart reveal-up">
-        <img src="https://ghchart.rshah.org/4f46e5/VarshuAi" alt="Varshan's GitHub Contribution Chart" class="contribution-chart" />
+
+      <div class="contrib-card reveal">
+        <div class="contrib-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Contribution Activity
+        </div>
+        <img src="https://ghchart.rshah.org/4f46e5/VarshuAi"
+             alt="GitHub contribution graph" class="contrib-img" />
       </div>
     </div>
   </section>
 
-  <!-- ── PROJECTS ── -->
-  <section id="projects" class="projects-section section-pad">
-    <div class="container">
-      <div class="section-label reveal-up">Projects</div>
-      <h2 class="section-title reveal-up">Live from <span class="highlight">GitHub</span></h2>
-      <p class="section-sub reveal-up">Synced in real-time from the GitHub API — every card is a real repo.</p>
-      <div class="projects-filter reveal-up" id="projectFilter">
-        <button class="filter-btn active" data-filter="all"      id="filter-all">All</button>
-        <button class="filter-btn"        data-filter="original" id="filter-original">My Builds</button>
-        <button class="filter-btn"        data-filter="forked"   id="filter-forked">Forked</button>
-      </div>
-      <div class="projects-grid" id="projectsGrid">
-        <div class="projects-loading" id="projectsLoading">
-          <div class="loading-spinner"></div>
-          <p>Fetching live from GitHub…</p>
+  <!-- PROJECTS -->
+  <section id="projects" class="section">
+    <div class="wrap">
+      <div class="section-tag">Projects</div>
+      <div class="section-head reveal">
+        <div>
+          <h2 class="section-title">Live from <span class="grad-text">GitHub</span></h2>
+          <p class="section-sub">Real-time sync via GitHub API — every card is a real repo.</p>
+        </div>
+        <div class="proj-filters" id="projFilters">
+          <button class="pf active" data-f="all">All</button>
+          <button class="pf" data-f="original">Mine</button>
+          <button class="pf" data-f="forked">Forked</button>
         </div>
       </div>
-      <div class="projects-more reveal-up" id="projectsMore" style="display:none">
-        <a href="https://github.com/VarshuAi?tab=repositories" target="_blank" class="btn-outline" id="view-all-repos">
-          View All Repos on GitHub ↗
+
+      <div class="proj-grid" id="projGrid">
+        <div class="proj-loading" id="projLoading">
+          <div class="spinner"></div>
+          <span>Fetching from GitHub…</span>
+        </div>
+      </div>
+
+      <div class="proj-more" id="projMore" style="display:none">
+        <a href="https://github.com/VarshuAi?tab=repositories" target="_blank" class="btn-ghost">
+          View all repos on GitHub ↗
         </a>
       </div>
     </div>
   </section>
 
-  <!-- ── SKILLS ── -->
-  <section id="skills" class="skills-section section-pad">
-    <div class="container">
-      <div class="section-label reveal-up">Skills</div>
-      <h2 class="section-title reveal-up">What I <span class="highlight">Work With</span></h2>
-      <div class="skills-wrapper">
-        <div class="skill-category reveal-up delay-1">
-          <div class="skill-cat-header">
-            <div class="skill-cat-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+  <!-- SKILLS -->
+  <section id="skills" class="section section-alt">
+    <div class="wrap">
+      <div class="section-tag">Skills</div>
+      <h2 class="section-title reveal">What I <span class="grad-text">Work With</span></h2>
+
+      <div class="skills-grid">
+
+        <div class="skill-card reveal">
+          <div class="sk-head">
+            <div class="sk-ico">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
             </div>
-            <div class="skill-cat-title">Languages</div>
+            <h3 class="sk-title">Languages</h3>
           </div>
-          <div class="skill-pills">
-            <span class="skill-pill">Python</span>
-            <span class="skill-pill">JavaScript</span>
-            <span class="skill-pill">Rust</span>
-            <span class="skill-pill">HTML / CSS</span>
-            <span class="skill-pill">Go</span>
-            <span class="skill-pill">Shell</span>
+          <div class="pill-row">
+            <span class="pill">Python</span>
+            <span class="pill">JavaScript</span>
+            <span class="pill">Rust</span>
+            <span class="pill">Go</span>
+            <span class="pill">HTML / CSS</span>
+            <span class="pill">Shell</span>
           </div>
         </div>
-        <div class="skill-category reveal-up delay-2">
-          <div class="skill-cat-header">
-            <div class="skill-cat-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+
+        <div class="skill-card reveal reveal-delay-1">
+          <div class="sk-head">
+            <div class="sk-ico">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
             </div>
-            <div class="skill-cat-title">Tools &amp; Tech</div>
+            <h3 class="sk-title">Tools & Tech</h3>
           </div>
-          <div class="skill-pills">
-            <span class="skill-pill">Git &amp; GitHub</span>
-            <span class="skill-pill">Node.js</span>
-            <span class="skill-pill">Tauri</span>
-            <span class="skill-pill">React</span>
-            <span class="skill-pill">Linux</span>
-            <span class="skill-pill">Docker</span>
+          <div class="pill-row">
+            <span class="pill">Git & GitHub</span>
+            <span class="pill">Node.js</span>
+            <span class="pill">React</span>
+            <span class="pill">Tauri</span>
+            <span class="pill">Docker</span>
+            <span class="pill">Linux</span>
           </div>
         </div>
-        <div class="skill-category reveal-up delay-3">
-          <div class="skill-cat-header">
-            <div class="skill-cat-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+
+        <div class="skill-card reveal reveal-delay-2">
+          <div class="sk-head">
+            <div class="sk-ico">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
             </div>
-            <div class="skill-cat-title">Interests</div>
+            <h3 class="sk-title">Interests</h3>
           </div>
-          <div class="skill-pills">
-            <span class="skill-pill">AI / ML</span>
-            <span class="skill-pill">Open Source</span>
-            <span class="skill-pill">System Tools</span>
-            <span class="skill-pill">Automation</span>
-            <span class="skill-pill">Game Modding</span>
-            <span class="skill-pill">Media Tools</span>
+          <div class="pill-row">
+            <span class="pill">AI / ML</span>
+            <span class="pill">Open Source</span>
+            <span class="pill">Automation</span>
+            <span class="pill">System Tools</span>
+            <span class="pill">Game Modding</span>
+            <span class="pill">Media Tools</span>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- ── CONTACT ── -->
-  <section id="contact" class="contact-section section-pad">
-    <div class="container">
-      <div class="section-label reveal-up">Contact</div>
-      <h2 class="section-title reveal-up">Let's <span class="highlight">Connect</span></h2>
-      <p class="section-sub reveal-up">Have an idea? Want to collaborate? Just say hi — I'm always open.</p>
-      <div class="contact-grid">
-        <a href="https://github.com/VarshuAi" target="_blank" class="contact-card reveal-up delay-1" id="contact-github">
-          <div class="contact-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+  <!-- CONTACT -->
+  <section id="contact" class="section">
+    <div class="wrap">
+      <div class="section-tag">Contact</div>
+      <h2 class="section-title reveal">Let's <span class="grad-text">Connect</span></h2>
+      <p class="section-sub reveal">Have an idea, want to collab, or just say hi.</p>
+
+      <div class="contact-row">
+
+        <a href="https://github.com/VarshuAi" target="_blank" class="contact-card reveal">
+          <div class="cc-ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.57v-2.23c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.21.69.82.57A12.01 12.01 0 0 0 24 12C24 5.37 18.63 0 12 0z"/></svg>
           </div>
-          <div class="contact-info">
-            <div class="contact-label">GitHub</div>
-            <div class="contact-value">@VarshuAi</div>
+          <div class="cc-body">
+            <div class="cc-label">GitHub</div>
+            <div class="cc-value">@VarshuAi</div>
           </div>
-          <div class="contact-arrow">↗</div>
+          <div class="cc-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </div>
         </a>
-        <a href="mailto:varshangowda@example.com" class="contact-card reveal-up delay-2" id="contact-email">
-          <div class="contact-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+
+        <a href="mailto:varshangowda@example.com" class="contact-card reveal reveal-delay-1">
+          <div class="cc-ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </div>
-          <div class="contact-info">
-            <div class="contact-label">Email</div>
-            <div class="contact-value">Drop a message</div>
+          <div class="cc-body">
+            <div class="cc-label">Email</div>
+            <div class="cc-value">Drop a message</div>
           </div>
-          <div class="contact-arrow">↗</div>
+          <div class="cc-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </div>
         </a>
-        <div class="contact-card reveal-up delay-3" id="contact-location">
-          <div class="contact-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+
+        <div class="contact-card reveal reveal-delay-2">
+          <div class="cc-ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           </div>
-          <div class="contact-info">
-            <div class="contact-label">Location</div>
-            <div class="contact-value">Bengaluru, India</div>
+          <div class="cc-body">
+            <div class="cc-label">Location</div>
+            <div class="cc-value">Bengaluru, India</div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- ── FOOTER ── -->
-  <footer class="footer">
-    <div class="footer-glow"></div>
-    <div class="container">
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="wrap">
       <div class="footer-inner">
-        <div class="footer-logo">VG.</div>
-        <p class="footer-tagline">"Build first. Ask questions later."</p>
-        <div class="footer-links">
-          <a href="#about"    class="footer-link" id="footer-about">About</a>
-          <a href="#projects" class="footer-link" id="footer-projects">Projects</a>
-          <a href="#skills"   class="footer-link" id="footer-skills">Skills</a>
-          <a href="#contact"  class="footer-link" id="footer-contact">Contact</a>
-          <a href="https://github.com/VarshuAi" target="_blank" class="footer-link" id="footer-github">GitHub ↗</a>
+        <div class="footer-brand">
+          <div class="footer-logo">VG.</div>
+          <p class="footer-tagline">"Build first. Ask questions later."</p>
         </div>
-        <div class="footer-divider"></div>
-        <p class="footer-built">
-          <svg class="footer-heart" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          Built with care · Synced live with the GitHub API
-        </p>
-        <p class="footer-copy">© 2026 Varshan Gowda SR · All rights reserved.</p>
+        <nav class="footer-nav">
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#skills">Skills</a>
+          <a href="#contact">Contact</a>
+          <a href="https://github.com/VarshuAi" target="_blank">GitHub ↗</a>
+        </nav>
+      </div>
+      <div class="footer-line"></div>
+      <div class="footer-bottom">
+        <span>© 2026 Varshan Gowda SR</span>
+        <span class="footer-built">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#f43f5e"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Synced live with GitHub API
+        </span>
       </div>
     </div>
   </footer>
