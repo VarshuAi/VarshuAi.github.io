@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>👀 Nice Try.</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #050a05;
+      color: #00ff41;
+      font-family: 'JetBrains Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    /* Matrix rain canvas */
+    #matrix { position: fixed; inset: 0; opacity: 0.18; pointer-events: none; z-index: 0; }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(0,0,0,0.82);
+      border: 1px solid rgba(0,255,65,0.3);
+      border-radius: 12px;
+      padding: 48px 56px;
+      max-width: 620px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(0,255,65,0.08), inset 0 0 60px rgba(0,0,0,0.5);
+      animation: card-in 0.5s ease both;
+    }
+    @keyframes card-in {
+      from { opacity:0; transform: scale(0.92) translateY(20px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
+    }
+
+    .ascii {
+      font-size: clamp(0.5rem, 1.8vw, 0.75rem);
+      line-height: 1.1;
+      color: #00ff41;
+      margin-bottom: 28px;
+      text-shadow: 0 0 10px rgba(0,255,65,0.7);
+      white-space: pre;
+      letter-spacing: 0.05em;
+    }
+
+    .eye {
+      font-size: 3.5rem;
+      line-height: 1;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 12px #00ff41);
+      animation: blink-eye 3s ease-in-out infinite;
+    }
+    @keyframes blink-eye {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95%            { transform: scaleY(0.05); }
+    }
+
+    h1 {
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 700;
+      color: #00ff41;
+      text-shadow: 0 0 16px rgba(0,255,65,0.6);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 0.82rem;
+      color: rgba(0,255,65,0.55);
+      margin-bottom: 28px;
+      letter-spacing: 0.05em;
+    }
+
+    .terminal-log {
+      background: rgba(0,255,65,0.04);
+      border: 1px solid rgba(0,255,65,0.15);
+      border-radius: 8px;
+      padding: 16px 20px;
+      text-align: left;
+      margin-bottom: 28px;
+      font-size: 0.78rem;
+      line-height: 2;
+    }
+    .log-line { color: rgba(0,255,65,0.5); }
+    .log-line .k { color: #ff3e3e; }
+    .log-line .v { color: #00ff41; }
+    .log-line .dim { color: rgba(0,255,65,0.3); }
+
+    .countdown {
+      font-size: 0.8rem;
+      color: rgba(0,255,65,0.5);
+      margin-bottom: 24px;
+    }
+    .countdown span { color: #00ff41; font-weight: 700; }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid rgba(0,255,65,0.4);
+      color: #00ff41;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 10px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-back:hover {
+      background: rgba(0,255,65,0.1);
+      border-color: #00ff41;
+      box-shadow: 0 0 20px rgba(0,255,65,0.2);
+    }
+
+    .bottom-text {
+      position: fixed;
+      bottom: 20px;
+      font-size: 0.7rem;
+      color: rgba(0,255,65,0.2);
+      letter-spacing: 0.1em;
+      z-index: 1;
+    }
+
+    /* Scanline effect */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="matrix"></canvas>
+
+  <div class="card">
+    <div class="ascii">
+ ██████╗ ██╗   ██╗███████╗████████╗███████╗██████╗ 
+ ██╔══██╗██║   ██║██╔════╝╚══██╔══╝██╔════╝██╔══██╗
+ ██████╔╝██║   ██║███████╗   ██║   █████╗  ██║  ██║
+ ██╔══██╗██║   ██║╚════██║   ██║   ██╔══╝  ██║  ██║
+ ██████╔╝╚██████╔╝███████║   ██║   ███████╗██████╔╝
+ ╚═════╝  ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═════╝ </div>
+
+    <div class="eye">👁️</div>
+    <h1>Nice try, hacker 😂</h1>
+    <p class="subtitle">// INTRUSION_DETECTED :: DEVTOOLS_OPEN</p>
+
+    <div class="terminal-log">
+      <div class="log-line"><span class="dim">[SYS]</span> &gt; Threat actor detected</div>
+      <div class="log-line"><span class="dim">[SYS]</span> &gt; IP logged: <span class="k">████████████</span></div>
+      <div class="log-line"><span class="dim">[SYS]</span> &gt; Sending your selfie to FBI... <span class="v">✓ done</span></div>
+      <div class="log-line"><span class="dim">[SYS]</span> &gt; Ordering pineapple on your pizza... <span class="v">✓ done</span></div>
+      <div class="log-line"><span class="dim">[SYS]</span> &gt; Nothing to see here. Move along.</div>
+    </div>
+
+    <p class="countdown">Redirecting back in <span id="countdown">10</span>s...</p>
+
+    <a href="/" class="btn-back">
+      ← Back to Safety
+    </a>
+  </div>
+
+  <p class="bottom-text">VARSHAN.GOWDA.SR // SECURITY_PROTOCOL_ACTIVE</p>
+
+  <script>
+    /* Matrix rain */
+    const cvs = document.getElementById('matrix');
+    const ctx = cvs.getContext('2d');
+    cvs.width  = window.innerWidth;
+    cvs.height = window.innerHeight;
+    const cols = Math.floor(cvs.width / 16);
+    const drops = Array(cols).fill(1);
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(5,10,5,0.05)';
+      ctx.fillRect(0, 0, cvs.width, cvs.height);
+      ctx.fillStyle = '#00ff41';
+      ctx.font = '13px JetBrains Mono, monospace';
+      drops.forEach((y, i) => {
+        const ch = String.fromCharCode(0x30A0 + Math.random() * 96);
+        ctx.fillText(ch, i * 16, y * 16);
+        if (y * 16 > cvs.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      });
+    }
+    setInterval(drawMatrix, 40);
+    window.addEventListener('resize', () => { cvs.width = window.innerWidth; cvs.height = window.innerHeight; });
+
+    /* Countdown redirect */
+    let secs = 10;
+    const el = document.getElementById('countdown');
+    const timer = setInterval(() => {
+      secs--;
+      el.textContent = secs;
+      if (secs <= 0) { clearInterval(timer); window.location.replace('/'); }
+    }, 1000);
+  </script>
+</body>
+</html>

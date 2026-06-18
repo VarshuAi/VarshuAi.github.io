@@ -3,6 +3,63 @@
    Clean · Modular · Well-aligned
    ========================================== */
 
+/* ══════════════════════════════════════
+   ANTI-DEVTOOLS SHIELD
+   Multiple detection layers — fires oops.html
+   ══════════════════════════════════════ */
+;(function devToolsShield() {
+  const TROLL = '/oops.html';
+  let fired = false;
+
+  function bust() {
+    if (fired) return;
+    fired = true;
+    // Blank the page instantly before redirect so nothing is readable
+    document.documentElement.style.visibility = 'hidden';
+    window.location.replace(TROLL);
+  }
+
+  /* ── Layer 1: Block keyboard shortcuts ── */
+  document.addEventListener('keydown', e => {
+    const K = e.key?.toUpperCase();
+    if (
+      e.key === 'F12' ||
+      (e.ctrlKey  && e.shiftKey && ['I','J','C','K'].includes(K)) ||
+      (e.metaKey  && e.altKey   && ['I','J'].includes(K)) || // Mac
+      (e.ctrlKey  && K === 'U')   // View source
+    ) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      bust();
+    }
+  }, true);
+
+  /* ── Layer 2: Disable right-click ── */
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  /* ── Layer 3: Window size delta (docked DevTools) ── */
+  function sizeCheck() {
+    const wDiff = window.outerWidth  - window.innerWidth;
+    const hDiff = window.outerHeight - window.innerHeight;
+    if (wDiff > 200 || hDiff > 200) bust();
+  }
+  setInterval(sizeCheck, 600);
+
+  /* ── Layer 4: Console getter trap (most reliable)
+     DevTools auto-reads object properties when logging,
+     triggering the getter even before the user types anything ── */
+  const trap = new Image();
+  Object.defineProperty(trap, 'id', {
+    get() { bust(); return ''; }
+  });
+  setInterval(() => {
+    console.log('%cPortfolio protected.', 'color:transparent;font-size:0px', trap);
+    console.clear();
+  }, 1500);
+
+})();
+/* ══════════════════════════════════════ */
+
 const GH_USER = 'VarshuAi';
 const GH_API  = `https://api.github.com/users/${GH_USER}`;
 const REPO_API = `https://api.github.com/users/${GH_USER}/repos?sort=updated&per_page=30`;
