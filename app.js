@@ -15,6 +15,17 @@ const LANG_COLORS = {
   Swift:'#FA7343', Kotlin:'#A97BFF',
 };
 
+/* ── SMOOTH ANCHOR SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    const id  = link.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
 /* ── CURSOR ── */
 const cDot  = document.getElementById('c-dot');
 const cRing = document.getElementById('c-ring');

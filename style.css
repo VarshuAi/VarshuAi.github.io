@@ -53,8 +53,6 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  /* Prevent scroll chaining on iOS */
-  overscroll-behavior: none;
 }
 body {
   font-family: var(--font);
@@ -63,7 +61,6 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   cursor: none;
-  /* Native smooth scroll — no JS needed */
   -webkit-overflow-scrolling: touch;
 }
 a { text-decoration: none; color: inherit; }
@@ -73,29 +70,74 @@ img { display: block; max-width: 100%; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: linear-gradient(var(--accent), var(--accent-2)); border-radius: var(--r-full); }
 
-/* ── CURSOR ── */
-#c-dot, #c-ring {
+/* ── CURSOR — Crosshair Scope ── */
+#c-dot {
   position: fixed;
+  width: 6px;
+  height: 6px;
+  background: #06B6D4;
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
+  transition: width 0.18s, height 0.18s, background 0.2s;
+  box-shadow: 0 0 8px rgba(6,182,212,0.8), 0 0 20px rgba(6,182,212,0.3);
 }
-#c-dot {
-  width: 7px; height: 7px;
-  background: var(--accent);
-  transition: width 0.15s, height 0.15s;
-  mix-blend-mode: multiply;
-}
+
 #c-ring {
-  width: 32px; height: 32px;
-  border: 1.5px solid rgba(79,70,229,0.4);
-  transition: width 0.25s, height 0.25s, border-color 0.25s;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  transition: width 0.22s, height 0.22s;
 }
+
+/* Crosshair SVG lines drawn via pseudo on a wrapper */
+#c-ring::before,
+#c-ring::after {
+  content: '';
+  position: absolute;
+  background: rgba(6,182,212,0.7);
+  border-radius: 2px;
+}
+/* Horizontal bar */
+#c-ring::before {
+  top: 50%; left: 0; right: 0;
+  height: 1px;
+  transform: translateY(-50%);
+  box-shadow: 0 0 6px rgba(6,182,212,0.5);
+}
+/* Vertical bar */
+#c-ring::after {
+  left: 50%; top: 0; bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 6px rgba(6,182,212,0.5);
+}
+
+/* Outer ring of crosshair */
+#c-ring .ring-circle {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(6,182,212,0.55);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(6,182,212,0.2);
+}
+
 body:has(a:hover) #c-dot,
-body:has(button:hover) #c-dot { width: 11px; height: 11px; }
+body:has(button:hover) #c-dot {
+  width: 10px;
+  height: 10px;
+  background: #22D3EE;
+  box-shadow: 0 0 14px rgba(6,182,212,1), 0 0 30px rgba(6,182,212,0.5);
+}
 body:has(a:hover) #c-ring,
-body:has(button:hover) #c-ring { width: 46px; height: 46px; border-color: var(--accent); }
+body:has(button:hover) #c-ring {
+  width: 52px;
+  height: 52px;
+}
 
 /* ── LAYOUT ── */
 .wrap {
