@@ -73,70 +73,68 @@ img { display: block; max-width: 100%; }
 /* ── CURSOR — Crosshair Scope ── */
 #c-dot {
   position: fixed;
-  width: 6px;
-  height: 6px;
+  top: 0; left: 0;
+  width: 6px; height: 6px;
+  margin: -3px 0 0 -3px;
   background: #06B6D4;
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.18s, height 0.18s, background 0.2s;
-  box-shadow: 0 0 8px rgba(6,182,212,0.8), 0 0 20px rgba(6,182,212,0.3);
+  will-change: transform;
+  transform: translate3d(-999px, -999px, 0);
+  box-shadow: 0 0 8px rgba(6,182,212,0.9), 0 0 20px rgba(6,182,212,0.3);
+  transition: width 0.15s, height 0.15s, box-shadow 0.15s;
 }
 
 #c-ring {
   position: fixed;
+  top: 0; left: 0;
+  width: 36px; height: 36px;
+  margin: -18px 0 0 -18px;
   pointer-events: none;
   z-index: 9998;
-  transform: translate(-50%, -50%);
-  width: 36px;
-  height: 36px;
-  transition: width 0.22s, height 0.22s;
+  will-change: transform;
+  transform: translate3d(-999px, -999px, 0);
+  transition: width 0.2s, height 0.2s;
 }
 
-/* Crosshair SVG lines drawn via pseudo on a wrapper */
 #c-ring::before,
 #c-ring::after {
   content: '';
   position: absolute;
-  background: rgba(6,182,212,0.7);
-  border-radius: 2px;
+  background: rgba(6,182,212,0.65);
 }
-/* Horizontal bar */
 #c-ring::before {
-  top: 50%; left: 0; right: 0;
+  top: 50%; left: 4px; right: 4px;
   height: 1px;
-  transform: translateY(-50%);
-  box-shadow: 0 0 6px rgba(6,182,212,0.5);
+  margin-top: -0.5px;
+  box-shadow: 0 0 5px rgba(6,182,212,0.4);
 }
-/* Vertical bar */
 #c-ring::after {
-  left: 50%; top: 0; bottom: 0;
+  left: 50%; top: 4px; bottom: 4px;
   width: 1px;
-  transform: translateX(-50%);
-  box-shadow: 0 0 6px rgba(6,182,212,0.5);
+  margin-left: -0.5px;
+  box-shadow: 0 0 5px rgba(6,182,212,0.4);
 }
-
-/* Outer ring of crosshair */
-#c-ring .ring-circle {
+.ring-circle {
   position: absolute;
   inset: 0;
-  border: 1.5px solid rgba(6,182,212,0.55);
+  border: 1.5px solid rgba(6,182,212,0.5);
   border-radius: 50%;
-  box-shadow: 0 0 12px rgba(6,182,212,0.2);
+  box-shadow: 0 0 10px rgba(6,182,212,0.15);
 }
 
 body:has(a:hover) #c-dot,
 body:has(button:hover) #c-dot {
-  width: 10px;
-  height: 10px;
+  width: 10px; height: 10px;
+  margin: -5px 0 0 -5px;
   background: #22D3EE;
-  box-shadow: 0 0 14px rgba(6,182,212,1), 0 0 30px rgba(6,182,212,0.5);
+  box-shadow: 0 0 16px rgba(6,182,212,1), 0 0 32px rgba(6,182,212,0.5);
 }
 body:has(a:hover) #c-ring,
 body:has(button:hover) #c-ring {
-  width: 52px;
-  height: 52px;
+  width: 50px; height: 50px;
+  margin: -25px 0 0 -25px;
 }
 
 /* ── LAYOUT ── */

@@ -26,19 +26,23 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
-/* ── CURSOR ── */
+/* ── CURSOR — translate3d for pixel-perfect GPU tracking ── */
 const cDot  = document.getElementById('c-dot');
 const cRing = document.getElementById('c-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
 
 document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  if (cDot) { cDot.style.left = mx + 'px'; cDot.style.top = my + 'px'; }
-});
+  mx = e.clientX;
+  my = e.clientY;
+  // Dot follows mouse instantly — no lag at all
+  if (cDot) cDot.style.transform = `translate3d(${mx}px,${my}px,0)`;
+}, { passive: true });
+
+// Ring follows with slight lag on its own rAF loop
 (function ringLoop() {
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  if (cRing) { cRing.style.left = rx + 'px'; cRing.style.top = ry + 'px'; }
+  rx += (mx - rx) * 0.16;
+  ry += (my - ry) * 0.16;
+  if (cRing) cRing.style.transform = `translate3d(${rx}px,${ry}px,0)`;
   requestAnimationFrame(ringLoop);
 })();
 
