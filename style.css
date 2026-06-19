@@ -1378,3 +1378,45 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border-md
   z-index: -1;
 }
 .section.visible .section-glow { opacity: 1; }
+
+/* ── Nav Fixes — alignment + dark mode ── */
+.nav-links { gap: 2px; }
+.nav-links a { font-size: 0.82rem; padding: 6px 10px; white-space: nowrap; }
+.nav-wrap { gap: var(--s4); }
+[data-theme="dark"] #site-nav.scrolled .nav-wrap {
+  background: rgba(12,12,14,0.92);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 4px 20px rgba(0,0,0,0.4);
+}
+[data-theme="dark"] .drawer {
+  background: rgba(20,20,24,0.97);
+}
+
+/* ── Mobile drawer — updated links ── */
+@media (max-width: 960px) {
+  .nav-links a { font-size: 0.78rem; padding: 5px 8px; }
+}
+
+/* ── Full mobile responsive fixes ── */
+@media (max-width: 768px) {
+  .theme-toggle { width: 34px; height: 34px; }
+  .theme-toggle svg { width: 16px; height: 16px; }
+  .building-grid { grid-template-columns: 1fr; }
+  .gh-cards { grid-template-columns: 1fr; }
+  .stack-grid { grid-template-columns: repeat(4, 1fr); gap: var(--s4); }
+  .timeline { padding-left: 0; }
+  .timeline::before { display: none; }
+  .tl-year { position: static; width: auto; text-align: left; display: block; margin-bottom: var(--s2); }
+  .tl-dot { display: none; }
+  #cmd-box { width: 95vw; }
+  #cmd-input { padding: 14px 18px; font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  .stack-grid { grid-template-columns: repeat(3, 1fr); }
+  .si-icon { width: 50px; height: 50px; }
+  .si-icon svg { width: 22px; height: 22px; }
+  .building-card { padding: var(--s5); }
+  .tl-card { padding: var(--s4) var(--s5); }
+  .tl-card h4 { font-size: 0.92rem; }
+  .tl-card p { font-size: 0.82rem; }
+}
