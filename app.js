@@ -527,3 +527,138 @@ document.addEventListener('DOMContentLoaded', function() {
   ov.addEventListener('click', function(e) { if (e.target === ov) hideEgg(); });
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') hideEgg(); });
 });
+
+/* ══════════════════════════════════════
+   DARK / LIGHT MODE TOGGLE
+   ══════════════════════════════════════ */
+(function darkMode() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('theme');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+  if (toggle) toggle.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  });
+})();
+
+/* ══════════════════════════════════════
+   SCROLL PROGRESS BAR
+   ══════════════════════════════════════ */
+(function scrollProgress() {
+  var bar = document.getElementById('scroll-progress');
+  if (!bar) return;
+  window.addEventListener('scroll', function() {
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = h > 0 ? ((window.scrollY / h) * 100) + '%' : '0%';
+  }, { passive: true });
+})();
+
+/* ══════════════════════════════════════
+   COMMAND PALETTE (Ctrl+K)
+   ══════════════════════════════════════ */
+(function cmdPalette() {
+  var overlay = document.getElementById('cmd-overlay');
+  var input = document.getElementById('cmd-input');
+  var results = document.getElementById('cmd-results');
+  if (!overlay || !input || !results) return;
+
+  var items = [
+    { label: 'About', section: '#about', icon: 'user' },
+    { label: 'Currently Building', section: '#building', icon: 'zap' },
+    { label: 'Projects', section: '#projects', icon: 'code' },
+    { label: 'Tech Stack', section: '#stack', icon: 'cpu' },
+    { label: 'GitHub Stats', section: '#github', icon: 'git' },
+    { label: 'Timeline', section: '#timeline', icon: 'clock' },
+    { label: 'Skills', section: '#skills', icon: 'layers' },
+    { label: 'Contact', section: '#contact', icon: 'mail' },
+    { label: 'Toggle Dark Mode', action: 'theme', icon: 'moon' },
+    { label: 'GitHub Profile', url: 'https://github.com/VarshuAi', icon: 'ext' },
+  ];
+
+  var activeIdx = 0;
+
+  function open() { overlay.classList.add('open'); input.value = ''; render(''); input.focus(); activeIdx = 0; }
+  function close() { overlay.classList.remove('open'); input.blur(); }
+
+  function render(q) {
+    var q2 = q.toLowerCase();
+    var filtered = items.filter(function(i) { return i.label.toLowerCase().includes(q2); });
+    if (activeIdx >= filtered.length) activeIdx = Math.max(0, filtered.length - 1);
+    results.innerHTML = filtered.map(function(item, i) {
+      return '<div class="cmd-item' + (i === activeIdx ? ' active' : '') + '" data-idx="' + i + '">' +
+        '<div class="cmd-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg></div>' +
+        '<span class="cmd-item-text">' + item.label + '</span>' +
+        (item.section ? '<span class="cmd-item-hint">' + item.section + '</span>' : '') +
+        '</div>';
+    }).join('');
+
+    results.querySelectorAll('.cmd-item').forEach(function(el) {
+      el.addEventListener('click', function() { go(filtered[parseInt(el.dataset.idx)]); });
+    });
+  }
+
+  function go(item) {
+    close();
+    if (item.section) {
+      var el = document.querySelector(item.section);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (item.action === 'theme') {
+      var t = document.getElementById('themeToggle');
+      if (t) t.click();
+    } else if (item.url) {
+      window.open(item.url, '_blank');
+    }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      overlay.classList.contains('open') ? close() : open();
+    }
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') { close(); return; }
+    var q = input.value.toLowerCase();
+    var filtered = items.filter(function(i) { return i.label.toLowerCase().includes(q); });
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, filtered.length - 1); render(input.value); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); render(input.value); }
+    if (e.key === 'Enter' && filtered[activeIdx]) { go(filtered[activeIdx]); }
+  });
+
+  input.addEventListener('input', function() { activeIdx = 0; render(input.value); });
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
+})();
+
+/* ══════════════════════════════════════
+   DYNAMIC GREETING (time of day)
+   ══════════════════════════════════════ */
+(function greeting() {
+  var el = document.getElementById('heroGreeting');
+  if (!el) return;
+  var h = new Date().getHours();
+  var g = h < 5 ? 'Late night owl?' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : h < 21 ? 'Good evening' : 'Burning the midnight oil?';
+  el.textContent = g + ' — welcome to my corner of the internet.';
+})();
+
+/* ══════════════════════════════════════
+   3D CARD TILT (parallax hover)
+   ══════════════════════════════════════ */
+(function cardTilt() {
+  if (window.matchMedia('(hover: none)').matches) return;
+  var cards = document.querySelectorAll('.building-card, .skill-card, .gh-card, .contact-card, .tl-card, .stat-card');
+  cards.forEach(function(card) {
+    card.style.transformStyle = 'preserve-3d';
+    card.style.transition = card.style.transition ? card.style.transition + ', transform 0.15s ease' : 'transform 0.15s ease';
+    card.addEventListener('mousemove', function(e) {
+      var r = card.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5;
+      var y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = 'perspective(600px) rotateY(' + (x * 8) + 'deg) rotateX(' + (-y * 8) + 'deg) scale(1.02)';
+    });
+    card.addEventListener('mouseleave', function() {
+      card.style.transform = 'perspective(600px) rotateY(0) rotateX(0) scale(1)';
+    });
+  });
+})();
