@@ -1,12 +1,12 @@
 /* ==========================================
-   PORTFOLIO â€” APP.JS v3
-   Clean Â· Modular Â· Well-aligned
+   PORTFOLIO — APP.JS v3
+   Clean · Modular · Well-aligned
    ========================================== */
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ══════════════════════════════════════
    ANTI-DEVTOOLS SHIELD
-   Multiple detection layers â€” fires oops.html
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   Multiple detection layers — fires oops.html
+   ══════════════════════════════════════ */
 ;(function devToolsShield() {
   const TROLL = '/oops.html';
   let fired = false;
@@ -19,7 +19,7 @@
     window.location.replace(TROLL);
   }
 
-  /* â”€â”€ Layer 1: Block keyboard shortcuts â”€â”€ */
+  /* ── Layer 1: Block keyboard shortcuts ── */
   document.addEventListener('keydown', e => {
     const K = e.key?.toUpperCase();
     if (
@@ -34,10 +34,10 @@
     }
   }, true);
 
-  /* â”€â”€ Layer 2: Disable right-click â”€â”€ */
+  /* ── Layer 2: Disable right-click ── */
   document.addEventListener('contextmenu', e => e.preventDefault());
 
-  /* â”€â”€ Layer 3: Window size delta (docked DevTools) â”€â”€ */
+  /* ── Layer 3: Window size delta (docked DevTools) ── */
   function sizeCheck() {
     const wDiff = window.outerWidth  - window.innerWidth;
     const hDiff = window.outerHeight - window.innerHeight;
@@ -45,9 +45,9 @@
   }
   setInterval(sizeCheck, 600);
 
-  /* â”€â”€ Layer 4: Console getter trap (most reliable)
+  /* ── Layer 4: Console getter trap (most reliable)
      DevTools auto-reads object properties when logging,
-     triggering the getter even before the user types anything â”€â”€ */
+     triggering the getter even before the user types anything ── */
   const trap = new Image();
   Object.defineProperty(trap, 'id', {
     get() { bust(); return ''; }
@@ -58,7 +58,68 @@
   }, 1500);
 
 })();
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+/* ── AUDIO SYSTEM (Web Audio API Synthesizer) ── */
+var audioEnabled = localStorage.getItem('audio_effects') !== 'false';
+var audioCtx = null;
+
+function playSound(type) {
+  if (!audioEnabled) return;
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    var now = audioCtx.currentTime;
+    
+    if (type === 'click') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1200, now);
+      osc.frequency.exponentialRampToValueAtTime(300, now + 0.04);
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      osc.start(now);
+      osc.stop(now + 0.04);
+    } else if (type === 'hover') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(800, now);
+      gain.gain.setValueAtTime(0.005, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
+      osc.start(now);
+      osc.stop(now + 0.015);
+    } else if (type === 'open') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(300, now);
+      osc.frequency.exponentialRampToValueAtTime(900, now + 0.15);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.02, now + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    } else if (type === 'close') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(900, now);
+      osc.frequency.exponentialRampToValueAtTime(300, now + 0.15);
+      gain.gain.setValueAtTime(0.02, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    }
+  } catch (e) {
+    console.warn("Audio Context failed:", e);
+  }
+}
+
+/* ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═  */
 
 const GH_USER = 'VarshuAi';
 const GH_API  = `https://api.github.com/users/${GH_USER}`;
@@ -72,7 +133,7 @@ const LANG_COLORS = {
   Swift:'#FA7343', Kotlin:'#A97BFF',
 };
 
-/* â”€â”€ SMOOTH ANCHOR SCROLL â”€â”€ */
+/* ── SMOOTH ANCHOR SCROLL ── */
 document.querySelectorAll('a[href^="#"]').forEach(link => {
   link.addEventListener('click', e => {
     const id  = link.getAttribute('href').slice(1);
@@ -83,10 +144,10 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════
    CINEMA INTRO CONTROLLER
    Total runtime: ~4.4 seconds
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+   ═══════════════════════════════ */
 (function introController() {
   const intro = document.getElementById('intro');
   const skip  = document.getElementById('intro-skip');
@@ -114,9 +175,9 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     dismiss();
   });
 })();
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ═══════════════════════════════ */
 
-/* â”€â”€ CURSOR â€” translate3d for pixel-perfect GPU tracking â”€â”€ */
+/* ── CURSOR — translate3d for pixel-perfect GPU tracking ── */
 const cDot  = document.getElementById('c-dot');
 const cRing = document.getElementById('c-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
@@ -124,7 +185,7 @@ let mx = 0, my = 0, rx = 0, ry = 0;
 document.addEventListener('mousemove', e => {
   mx = e.clientX;
   my = e.clientY;
-  // Dot follows mouse instantly â€” no lag at all
+  // Dot follows mouse instantly — no lag at all
   if (cDot) cDot.style.transform = `translate3d(${mx}px,${my}px,0)`;
 }, { passive: true });
 
@@ -136,7 +197,7 @@ document.addEventListener('mousemove', e => {
   requestAnimationFrame(ringLoop);
 })();
 
-/* â”€â”€ PARTICLES â”€â”€ */
+/* ── PARTICLES ── */
 const canvas = document.getElementById('hero-canvas');
 const ctx    = canvas ? canvas.getContext('2d') : null;
 let pts = [];
@@ -204,7 +265,7 @@ function drawCanvas() {
 window.addEventListener('resize', resizeCanvas, { passive: true });
 if (window.matchMedia('(min-width: 768px)').matches) initCanvas();
 
-/* â”€â”€ TYPEWRITER â”€â”€ */
+/* ── TYPEWRITER ── */
 const phrases = [
   'Builder by instinct.',
   'Tinkerer by nature.',
@@ -226,7 +287,7 @@ function type() {
 }
 setTimeout(type, 500);
 
-/* â”€â”€ NAV â”€â”€ */
+/* ── NAV ── */
 const siteNav  = document.getElementById('site-nav');
 const navLine  = document.getElementById('navLine');
 const navLinks = document.querySelectorAll('.nav-links a');
@@ -248,7 +309,7 @@ window.addEventListener('scroll', () => {
   });
 }, { passive: true });
 
-/* â”€â”€ MOBILE DRAWER â”€â”€ */
+/* ── MOBILE DRAWER ── */
 const toggle  = document.getElementById('navToggle');
 const drawer  = document.getElementById('drawer');
 const overlay = document.getElementById('drawerOverlay');
@@ -264,7 +325,7 @@ toggle?.addEventListener('click', () => toggleDrawer(!toggle.classList.contains(
 overlay?.addEventListener('click', () => toggleDrawer(false));
 drawer?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggleDrawer(false)));
 
-/* â”€â”€ SCROLL REVEAL â”€â”€ */
+/* ── SCROLL REVEAL ── */
 const revObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); }
@@ -273,7 +334,7 @@ const revObs = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
-/* â”€â”€ COUNTER ANIMATION â”€â”€ */
+/* ── COUNTER ANIMATION ── */
 const cntObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (!e.isIntersecting) return;
@@ -293,7 +354,7 @@ const cntObs = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.counter').forEach(el => cntObs.observe(el));
 
-/* â”€â”€ CARD SPOTLIGHT â”€â”€ */
+/* ── CARD SPOTLIGHT ── */
 function attachSpotlight() {
   document.querySelectorAll('.proj-card').forEach(card => {
     card.addEventListener('mousemove', e => {
@@ -306,7 +367,7 @@ function attachSpotlight() {
   });
 }
 
-/* â”€â”€ PROJECTS â”€â”€ */
+/* ── PROJECTS ── */
 let repos = [], filter = 'all';
 
 function buildCard(repo, i) {
@@ -334,10 +395,10 @@ function buildCard(repo, i) {
       <span class="proj-name">${repo.name}</span>
       ${repo.fork ? '<span class="fork-badge">Fork</span>' : ''}
     </div>
-    <p class="proj-desc">${desc.length > 100 ? desc.slice(0, 100) + 'â€¦' : desc}</p>
+    <p class="proj-desc">${desc.length > 100 ? desc.slice(0, 100) + '…' : desc}</p>
     <div class="proj-foot">
       <div class="proj-lang">
-        ${lang ? `<span class="lang-dot lc-${lang}" style="background:${color}"></span><span>${lang}</span>` : '<span style="color:var(--text-3)">â€”</span>'}
+        ${lang ? `<span class="lang-dot lc-${lang}" style="background:${color}"></span><span>${lang}</span>` : '<span style="color:var(--text-3)">—</span>'}
       </div>
       <div class="proj-meta">
         <span class="proj-meta-item">
@@ -349,7 +410,7 @@ function buildCard(repo, i) {
           ${forks}
         </span>
       </div>
-      <span class="proj-arrow">â†—</span>
+      <span class="proj-arrow">↗</span>
     </div>`;
   return a;
 }
@@ -391,12 +452,12 @@ async function loadRepos() {
   } catch {
     grid.innerHTML = `<div class="proj-loading">
       <span>Could not load repos.</span>
-      <a href="https://github.com/${GH_USER}" target="_blank" style="color:var(--accent);font-weight:700">Visit GitHub â†—</a>
+      <a href="https://github.com/${GH_USER}" target="_blank" style="color:var(--accent);font-weight:700">Visit GitHub ↗</a>
     </div>`;
   }
 }
 
-/* â”€â”€ GITHUB PROFILE â”€â”€ */
+/* ── GITHUB PROFILE ── */
 async function loadProfile() {
   try {
     const data = await (await fetch(GH_API)).json();
@@ -446,7 +507,7 @@ async function loadViews() {
   } catch (e) { /* fail silently */ }
 }
 
-/* â”€â”€ PARALLAX ORBS â”€â”€ */
+/* ── PARALLAX ORBS ── */
 let px = 0, py = 0, plx = 0, ply = 0;
 document.addEventListener('mousemove', e => {
   px = (e.clientX / window.innerWidth  - 0.5) * 30;
@@ -460,24 +521,25 @@ document.addEventListener('mousemove', e => {
   requestAnimationFrame(pLoop);
 })();
 
-/* Smooth scroll done natively via CSS â€” no JS needed */
+/* Smooth scroll done natively via CSS — no JS needed */
 
 
-/* â”€â”€ HERO REVEAL â”€â”€ */
+/* ── HERO REVEAL ── */
 setTimeout(() => {
   document.querySelectorAll('#top .reveal, #h-status, #h-name, #h-type, #h-bio, #h-ctas, #h-scroll, #h-right').forEach(el => {
     el.classList.add('visible');
   });
 }, 100);
 
-/* â”€â”€ INIT â”€â”€ */
+/* ── INIT ── */
 loadProfile();
 loadRepos();
 loadViews();
+loadArticles();
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   EASTER EGG â€” type "varshan" anywhere
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ══════════════════════════════════════
+   EASTER EGG — type "varshan" anywhere
+   ══════════════════════════════════════ */
 (function easterEgg() {
   const SECRET = 'varshan';
   let buffer = '';
@@ -506,9 +568,9 @@ loadViews();
   document.addEventListener('keydown', e => { if (e.key === 'Escape') hideEgg(); });
 })();
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   SECTION TRANSITIONS â€” stagger reveal on scroll
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ══════════════════════════════════════
+   SECTION TRANSITIONS — stagger reveal on scroll
+   ══════════════════════════════════════ */
 (function sectionTransitions() {
   const sections = document.querySelectorAll('.section');
   const io = new IntersectionObserver(entries => {
@@ -601,6 +663,7 @@ document.addEventListener('DOMContentLoaded', function cmdPalette() {
     { label: 'Tech Stack', section: '#stack', icon: 'cpu' },
     { label: 'GitHub Stats', section: '#github', icon: 'git' },
     { label: 'Timeline', section: '#timeline', icon: 'clock' },
+    { label: 'Blog', section: '#blog', icon: 'book' },
     { label: 'Skills', section: '#skills', icon: 'layers' },
     { label: 'Contact', section: '#contact', icon: 'mail' },
     { label: 'Toggle Dark Mode', action: 'theme', icon: 'moon' },
@@ -609,8 +672,8 @@ document.addEventListener('DOMContentLoaded', function cmdPalette() {
 
   var activeIdx = 0;
 
-  function open() { overlay.classList.add('open'); input.value = ''; render(''); input.focus(); activeIdx = 0; }
-  function close() { overlay.classList.remove('open'); input.blur(); }
+  function open() { overlay.classList.add('open'); input.value = ''; render(''); input.focus(); activeIdx = 0; if (typeof playSound === 'function') playSound('open'); }
+  function close() { overlay.classList.remove('open'); input.blur(); if (typeof playSound === 'function') playSound('close'); }
 
   function render(q) {
     var q2 = q.toLowerCase();
@@ -674,20 +737,343 @@ document.addEventListener('DOMContentLoaded', function cmdPalette() {
 /* ══════════════════════════════════════
    3D CARD TILT (parallax hover)
    ══════════════════════════════════════ */
-(function cardTilt() {
-  if (window.matchMedia('(hover: none)').matches) return;
-  var cards = document.querySelectorAll('.building-card, .skill-card, .gh-card, .contact-card, .tl-card, .stat-card');
-  cards.forEach(function(card) {
-    card.style.transformStyle = 'preserve-3d';
-    card.style.transition = card.style.transition ? card.style.transition + ', transform 0.15s ease' : 'transform 0.15s ease';
-    card.addEventListener('mousemove', function(e) {
-      var r = card.getBoundingClientRect();
-      var x = (e.clientX - r.left) / r.width - 0.5;
-      var y = (e.clientY - r.top) / r.height - 0.5;
-      card.style.transform = 'perspective(600px) rotateY(' + (x * 8) + 'deg) rotateX(' + (-y * 8) + 'deg) scale(1.02)';
+})();
+
+/* ══════════════════════════════════════
+   INTERACTIVE TECH STACK MODAL & DATABASE
+   ══════════════════════════════════════ */
+var STACK_DETAILS = {
+  'python': {
+    title: 'Python',
+    sub: 'Data pipelines, Scripting & Backend APIs',
+    desc: 'Used extensively for developing automation scripts, web scrapers, data processing pipelines, and AI utility scripts. Leveraging Python for fast prototyping and high-level tool integration.',
+    icon: '<svg viewBox="0 0 24 24" fill="#3776AB"><path d="M12 0C5.8 0 6.2 2.7 6.2 2.7v2.6h5.9v.8H3.9S0 5.6 0 12s3.4 6.6 3.4 6.6H6v-3.2s-.1-3.4 3.4-3.4h5.9s3.2.1 3.2-3.1V3.4S19.1 0 12 0zm-1.6 1.9c.6 0 1 .4 1 1s-.4 1-1 1-1-.4-1-1 .4-1 1-1zM12 24c6.2 0 5.8-2.7 5.8-2.7v-2.6h-5.9v-.8h8.2S24 18.4 24 12s-3.4-6.6-3.4-6.6H18v3.2s.1 3.4-3.4 3.4H8.7s-3.2-.1-3.2 3.1v5.5S4.9 24 12 24zm1.6-1.9c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z"/></svg>',
+    color: '#3776AB',
+    match: function(r) { return r.language && r.language.toLowerCase() === 'python'; }
+  },
+  'javascript': {
+    title: 'JavaScript',
+    sub: 'Interactive Web Apps & Dynamic DOM',
+    desc: 'The backbone of my web layouts. I write clean, vanilla ES6+ JavaScript for rendering APIs, managing complex state and UI interactions, and creating custom page animations without heavy frameworks.',
+    icon: '<svg viewBox="0 0 24 24" fill="#F7DF1E"><path d="M0 0h24v24H0V0zm22.03 18.6c-.3-1.5-1.4-2.2-2.9-2.2-.8 0-1.3.2-1.7.7v-5.9h-2.5V20c-.1 0-.1 0-.2-.1-.4-1.4-1.5-2-3-2-1.2 0-2 .5-2.5 1.3v-1.1H7v6.3h2.5v-3.7c0-.6.3-1 .9-1s.9.4.9 1v3.7h2.5v-3.7c0-.6.3-1 .9-1s.9.4.9 1v3.7h2.5V18.8c.5-.6 1.1-.9 1.8-.9.8 0 1.2.4 1.2 1.3V24H24v-4c0-1-.3-1.2-.6-1.4l.63.0z"/><path d="M11.4 9.4c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7 1.2-2.7 2.7-2.7 2.7 1.2 2.7 2.7zm8.5 0c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7 1.2-2.7 2.7-2.7 2.7 1.2 2.7 2.7z"/></svg>',
+    color: '#F7DF1E',
+    match: function(r) { return r.language && r.language.toLowerCase() === 'javascript'; }
+  },
+  'rust': {
+    title: 'Rust',
+    sub: 'Systems Programming & Safe Tauri Apps',
+    desc: 'My absolute favorite for writing blazing fast, memory-safe backend services, desktop utilities via Tauri, and command-line interfaces. Built professional tools like Antigravity-Manager using Rust.',
+    icon: '<svg viewBox="0 0 24 24" fill="#CE422B"><path d="M23.83 11.72l-1.05-.65a10.75 10.75 0 0 0-.08-1.01l.9-.8a.27.27 0 0 0-.05-.43l-1.12-.57a10.9 10.9 0 0 0-.26-.98l.72-.94a.27.27 0 0 0-.13-.42l-1.22-.37a11.2 11.2 0 0 0-.43-.9l.5-1.06a.27.27 0 0 0-.2-.38l-1.26-.13a11.4 11.4 0 0 0-.59-.79l.26-1.13a.27.27 0 0 0-.27-.33l-1.26.11a11.6 11.6 0 0 0-.73-.65l0-1.16a.27.27 0 0 0-.32-.26l-1.2.36a11.8 11.8 0 0 0-.85-.48L16 .27a.27.27 0 0 0-.36-.18l-1.1.6a12 12 0 0 0-.94-.3L13.3.17A.27.27 0 0 0 12.94 0l-.94.83a12 12 0 0 0-.97-.07L11.26 0a.27.27 0 0 0-.36.17l-.3 1.22a12 12 0 0 0-.92.31L8.61.1a.27.27 0 0 0-.36.18l-.18 1.24A12 12 0 0 0 7.24 2l-1.2-.35a.27.27 0 0 0-.32.26l0 1.16A11.8 11.8 0 0 0 5 3.72l-1.26-.1a.27.27 0 0 0-.27.33l.26 1.13a11.6 11.6 0 0 0-.59.79L1.88 6a.27.27 0 0 0-.2.38l.5 1.06a11.4 11.4 0 0 0-.43.9L.53 8.7a.27.27 0 0 0-.13.42l.72.94a10.9 10.9 0 0 0-.26.98L.74 11.6a.27.27 0 0 0-.05.43l.9.8a10.75 10.75 0 0 0-.08 1.01l1.05-.65a.27.27 0 0 0 0-.44zM12 16.5A4.5 4.5 0 1 1 12 7.5 4.5 4.5 0 0 1 12 16.5z"/></svg>',
+    color: '#CE422B',
+    match: function(r) { return r.language && r.language.toLowerCase() === 'rust'; }
+  },
+  'go': {
+    title: 'Go',
+    sub: 'Backend Microservices & CLI tools',
+    desc: 'Leveraged for high-concurrency microservices, network servers, and cross-platform tools. Built various validators and parser CLI tools (like yaml-linter-v240) using Go.',
+    icon: '<svg viewBox="0 0 24 24" fill="#00ADD8"><path d="M1.8 9.6c-.1 0-.1-.1 0 0l-.2-.2 0 0c0-.1 0-.1.1-.1h20.3c.1 0 .1 0 .1.1l-.1.2c0 .1-.1.1-.1.1H1.8zm-.7 1.5c-.1 0-.1 0 0 0l-.1-.2v-.1c0-.1 0-.1.1-.1h20.8c.1 0 .1 0 .1.1v.1c0 .1-.1.1-.1.1H1.1zm1.1 1.4s-.1 0 0 0l-.2-.1v-.1c0-.1 0-.1.1-.1h18.6c.1 0 .1 0 .1.1v.2c0 .1-.1.1-.1.1H2.2z"/></svg>',
+    color: '#00ADD8',
+    match: function(r) { return r.language && r.language.toLowerCase() === 'go'; }
+  },
+  'node.js': {
+    title: 'Node.js',
+    sub: 'Server-side runtime & Script tooling',
+    desc: 'Extensively used for runtime operations, tooling, script writing, and integration APIs. Essential for modern server-side javascript architecture.',
+    icon: '<svg viewBox="0 0 24 24" fill="#339933"><path d="M11.998 24a2.7 2.7 0 0 1-1.357-.365L7.616 21.77c-.504-.282-.258-.381-.092-.438.493-.173.592-.211 1.118-.511.055-.032.127-.02.183.014l2.276 1.352c.083.045.199.045.275 0l8.877-5.126a.28.28 0 0 0 .137-.243V7.185a.282.282 0 0 0-.138-.245l-8.875-5.122a.279.279 0 0 0-.274 0L2.226 6.94a.283.283 0 0 0-.138.244v10.25a.28.28 0 0 0 .138.242l2.432 1.406c1.32.66 2.128-.117 2.128-.9V8.322a.255.255 0 0 1 .255-.255h1.114c.14 0 .254.115.254.255v9.86c0 1.762-.96 2.773-2.629 2.773-.513 0-.917 0-2.044-.556L1.358 19.1A2.726 2.726 0 0 1 0 16.741V6.491a2.726 2.726 0 0 1 1.358-2.36l8.875-5.128a2.748 2.748 0 0 1 2.73 0l8.875 5.129A2.726 2.726 0 0 1 24 6.491v10.25a2.726 2.726 0 0 1-1.358 2.36l-8.875 5.129a2.7 2.7 0 0 1-1.369.37z"/></svg>',
+    color: '#339933',
+    match: function(r) { return r.language && (r.language.toLowerCase() === 'javascript' || r.language.toLowerCase() === 'typescript'); }
+  },
+  'react': {
+    title: 'React',
+    sub: 'Single Page Applications & React DOM',
+    desc: 'Used for building complex dashboard apps, responsive client portals, and customizable interactive views with modular components.',
+    icon: '<svg viewBox="0 0 24 24" fill="#61DAFB"><circle cx="12" cy="11.99" r="2.14"/><path d="M12 6.64c3.37 0 6.49.53 8.82 1.39 2.8 1.05 4.35 2.62 4.35 4.21 0 1.65-1.63 3.28-4.55 4.36-2.3.85-5.35 1.29-8.62 1.29-3.32 0-6.41-.43-8.73-1.3C.41 15.52-1.17 13.87-1.17 12.24c0-1.58 1.51-3.13 4.14-4.17C5.32 7.16 8.52 6.64 12 6.64m0-1C3.68 5.64-1.17 8.56-1.17 12.24s4.85 6.6 13.17 6.6 13.17-2.92 13.17-6.6S20.32 5.64 12 5.64z"/></svg>',
+    color: '#61DAFB',
+    match: function(r) { return r.name.toLowerCase().includes('react') || (r.description && r.description.toLowerCase().includes('react')); }
+  },
+  'docker': {
+    title: 'Docker',
+    sub: 'Containerization & DevOps Deployments',
+    desc: 'Used for containerizing apps and setting up dev/production parity. Ensures that all applications run identically across environments.',
+    icon: '<svg viewBox="0 0 24 24" fill="#2496ED"><path d="M13.98 11.08h2.12v-2h-2.12zm-2.95 0h2.13v-2H11zm-2.94 0h2.12v-2H8.06zm-2.95 0H7.2v-2H5.11zm5.9-2.96h2.12V6.04h-2.12zm-2.95 0h2.13V6.04H8.06zm7.02 5.92h2.12v-2h-2.12zM0 12.06s.36 2.6 4.6 2.6h14.79c1.68 0 3.61-1.15 3.61-2.6z"/></svg>',
+    color: '#2496ED',
+    match: function(r) { return r.name.toLowerCase().includes('docker') || (r.description && r.description.toLowerCase().includes('docker')); }
+  },
+  'linux': {
+    title: 'Linux',
+    sub: 'OS Environment & Shell Automation',
+    desc: 'My main operating system environment for hosting and shell scripting. I script repetitive server operations and run containerized architectures.',
+    icon: '<svg viewBox="0 0 24 24" fill="#FCC624"><path d="M12 0a12 12 0 1 0 0 24A12 12 0 0 0 12 0zm5.01 17.6c-.1.2-.4.3-.6.2-1.7-.9-3.5-1-5.1-.4-1.2.4-2.2 1.2-2.9 2.2-.1.2-.4.3-.6.2l-.3-.2c-.2-.1-.3-.4-.2-.6.8-1.2 1.9-2.1 3.3-2.6 1.8-.7 3.8-.6 5.7.4.2.1.3.4.2.6l-.5.2zm1.4-2.5c-.1.2-.4.4-.7.3-2-.8-4.3-1.3-6.3-.4-1.4.6-2.6 1.6-3.5 2.9-.2.2-.5.3-.7.2l-.3-.2c-.2-.2-.3-.5-.1-.7 1-1.5 2.4-2.7 4-3.3 2.3-1 4.8-.4 7.1.5.2.1.4.4.2.7l-.7 0zm.2-2.7c-.1.2-.3.3-.5.2-2.7-1.1-5.9-1.5-8.6-.5-1.7.7-3.1 1.8-4.1 3.4-.2.2-.5.3-.7.1l-.2-.2c-.2-.2-.2-.5 0-.7 1.1-1.7 2.7-3 4.7-3.8 3-.1.3-6.9.5-9.8 1.7.3.1.4.4.2.6l-.7.2z"/></svg>',
+    color: '#FCC624',
+    match: function(r) { return r.language && r.language.toLowerCase() === 'shell'; }
+  },
+  'git': {
+    title: 'Git',
+    sub: 'Version Control & GitHub Workflows',
+    desc: 'Essential version control and source control. I structure commits cleanly, manage branches, and leverage GitHub Actions for automated CI/CD.',
+    icon: '<svg viewBox="0 0 24 24" fill="#F05032"><path d="M23.546 10.93L13.067.452a1.55 1.55 0 0 0-2.188 0L8.708 2.627l2.76 2.76a1.838 1.838 0 0 1 2.327 2.341l2.658 2.66a1.838 1.838 0 1 1-1.1 1.027L12.76 9.175v6.617a1.838 1.838 0 1 1-1.51-.077V9.1a1.838 1.838 0 0 1-.987-2.416L7.523 3.933 1.294 10.16a1.55 1.55 0 0 0 0 2.186l10.48 10.48a1.55 1.55 0 0 0 2.186 0l9.587-9.586a1.55 1.55 0 0 0 0-2.31z"/></svg>',
+    color: '#F05032',
+    match: function(r) { return true; }
+  },
+  'html5': {
+    title: 'HTML5 & CSS3',
+    sub: 'Semantic Markup & Modern Layouts',
+    desc: 'Used to write accessible, modern markup and beautiful custom layouts. Skilled in Flexbox, Grid, Custom Variables, CSS Keyframes, and clean designs.',
+    icon: '<svg viewBox="0 0 24 24" fill="#E34F26"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>',
+    color: '#E34F26',
+    match: function(r) { return r.language && (r.language.toLowerCase() === 'html' || r.language.toLowerCase() === 'css'); }
+  },
+  'tauri': {
+    title: 'Tauri',
+    sub: 'Lightweight Cross-Platform Desktop Apps',
+    desc: 'Utilized to build lightweight, fast desktop apps using Web technologies for the frontend and Rust for backend performance and security.',
+    icon: '<svg viewBox="0 0 24 24" fill="#FFC131"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm0 4.5c2.1 0 3.8 1.7 3.8 3.8S14.1 12 12 12s-3.8-1.7-3.8-3.8S9.9 4.5 12 4.5zm0 15c-3.2 0-6-1.6-7.7-4 0-2.6 5.1-4 7.7-4s7.7 1.4 7.7 4c-1.7 2.4-4.5 4-7.7 4z"/></svg>',
+    color: '#FFC131',
+    match: function(r) { return r.name.toLowerCase().includes('tauri') || (r.description && r.description.toLowerCase().includes('tauri')); }
+  },
+  'shell': {
+    title: 'Shell Scripting',
+    sub: 'Automation & Command Line utilities',
+    desc: 'Used for creating server setup scripts, local builders, automation tasks, and streamlining development workflows in Bash or PowerShell.',
+    icon: '<svg viewBox="0 0 24 24" fill="#4EAA25"><path d="M15.57 17.56a.5.5 0 0 1-.35-.15l-5.07-5.06a.5.5 0 0 1 0-.7l5.07-5.06a.5.5 0 0 1 .7.7L11.2 12l4.72 4.71a.5.5 0 0 1-.35.85zM21 20H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1z"/></svg>',
+    color: '#4EAA25',
+    match: function(r) { return r.language && r.language.toLowerCase() === 'shell'; }
+  }
+};
+
+/* ══════════════════════════════════════
+   BLOG INTEGRATION (DEV.to API)
+   ══════════════════════════════════════ */
+async function loadArticles() {
+  var grid = document.getElementById('blogGrid');
+  var more = document.getElementById('blogMore');
+  var moreLink = document.getElementById('blogMoreLink');
+  if (!grid) return;
+  
+  var username = 'varshuai';
+  try {
+    var res = await fetch('https://dev.to/api/articles?username=' + username);
+    if (!res.ok) throw new Error('API error');
+    var articles = await res.json();
+    
+    if (articles.length === 0) {
+      renderMockArticles();
+      return;
+    }
+    
+    renderArticles(articles.slice(0, 3));
+    if (more) {
+      more.style.display = 'flex';
+      if (moreLink) moreLink.href = 'https://dev.to/' + username;
+    }
+  } catch (e) {
+    renderMockArticles();
+  }
+}
+
+function renderMockArticles() {
+  var grid = document.getElementById('blogGrid');
+  var more = document.getElementById('blogMore');
+  if (!grid) return;
+  
+  var mockArticles = [
+    {
+      title: "Building a satisfiably fast Desktop App with Tauri and Rust",
+      description: "Why Tauri is replacing Electron for my desktop development needs, and how to get started with Rust backends.",
+      url: "https://dev.to",
+      published_at: new Date().toISOString(),
+      tag_list: ["rust", "tauri", "desktop"],
+      reading_time_minutes: 5,
+      cover_image: ""
+    },
+    {
+      title: "Clean Architecture in Go: A Practical Guide for Microservices",
+      description: "How to structure your Go projects for scale, testability, and clean separation of concerns without over-engineering.",
+      url: "https://dev.to",
+      published_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      tag_list: ["go", "backend", "architecture"],
+      reading_time_minutes: 7,
+      cover_image: ""
+    },
+    {
+      title: "Mastering the Command Palette Pattern in Vanilla JavaScript",
+      description: "Step-by-step walkthrough of creating an accessible, keyboard-navigable command menu for your web applications.",
+      url: "https://dev.to",
+      published_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+      tag_list: ["javascript", "webdev", "a11y"],
+      reading_time_minutes: 4,
+      cover_image: ""
+    }
+  ];
+  
+  renderArticles(mockArticles);
+  if (more) {
+    more.style.display = 'flex';
+  }
+}
+
+def renderArticles(articles) {
+  var grid = document.getElementById('blogGrid');
+  if (!grid) return;
+  
+  grid.innerHTML = articles.map(function(art, i) {
+    var date = new Date(art.published_at).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
     });
-    card.addEventListener('mouseleave', function() {
-      card.style.transform = 'perspective(600px) rotateY(0) rotateX(0) scale(1)';
+    
+    var tagsHtml = (art.tag_list || []).map(function(t) {
+      return '<span class="blog-card-tag">#' + t + '</span>';
+    }).join('');
+    
+    var coverHtml = art.cover_image 
+      ? '<img class="blog-card-img" src="' + art.cover_image + '" alt="' + art.title + '" loading="lazy" />'
+      : '<div class="blog-card-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>';
+
+    return '<a href="' + art.url + '" target="_blank" class="blog-card reveal" style="transition-delay:' + (i * 0.1) + 's">' +
+      coverHtml +
+      '<div class="blog-card-body">' +
+        '<div class="blog-card-tags">' + tagsHtml + '</div>' +
+        '<h3>' + art.title + '</h3>' +
+        '<p>' + art.description + '</p>' +
+        '<div class="blog-card-footer">' +
+          '<span>' + date + ' &middot; ' + art.reading_time_minutes + ' min read</span>' +
+          '<span class="blog-card-arrow">↗</span>' +
+        '</div>' +
+      '</div>' +
+      '</a>';
+  }).join('');
+  
+  if (typeof revObs !== 'undefined') {
+    grid.querySelectorAll('.reveal').forEach(function(el) {
+      revObs.observe(el);
+    });
+  }
+}
+
+/* ══════════════════════════════════════
+   INTERACTIVE WORKPLACE EVENT BINDINGS
+   ══════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function() {
+  // 1. Audio toggle button
+  var audioToggleBtn = document.getElementById('audioToggle');
+  if (audioToggleBtn) {
+    if (!audioEnabled) {
+      audioToggleBtn.classList.add('muted');
+    }
+    audioToggleBtn.addEventListener('click', function() {
+      audioEnabled = !audioEnabled;
+      localStorage.setItem('audio_effects', audioEnabled);
+      if (audioEnabled) {
+        audioToggleBtn.classList.remove('muted');
+        playSound('click');
+      } else {
+        audioToggleBtn.classList.add('muted');
+      }
+    });
+  }
+
+  // 2. Play sound effects on mouse hover & click
+  var elementsToSound = [
+    '.nav-links a', '.theme-toggle', '.audio-toggle', 
+    '.stack-item', '.proj-card', '.blog-card', 
+    '.btn-solid', '.btn-ghost', '.logo', '.footer-nav a'
+  ];
+  
+  var lastHovered = null;
+  document.addEventListener('mouseover', function(e) {
+    var target = e.target;
+    if (target && target.closest) {
+      var matchedEl = null;
+      elementsToSound.forEach(function(sel) {
+        var el = target.closest(sel);
+        if (el) matchedEl = el;
+      });
+      if (matchedEl && matchedEl !== lastHovered) {
+        playSound('hover');
+        lastHovered = matchedEl;
+      } else if (!matchedEl) {
+        lastHovered = null;
+      }
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    var target = e.target;
+    if (target && target.closest) {
+      var matchedEl = null;
+      elementsToSound.forEach(function(sel) {
+        var el = target.closest(sel);
+        if (el) matchedEl = el;
+      });
+      if (matchedEl) {
+        playSound('click');
+      }
+    }
+  });
+
+  // 3. Tech Stack details modal
+  var stackOverlay = document.getElementById('stack-overlay');
+  var stackCloseBtn = document.getElementById('stackClose');
+  var stackModalIco = document.getElementById('stackModalIco');
+  var stackModalTitle = document.getElementById('stackModalTitle');
+  var stackModalSub = document.getElementById('stackModalSub');
+  var stackModalDesc = document.getElementById('stackModalDesc');
+  var stackModalProjects = document.getElementById('stackModalProjects');
+  
+  document.querySelectorAll('.stack-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      var techName = item.querySelector('span').textContent.trim();
+      var details = STACK_DETAILS[techName.toLowerCase()];
+      if (!details || !stackOverlay) return;
+      
+      playSound('open');
+      stackModalIco.innerHTML = details.icon;
+      stackModalIco.style.background = details.color + '22';
+      stackModalIco.style.borderColor = details.color + '44';
+      stackModalTitle.textContent = details.title;
+      stackModalSub.textContent = details.sub;
+      stackModalSub.style.color = details.color;
+      stackModalDesc.textContent = details.desc;
+      
+      var matched = repos.filter(details.match).slice(0, 4);
+      if (matched.length > 0) {
+        document.getElementById('stackModalProjectsSection').style.display = 'block';
+        stackModalProjects.innerHTML = matched.map(function(repo) {
+          return '<a href="' + repo.html_url + '" target="_blank" class="stack-proj-link">' +
+            '<div>' +
+              '<div class="stack-proj-name">' + repo.name + '</div>' +
+              '<div class="stack-proj-desc">' + (repo.description || 'No description provided.') + '</div>' +
+            '</div>' +
+            '<div class="stack-proj-arrow">↗</div>' +
+            '</a>';
+        }).join('');
+      } else {
+        document.getElementById('stackModalProjectsSection').style.display = 'none';
+      }
+      
+      stackOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
     });
   });
-})();
+  
+  if (stackCloseBtn && stackOverlay) {
+    stackCloseBtn.addEventListener('click', function() {
+      playSound('close');
+      stackOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  }
+  
+  if (stackOverlay) {
+    stackOverlay.addEventListener('click', function(e) {
+      if (e.target === stackOverlay) {
+        playSound('close');
+        stackOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+});
+
