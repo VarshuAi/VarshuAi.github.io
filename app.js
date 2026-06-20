@@ -1,4 +1,4 @@
-﻿/* ==========================================
+/* ==========================================
    PORTFOLIO â€” APP.JS v3
    Clean Â· Modular Â· Well-aligned
    ========================================== */
@@ -559,7 +559,7 @@ document.addEventListener('DOMContentLoaded', function() {
 /* ══════════════════════════════════════
    COMMAND PALETTE (Ctrl+K)
    ══════════════════════════════════════ */
-(function cmdPalette() {
+document.addEventListener('DOMContentLoaded', function cmdPalette() {
   var overlay = document.getElementById('cmd-overlay');
   var input = document.getElementById('cmd-input');
   var results = document.getElementById('cmd-results');
@@ -614,7 +614,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   document.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    if ((e.ctrlKey || e.metaKey) && (e.key && e.key.toLowerCase() === 'k' || e.code === 'KeyK')) {
       e.preventDefault();
       overlay.classList.contains('open') ? close() : open();
     }
@@ -629,7 +629,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   input.addEventListener('input', function() { activeIdx = 0; render(input.value); });
   overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
-})();
+});
 
 /* ══════════════════════════════════════
    DYNAMIC GREETING (time of day)
