@@ -400,21 +400,38 @@ async function loadRepos() {
 async function loadProfile() {
   try {
     const data = await (await fetch(GH_API)).json();
+    const reposVal = data.public_repos;
+    const folsVal = data.followers;
+    const folgVal = data.following;
+
     // Update counters
-    const els = {
-      repos: document.querySelector('[data-target="204"]'),
-      fols:  document.querySelector('[data-target="136"]'),
-      folg:  document.querySelector('[data-target="405"]'),
-    };
-    if (els.repos) els.repos.dataset.target = data.public_repos;
-    if (els.fols)  els.fols.dataset.target  = data.followers;
-    if (els.folg)  els.folg.dataset.target  = data.following;
+    const reposCounter = document.getElementById('stat-repos-counter');
+    const folsCounter = document.getElementById('stat-fols-counter');
+    const folgCounter = document.getElementById('stat-folg-counter');
+
+    if (reposCounter) {
+      reposCounter.dataset.target = reposVal;
+      if (reposCounter.textContent !== '0') reposCounter.textContent = reposVal.toLocaleString();
+    }
+    if (folsCounter) {
+      folsCounter.dataset.target = folsVal;
+      if (folsCounter.textContent !== '0') folsCounter.textContent = folsVal.toLocaleString();
+    }
+    if (folgCounter) {
+      folgCounter.dataset.target = folgVal;
+      if (folgCounter.textContent !== '0') folgCounter.textContent = folgVal.toLocaleString();
+    }
+
+    // Update inline dynamic values across page
+    document.querySelectorAll('.github-repos-dynamic').forEach(el => el.textContent = reposVal);
+    document.querySelectorAll('.github-followers-dynamic').forEach(el => el.textContent = folsVal);
+    document.querySelectorAll('.github-following-dynamic').forEach(el => el.textContent = folgVal);
 
     // Update chips
     const rv = document.getElementById('chip-repo-val');
     const fv = document.getElementById('chip-follow-val');
-    if (rv) rv.textContent = data.public_repos + '+';
-    if (fv) fv.textContent = data.followers;
+    if (rv) rv.textContent = reposVal + '+';
+    if (fv) fv.textContent = folsVal;
   } catch(e) { /* fail silently */ }
 }
 
