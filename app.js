@@ -435,6 +435,17 @@ async function loadProfile() {
   } catch(e) { /* fail silently */ }
 }
 
+async function loadViews() {
+  try {
+    const res = await fetch('https://abacus.jasoncameron.dev/hit/varshuai.github.io/visits');
+    if (res.ok) {
+      const data = await res.json();
+      const el = document.getElementById('visit-count');
+      if (el) el.textContent = data.value.toLocaleString();
+    }
+  } catch (e) { /* fail silently */ }
+}
+
 /* â”€â”€ PARALLAX ORBS â”€â”€ */
 let px = 0, py = 0, plx = 0, ply = 0;
 document.addEventListener('mousemove', e => {
@@ -462,6 +473,7 @@ setTimeout(() => {
 /* â”€â”€ INIT â”€â”€ */
 loadProfile();
 loadRepos();
+loadViews();
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    EASTER EGG â€” type "varshan" anywhere

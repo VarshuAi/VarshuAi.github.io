@@ -1087,7 +1087,7 @@ body:has(button:hover) #c-ring {
   font-size: 0.78rem;
   color: rgba(255,255,255,0.25);
 }
-.footer-built {
+.footer-built, .footer-views {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1170,6 +1170,7 @@ body:has(button:hover) #c-ring {
   .proj-filters { flex-wrap: wrap; }
   .nav-toggle { cursor: pointer; }
   .pf { cursor: pointer; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
 
 @media (max-width: 440px) {
