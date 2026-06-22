@@ -6,25 +6,25 @@
     @keyframes scanMove { 0% { transform: translateY(0); } 100% { transform: translateY(466px); } }
 
     .bg { fill: #0D1117; }
-    .frame { fill: none; stroke: #FF0000; stroke-width: 1; opacity: 0.25; }
-    .title { font-family: 'Courier New', monospace; font-size: 13px; fill: #FF0000; font-weight: bold; }
+    .frame { fill: none; stroke: #0074D9; stroke-width: 1; opacity: 0.25; }
+    .title { font-family: 'Courier New', monospace; font-size: 13px; fill: #0074D9; font-weight: bold; }
     .bio { font-family: 'Courier New', monospace; font-size: 12.5px; fill: #8B949E; animation: fadeIn 0.3s forwards; opacity: 0; }
-    .ok { fill: #FF0000; font-weight: bold; }
-    .section { font-family: 'Courier New', monospace; font-size: 12px; fill: #FF0000; opacity: 0.4; }
+    .ok { fill: #0074D9; font-weight: bold; }
+    .section { font-family: 'Courier New', monospace; font-size: 12px; fill: #0074D9; opacity: 0.4; }
     .about { font-family: 'Courier New', monospace; font-size: 12.5px; fill: #C9D1D9; animation: fadeIn 0.3s forwards; opacity: 0; }
-    .key { fill: #FF0000; font-weight: bold; }
-    .motd { font-family: 'Courier New', monospace; font-size: 13px; fill: #FF6B6B; font-style: italic; animation: fadeIn 0.5s forwards; opacity: 0; }
-    .cursor { font-family: 'Courier New', monospace; font-size: 13px; fill: #FF0000; animation: blink 1s infinite; }
-    .prompt { font-family: 'Courier New', monospace; font-size: 12.5px; fill: #FF0000; animation: fadeIn 0.3s forwards; opacity: 0; }
-    .glow { fill: #FF000044; filter: blur(50px); animation: glowPulse 4s infinite; }
+    .key { fill: #0074D9; font-weight: bold; }
+    .motd { font-family: 'Courier New', monospace; font-size: 13px; fill: #7FDBFF; font-style: italic; animation: fadeIn 0.5s forwards; opacity: 0; }
+    .cursor { font-family: 'Courier New', monospace; font-size: 13px; fill: #0074D9; animation: blink 1s infinite; }
+    .prompt { font-family: 'Courier New', monospace; font-size: 12.5px; fill: #0074D9; animation: fadeIn 0.3s forwards; opacity: 0; }
+    .glow { fill: #0074D944; filter: blur(50px); animation: glowPulse 4s infinite; }
   </style>
 
   <rect width="850" height="466" class="bg"/>
   <rect x="4" y="4" width="842" height="458" rx="8" class="frame"/>
   <ellipse cx="425" cy="40" rx="250" ry="25" class="glow"/>
 
-  <text x="30" y="35" class="title">VARSHUOS BIOS v4.20  //  RedStrike OS v14.2 "Inferno"  //  Monday</text>
-  <line x1="30" y1="44" x2="820" y2="44" stroke="#FF0000" stroke-width="0.4" opacity="0.2"/>
+  <text x="30" y="35" class="title">VARSHUOS BIOS v4.20  //  DeepBlue OS v12.1 "Abyss"  //  Tuesday</text>
+  <line x1="30" y1="44" x2="820" y2="44" stroke="#0074D9" stroke-width="0.4" opacity="0.2"/>
 
   
     <text x="30" y="65" class="bio" style="animation-delay:0.2s">  CPU      : Varshan Gowda @ mass_clock               <tspan class="ok">[  OK  ]</tspan></text>
@@ -33,7 +33,7 @@
     <text x="30" y="137" class="bio" style="animation-delay:0.6499999999999999s">  CHAI     : Filter Coffee Module                     <tspan class="ok">[  OK  ]</tspan></text>
     <text x="30" y="161" class="bio" style="animation-delay:0.8s">  AUDIO    : Lo-fi Hip Hop Radio                      <tspan class="ok">[  OK  ]</tspan></text>
 
-  <line x1="30" y1="205" x2="820" y2="205" stroke="#FF0000" stroke-width="0.4" opacity="0.2"/>
+  <line x1="30" y1="205" x2="820" y2="205" stroke="#0074D9" stroke-width="0.4" opacity="0.2"/>
   <text x="30" y="210" class="section">// cat /home/varshuai/about.txt</text>
 
   
@@ -46,10 +46,10 @@
     <text x="30" y="362" class="about" style="animation-delay:1.72s">  <tspan class="key">Sleep     </tspan> optional</text>
     <text x="30" y="384" class="about" style="animation-delay:1.8399999999999999s">  <tspan class="key">Chai      </tspan> mandatory</text>
 
-  <text x="30" y="426" class="motd" style="animation-delay:2.2s">"New week. New exploits. No mercy."</text>
+  <text x="30" y="426" class="motd" style="animation-delay:2.2s">"Silence the noise. Enter the flow."</text>
   <text x="30" y="451" class="prompt" style="animation-delay:2.5s">varshuai@mass-coder:~$ <tspan class="cursor">_</tspan></text>
 
-  <rect x="0" y="0" width="850" height="1.5" fill="#FF0000" opacity="0.03">
+  <rect x="0" y="0" width="850" height="1.5" fill="#0074D9" opacity="0.03">
     <animateTransform attributeName="transform" type="translate" from="0 0" to="0 466" dur="5s" repeatCount="indefinite"/>
   </rect>
 </svg>
