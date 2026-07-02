@@ -1,0 +1,10 @@
+{
+  "name": "varshuai-portfolio-server",
+  "version": "1.0.0",
+  "description": "Secure companion server for portfolio installations",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {}
+}
