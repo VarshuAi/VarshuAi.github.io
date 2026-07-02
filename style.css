@@ -1279,7 +1279,7 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border-md
 }
 [data-theme="dark"] body { background: var(--bg); color: var(--text-1); }
 [data-theme="dark"] .hero-mesh { opacity: 0.7; }
-[data-theme="dark"] .gh-img { filter: invert(1) hue-rotate(180deg) brightness(1.1); }
+body:not([data-theme="dark"]) .gh-img { filter: invert(1) hue-rotate(180deg) brightness(0.9); }
 
 /* Theme toggle button */
 .theme-toggle {
