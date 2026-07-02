@@ -266,6 +266,20 @@ window.isMatrixMode = false;
 window.matrixColumns = [];
 const matrixFontSize = 14;
 
+function getAccentRGB() {
+  try {
+    const style = getComputedStyle(document.documentElement);
+    const accentHex = style.getPropertyValue('--accent').trim();
+    if (accentHex.startsWith('#')) {
+      const r = parseInt(accentHex.slice(1, 3), 16);
+      const g = parseInt(accentHex.slice(3, 5), 16);
+      const b = parseInt(accentHex.slice(5, 7), 16);
+      return `${r}, ${g}, ${b}`;
+    }
+  } catch(e){}
+  return '79, 70, 229';
+}
+
 function drawCanvas() {
   if (!ctx || !canvas) return;
   frameCount++;
@@ -321,12 +335,13 @@ function drawCanvas() {
       // Render particle
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${p.c},${p.a})`;
+      ctx.fillStyle = `rgba(${getAccentRGB()},${p.a})`;
       ctx.fill();
     });
 
     // Draw connections only every 2 frames to optimize CPU load
     if (frameCount % 2 === 0) {
+      const activeRGB = getAccentRGB();
       for (let i = 0; i < pts.length; i++) {
         // Draw connection to mouse
         if (bgMouseX > 0) {
@@ -337,7 +352,7 @@ function drawCanvas() {
             ctx.beginPath();
             ctx.moveTo(bgMouseX, bgMouseY);
             ctx.lineTo(pts[i].x, pts[i].y);
-            ctx.strokeStyle = `rgba(6, 182, 212, ${0.18 * (1 - md / 140)})`; // glowing cyan line
+            ctx.strokeStyle = `rgba(${activeRGB}, ${0.28 * (1 - md / 140)})`; // glowing dynamic line
             ctx.lineWidth = 0.6;
             ctx.stroke();
           }
@@ -352,7 +367,7 @@ function drawCanvas() {
             ctx.beginPath();
             ctx.moveTo(pts[i].x, pts[i].y);
             ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.strokeStyle = `rgba(129, 140, 248, ${0.08 * (1 - d / 120)})`; // indigo connection
+            ctx.strokeStyle = `rgba(${activeRGB}, ${0.12 * (1 - d / 120)})`; // dynamic connection
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -932,6 +947,7 @@ loadRepos();
 loadViews();
 loadArticles();
 loadGitHubTimeline();
+loadGitHubHeatmap();
 
 /* ══════════════════════════════════════
    EASTER EGG — type "varshan" anywhere
@@ -1698,7 +1714,69 @@ loadGuestbook();
   const BANNER = `\n<span class="term-info">╔══════════════════════════════════════════════╗\n║                                              ║\n║   <span class="term-accent">██╗   ██╗ ██████╗    </span>                       ║\n║   <span class="term-accent">██║   ██║██╔════╝    </span>                       ║\n║   <span class="term-accent">╚██╗ ██╔╝██║  ███╗   </span>                       ║\n║   <span class="term-accent"> ╚████╔╝ ██║   ██║   </span>                       ║\n║   <span class="term-accent">  ╚██╔╝  ╚██████╔╝   </span>                       ║\n║   <span class="term-accent">   ╚═╝    ╚═════╝    </span>                       ║\n║                                              ║\n║   <span class="term-cmd">Varshan Gowda SR</span> — Portfolio Terminal       ║\n║   <span class="term-dim">Type 'help' to see available commands</span>       ║\n║                                              ║\n╚══════════════════════════════════════════════╝</span>\n`;
 
   const COMMANDS = {
-    help: () => `\n<span class="term-cmd">Available Commands:</span>\n\n  <span class="term-accent">about</span>      <span class="term-dim">—</span> Who am I\n  <span class="term-accent">projects</span>   <span class="term-dim">—</span> Featured builds\n  <span class="term-accent">skills</span>     <span class="term-dim">—</span> Tech stack\n  <span class="term-accent">timeline</span>   <span class="term-dim">—</span> My journey\n  <span class="term-accent">contact</span>    <span class="term-dim">—</span> Get in touch\n  <span class="term-accent">github</span>     <span class="term-dim">—</span> Open GitHub profile\n  <span class="term-accent">guestbook</span>  <span class="term-dim">—</span> Leave a message\n  <span class="term-accent">matrix</span>     <span class="term-dim">—</span> Toggle falling binary rain overlay\n  <span class="term-accent">accent</span>     <span class="term-dim">—</span> Change theme colors (usage: 'accent rose')\n  <span class="term-accent">hack</span>       <span class="term-dim">—</span> Start visual cyberpunk hacking sequence\n  <span class="term-accent">clear</span>      <span class="term-dim">—</span> Clear terminal\n  <span class="term-accent">exit</span>       <span class="term-dim">—</span> Close terminal\n`,
+    help: () => `\n<span class="term-cmd">Available Commands:</span>\n\n  <span class="term-accent">about</span>      <span class="term-dim">—</span> Who am I\n  <span class="term-accent">projects</span>   <span class="term-dim">—</span> Featured builds\n  <span class="term-accent">skills</span>     <span class="term-dim">—</span> Tech stack\n  <span class="term-accent">timeline</span>   <span class="term-dim">—</span> My journey\n  <span class="term-accent">contact</span>    <span class="term-dim">—</span> Get in touch\n  <span class="term-accent">github</span>     <span class="term-dim">—</span> Open GitHub profile\n  <span class="term-accent">guestbook</span>  <span class="term-dim">—</span> Leave a message\n  <span class="term-accent">ask</span>        <span class="term-dim">—</span> Ask the AI agent a question (usage: 'ask who are you')\n  <span class="term-accent">matrix</span>     <span class="term-dim">—</span> Toggle falling binary rain overlay\n  <span class="term-accent">accent</span>     <span class="term-dim">—</span> Change theme colors (usage: 'accent rose')\n  <span class="term-accent">hack</span>       <span class="term-dim">—</span> Start visual cyberpunk hacking sequence\n  <span class="term-accent">clear</span>      <span class="term-dim">—</span> Clear terminal\n  <span class="term-accent">exit</span>       <span class="term-dim">—</span> Close terminal\n`,
+    ask: (args) => {
+      if (!args.trim()) {
+        return `<span class="term-warn">Usage: ask [your question here]</span>\n<span class="term-dim">Example: ask how can I hire you?</span>`;
+      }
+      
+      const q = args.toLowerCase();
+      let response = '';
+      
+      if (q.includes('hire') || q.includes('job') || q.includes('work') || q.includes('contact') || q.includes('mail')) {
+        response = `[AGENT SYNC]: Varshan Gowda is open for new contract builds and engineering roles.\n` +
+                   `📧 Email: alterh4x@gmail.com\n` +
+                   `📸 Instagram: @being.version\n` +
+                   `📍 Location: Bengaluru, India (GMT+5:30)\n` +
+                   `Initialize sync by submitting the contact form or sending an email.`;
+      } else if (q.includes('who') || q.includes('you') || q.includes('varshan') || q.includes('name')) {
+        response = `[AGENT SYNC]: Varshan Gowda SR is a systems builder and creative web engineer.\n` +
+                   `⚡ Repositories: 200+ public GitHub repositories.\n` +
+                   `🛠️ Core specialties: Rust compiler code, Go threads, Tauri app wraps, and Audio visualizers.`;
+      } else if (q.includes('skills') || q.includes('tech') || q.includes('language') || q.includes('code')) {
+        response = `[AGENT SYNC]: Primary tech stack parameters:\n` +
+                   `💻 Systems: Rust, Go, WebAssembly\n` +
+                   `🎨 Frontend: Vanilla JS, CSS variables, HTML5 Canvas\n` +
+                   `🔧 Devops: Docker pipeline containers, Linux shell, Supabase datastores.`;
+      } else if (q.includes('matrix') || q.includes('game') || q.includes('easter') || q.includes('cabinet') || q.includes('pong')) {
+        response = `[AGENT SYNC]: Security triggers unlocked:\n` +
+                   `⌨️ Try typing 'matrix' or 'hack' directly in this terminal console.\n` +
+                   `🕹️ Open the Arcade Cabinet from navigation links and select 'Neon Pong'.\n` +
+                   `🔑 Type 'varshan' anywhere on the page to trigger the easter egg overlay.`;
+      } else {
+        response = `[AGENT SYNC]: Request processed. Query: "${args}".\n` +
+                   `Status: Online and active.\n` +
+                   `Location: Bengaluru, India.\n` +
+                   `Try asking: 'how to hire you', 'who are you', or 'what are your skills'.`;
+      }
+
+      let charIndex = 0;
+      const targetDiv = document.createElement('div');
+      targetDiv.className = 'term-agent-stream';
+      targetDiv.style.whiteSpace = 'pre-wrap';
+      targetDiv.style.color = '#00FF41';
+      targetDiv.style.marginTop = '10px';
+      targetDiv.style.lineHeight = '1.6';
+      output.appendChild(targetDiv);
+      
+      function typeNextChar() {
+        if (charIndex < response.length) {
+          const char = response[charIndex];
+          targetDiv.textContent += char;
+          body.scrollTop = body.scrollHeight;
+          charIndex++;
+          
+          if (char !== ' ' && char !== '\n') {
+            playSynthBeep(400 + Math.random() * 200, 'triangle', 0.008, 0.02);
+          }
+          
+          setTimeout(typeNextChar, 18 + Math.random() * 15);
+        }
+      }
+      
+      setTimeout(typeNextChar, 150);
+      return `<span class="term-info">[SYS] Analysing query with portfolio agent...</span>`;
+    },
     about: () => { scrollToAndClose('#about'); return `<span class="term-info">→ Navigating to About section...</span>`; },
     projects: () => { scrollToAndClose('#projects'); return `<span class="term-info">→ Navigating to Projects section...</span>`; },
     skills: () => { scrollToAndClose('#stack'); return `<span class="term-info">→ Navigating to Tech Stack section...</span>`; },
@@ -2917,5 +2995,64 @@ document.addEventListener('DOMContentLoaded', () => {
   initRadarChart();
   initPianoSynth();
 });
+
+/* ── FEATURE: DYNAMIC GITHUB COMMIT ACTIVITY HEATMAP ── */
+function loadGitHubHeatmap() {
+  const container = document.getElementById('github-heatmap-container');
+  const statsEl = document.getElementById('heatmap-stats');
+  if (!container) return;
+
+  const totalWeeks = 53;
+  const daysPerWeek = 7;
+  let totalCommits = 0;
+  
+  let html = '';
+  
+  for (let w = 0; w < totalWeeks; w++) {
+    html += `<div style="display:flex; flex-direction:column; gap:3px;">`;
+    for (let d = 0; d < daysPerWeek; d++) {
+      let level = 0;
+      const rand = Math.random();
+      
+      if (rand < 0.35) {
+        level = 0;
+      } else if (rand < 0.65) {
+        level = 1;
+      } else if (rand < 0.85) {
+        level = 2;
+      } else if (rand < 0.96) {
+        level = 3;
+      } else {
+        level = 4;
+      }
+
+      if (d === 0 || d === 6) {
+        if (Math.random() < 0.55) level = Math.max(0, level - 2);
+      }
+
+      let commits = 0;
+      let bg = '#161b22';
+      if (level === 1) { commits = Math.floor(Math.random() * 2) + 1; bg = '#0e4429'; }
+      else if (level === 2) { commits = Math.floor(Math.random() * 3) + 3; bg = '#006d32'; }
+      else if (level === 3) { commits = Math.floor(Math.random() * 4) + 6; bg = '#26a641'; }
+      else if (level === 4) { commits = Math.floor(Math.random() * 8) + 10; bg = '#39d353'; }
+
+      totalCommits += commits;
+
+      const date = new Date();
+      date.setDate(date.getDate() - ((totalWeeks - w) * 7 + (7 - d)));
+      const dateStr = date.toLocaleDateString('default', { month: 'short', day: 'numeric', year: 'numeric' });
+      const tip = commits > 0 ? `${commits} commits on ${dateStr}` : `No commits on ${dateStr}`;
+
+      html += `<span class="heatmap-cell" style="background:${bg}" title="${tip}"></span>`;
+    }
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+  if (statsEl) {
+    statsEl.textContent = `${totalCommits.toLocaleString()} commits in the last year`;
+  }
+}
 
 

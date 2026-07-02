@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2.9" />
+  <link rel="stylesheet" href="style.css?v=3.0" />
 
   <!-- INTRO CINEMA STYLES  -  inline so they load before anything else -->
   <style>
@@ -675,6 +675,26 @@
         <div class="gh-card reveal reveal-delay-1">
           <img src="https://github-stats-extended.vercel.app/api/top-langs/?username=VarshuAi&layout=compact&bg_color=00000000&hide_border=true&title_color=818cf8&icon_color=06b6d4&text_color=a0a0ab&langs_count=8" alt="Top Languages" class="gh-img" loading="lazy" />
         </div>
+        <div class="gh-card reveal reveal-delay-2" style="grid-column: 1 / -1; flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 22px; min-height: auto;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+            <span style="font-family:'Outfit',sans-serif; font-size:0.85rem; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em">Commit Activity Heatmap</span>
+            <span style="font-size:0.75rem; color:var(--text-3); font-family:'JetBrains Mono',monospace" id="heatmap-stats">VarshuAi / contributions</span>
+          </div>
+          <div id="github-heatmap-container" style="display:flex; flex-direction:column; gap:4px; overflow-x:auto; padding-bottom:8px;">
+            <!-- Rendered dynamically -->
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:0.68rem; color:var(--text-3); font-family:'JetBrains Mono',monospace">
+            <span>Less activity</span>
+            <div style="display:flex; gap:3px; align-items:center">
+              <span style="width:10px; height:10px; background:#161b22; border-radius:2px; border:1px solid rgba(255,255,255,0.05)"></span>
+              <span style="width:10px; height:10px; background:#0e4429; border-radius:2px"></span>
+              <span style="width:10px; height:10px; background:#006d32; border-radius:2px"></span>
+              <span style="width:10px; height:10px; background:#26a641; border-radius:2px"></span>
+              <span style="width:10px; height:10px; background:#39d353; border-radius:2px"></span>
+            </div>
+            <span>More activity</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1034,7 +1054,7 @@
     <button onclick="togglePianoPanel(false)" style="color:#EF4444;background:none;border:none;cursor:pointer;font-weight:700;font-size:0.75rem;padding:0;outline:none">CLOSE</button>
   </div>
 
-  <script src="app.js?v=2.9"></script>
+  <script src="app.js?v=3.0"></script>
 </body>
 </html>
 
