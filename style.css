@@ -79,7 +79,7 @@ img { display: block; max-width: 100%; }
   background: #06B6D4;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 999999;
   will-change: transform;
   transform: translate3d(-999px, -999px, 0);
   box-shadow: 0 0 8px rgba(6,182,212,0.9), 0 0 20px rgba(6,182,212,0.3);
@@ -92,7 +92,7 @@ img { display: block; max-width: 100%; }
   width: 36px; height: 36px;
   margin: -18px 0 0 -18px;
   pointer-events: none;
-  z-index: 9998;
+  z-index: 999998;
   will-change: transform;
   transform: translate3d(-999px, -999px, 0);
   transition: width 0.2s, height 0.2s;
