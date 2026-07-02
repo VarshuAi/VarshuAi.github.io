@@ -404,7 +404,7 @@ body:has(button:hover) #c-ring {
   align-items: center;
   gap: var(--s2);
   background: var(--text-1);
-  color: #fff;
+  color: var(--bg);
   font-size: 0.88rem;
   font-weight: 700;
   padding: 12px 24px;
