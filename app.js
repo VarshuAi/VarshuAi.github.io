@@ -178,6 +178,9 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 
   document.body.classList.add('intro-on');
 
+  const isMobileDev = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.matchMedia('(max-width: 768px)').matches;
+  const bootPrompt = isMobileDev ? "Tap anywhere to boot into deck..." : "Click or Press ANY KEY to boot into deck...";
+
   const biosLines = [
     "VG-BIOS Version 5.2.2026 (C) 2026 Varshan SR",
     "CPU: AMD Ryzen 9 7950X @ 4.50 GHz",
@@ -195,7 +198,7 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     "STATUS: SECURE. SYSTEM LOADED SUCCESSFULLY.",
     "===========================================================",
     "",
-    "Click or Press ANY KEY to boot into deck..."
+    bootPrompt
   ];
 
   let currentLine = 0;
@@ -259,8 +262,8 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 
       currentLine++;
       
-      let delay = 120 + Math.random() * 80;
-      if (currentLine === 5 || currentLine === 12) delay = 400;
+      let delay = isMobileDev ? (60 + Math.random() * 40) : (120 + Math.random() * 80);
+      if (currentLine === 5 || currentLine === 12) delay = isMobileDev ? 200 : 400;
       setTimeout(printNextLine, delay);
     } else {
       intro.addEventListener('click', dismiss);
@@ -277,20 +280,25 @@ const cDot  = document.getElementById('c-dot');
 const cRing = document.getElementById('c-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
 
-document.addEventListener('mousemove', e => {
-  mx = e.clientX;
-  my = e.clientY;
-  // Dot follows mouse instantly — no lag at all
-  if (cDot) cDot.style.transform = `translate3d(${mx}px,${my}px,0)`;
-}, { passive: true });
+const isMobileDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.matchMedia('(max-width: 768px)').matches;
 
-// Ring follows with slight lag on its own rAF loop
-(function ringLoop() {
-  rx += (mx - rx) * 0.16;
-  ry += (my - ry) * 0.16;
-  if (cRing) cRing.style.transform = `translate3d(${rx}px,${ry}px,0)`;
-  requestAnimationFrame(ringLoop);
-})();
+if (isMobileDevice) {
+  if (cDot) cDot.style.display = 'none';
+  if (cRing) cRing.style.display = 'none';
+} else {
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+    if (cDot) cDot.style.transform = `translate3d(${mx}px,${my}px,0)`;
+  }, { passive: true });
+
+  (function ringLoop() {
+    rx += (mx - rx) * 0.16;
+    ry += (my - ry) * 0.16;
+    if (cRing) cRing.style.transform = `translate3d(${rx}px,${ry}px,0)`;
+    requestAnimationFrame(ringLoop);
+  })();
+}
 
 /* ── PARTICLES ── */
 const canvas = document.getElementById('hero-canvas');
@@ -306,7 +314,9 @@ function resizeCanvas() {
 function initCanvas() {
   if (!canvas || !ctx) return;
   resizeCanvas();
-  pts = Array.from({ length: 40 }, () => ({
+  const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.matchMedia('(max-width: 768px)').matches;
+  const numParticles = isMobile ? 18 : 40;
+  pts = Array.from({ length: numParticles }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
     r: Math.random() * 1.2 + 0.4,
@@ -324,6 +334,8 @@ let bgMouseY = -1000;
 
 window.addEventListener('mousemove', e => {
   if (!canvas) return;
+  const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.matchMedia('(max-width: 768px)').matches;
+  if (isMobile) return;
   const rect = canvas.getBoundingClientRect();
   bgMouseX = e.clientX - rect.left;
   bgMouseY = e.clientY - rect.top;

@@ -2490,6 +2490,12 @@ body:not([data-theme="dark"]) .gh-img { filter: invert(1) hue-rotate(180deg) bri
   .arcade-right { flex: none; height: auto; }
   .arcade-toggle { bottom: 70px; right: 16px; width: 42px; height: 42px; font-size: 1.05rem; }
   .lofi-player { bottom: 16px; left: 16px; }
+  .lofi-player:hover, .lofi-player.expanded {
+    width: calc(100vw - 32px) !important;
+    max-width: 320px;
+    height: 96px;
+    left: 16px;
+  }
   .about-dashboard { grid-template-columns: 1fr; }
 }
 
