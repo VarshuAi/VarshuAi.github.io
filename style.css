@@ -2417,3 +2417,9 @@ body:not([data-theme="dark"]) .gh-img { filter: invert(1) hue-rotate(180deg) bri
   50% { opacity: 0.55; transform: scale(1.15); }
 }
 
+@media (max-width: 768px) {
+  .diag-layout { grid-template-columns: 1fr !important; gap: 10px !important; overflow-y: auto !important; }
+  #diag-drawer { height: 420px !important; bottom: -500px; }
+  .contact-form-row { grid-template-columns: 1fr !important; gap: 10px !important; }
+}
+

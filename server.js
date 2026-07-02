@@ -10,6 +10,7 @@ const DB_FILE = path.resolve(__dirname, 'projects_db.json');
 const GUESTBOOK_FILE = path.resolve(__dirname, 'guestbook_db.json');
 const VISITS_FILE = path.resolve(__dirname, 'visits_db.json');
 const LEADERBOARD_FILE = path.resolve(__dirname, 'leaderboard_db.json');
+const CONTACT_FILE = path.resolve(__dirname, 'contact_db.json');
 
 // Admin Auth Token (Set via environment variables when hosting)
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'secure-local-development-key';
@@ -61,6 +62,9 @@ if (!fs.existsSync(VISITS_FILE)) {
 }
 if (!fs.existsSync(LEADERBOARD_FILE)) {
   fs.writeFileSync(LEADERBOARD_FILE, JSON.stringify([], null, 2));
+}
+if (!fs.existsSync(CONTACT_FILE)) {
+  fs.writeFileSync(CONTACT_FILE, JSON.stringify([], null, 2));
 }
 
 const MIME_TYPES = {
@@ -317,6 +321,60 @@ function saveLeaderboardDatabase(dataString, callback) {
     req.end();
   } else {
     fs.writeFile(LEADERBOARD_FILE, dataString, 'utf8', callback);
+  }
+}
+
+function getContactDatabase(callback) {
+  if (IS_CLOUD_MODE) {
+    supabaseRequest('GET', 'contact_db.json', null, callback);
+  } else {
+    fs.readFile(CONTACT_FILE, 'utf8', callback);
+  }
+}
+
+function saveContactDatabase(dataString, callback) {
+  if (IS_CLOUD_MODE) {
+    supabaseRequest('PUT', 'contact_db.json', dataString, callback);
+  } else {
+    fs.writeFile(CONTACT_FILE, dataString, 'utf8', callback);
+  }
+}
+
+function sendDiscordContactAlert(name, message, email) {
+  if (!DISCORD_WEBHOOK_URL) return;
+  try {
+    const discordUrl = new URL(DISCORD_WEBHOOK_URL);
+    const payload = JSON.stringify({
+      embeds: [{
+        title: "✉️ New Contact Form Inquiry",
+        description: `You received a new direct message on your portfolio!`,
+        color: 16738657, // Pink/Rose
+        fields: [
+          { name: "Sender", value: name || "Anonymous", inline: true },
+          { name: "Email Address", value: email || "No Email", inline: true },
+          { name: "Message", value: `"${message}"` },
+          { name: "Time", value: new Date().toLocaleString() }
+        ],
+        footer: { text: "VarshuAI Portfolio Alerts" }
+      }]
+    });
+    
+    const options = {
+      method: 'POST',
+      hostname: discordUrl.hostname,
+      path: discordUrl.pathname,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
+    
+    const req = https.request(options);
+    req.on('error', () => {}); // Silent catch
+    req.write(payload);
+    req.end();
+  } catch (e) {
+    // Silent catch
   }
 }
 
@@ -588,6 +646,107 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ error: 'File write error: ' + err.message }));
       });
     }
+    return;
+  }
+
+  // GET /api/contact (Admin Authorized Only)
+  if (pathname === '/api/contact' && req.method === 'GET') {
+    if (!isAuthorized(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Unauthorized' }));
+      return;
+    }
+    getContactDatabase((err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Could not read contact database: ' + err.message }));
+      } else {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(data);
+      }
+    });
+    return;
+  }
+
+  // POST /api/contact
+  if (pathname === '/api/contact' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => {
+      try {
+        const { name, email, message } = JSON.parse(body);
+        if (!name || !email || !message || name.length > 50 || email.length > 80 || message.length > 1000) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid input fields' }));
+          return;
+        }
+        getContactDatabase((err, data) => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Could not read contact database' }));
+            return;
+          }
+          const entries = JSON.parse(data);
+          entries.push({ name: name.trim(), email: email.trim(), message: message.trim(), timestamp: new Date().toISOString() });
+          saveContactDatabase(JSON.stringify(entries, null, 2), saveErr => {
+            if (saveErr) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Could not save message' }));
+            } else {
+              sendDiscordContactAlert(name.trim(), message.trim(), email.trim());
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: true }));
+            }
+          });
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
+  // DELETE /api/contact (Admin Authorized Only)
+  if (pathname === '/api/contact' && req.method === 'DELETE') {
+    if (!isAuthorized(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Unauthorized' }));
+      return;
+    }
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => {
+      try {
+        const { index } = JSON.parse(body);
+        getContactDatabase((err, data) => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Could not read contact database' }));
+            return;
+          }
+          const entries = JSON.parse(data);
+          if (index < 0 || index >= entries.length) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid index' }));
+            return;
+          }
+          entries.splice(index, 1);
+          saveContactDatabase(JSON.stringify(entries, null, 2), saveErr => {
+            if (saveErr) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Could not save changes' }));
+            } else {
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: true }));
+            }
+          });
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid request body' }));
+      }
+    });
     return;
   }
 

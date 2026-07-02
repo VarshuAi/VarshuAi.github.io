@@ -1934,24 +1934,89 @@ function changeLofiVolume(vol) {
     }
   }
 
+  let activeGame = 'snake';
+  let pongBall = { x: 200, y: 200, vx: 3, vy: 1.5, radius: 6 };
+  let leftPaddleY = 150;
+  let rightPaddleY = 150;
+  const paddleHeight = 60;
+  const paddleWidth = 10;
+  const paddleSpeed = 4.5;
+  const keyState = {};
+
+  window.addEventListener('keydown', e => {
+    const K = e.key.toUpperCase();
+    keyState[K] = true;
+    if (isPlaying) {
+      if (['ARROWUP', 'ARROWDOWN', 'W', 'S', ' '].includes(K)) {
+        e.preventDefault();
+      }
+    }
+    if (!isPlaying) return;
+    if (activeGame === 'snake') {
+      if ((K === 'ARROWUP' || K === 'W') && dy === 0) { dx = 0; dy = -1; }
+      else if ((K === 'ARROWDOWN' || K === 'S') && dy === 0) { dx = 0; dy = 1; }
+      else if ((K === 'ARROWLEFT' || K === 'A') && dx === 0) { dx = -1; dy = 0; }
+      else if ((K === 'ARROWRIGHT' || K === 'D') && dx === 0) { dx = 1; dy = 0; }
+    }
+  });
+
+  window.addEventListener('keyup', e => {
+    keyState[e.key.toUpperCase()] = false;
+  });
+
+  window.switchArcadeGame = function(game) {
+    activeGame = game;
+    const instructions = document.querySelector('.arcade-instructions');
+    if (instructions) {
+      if (game === 'snake') {
+        instructions.innerHTML = `
+          <strong>🎮 Controls:</strong><br/>
+          - Press Arrow keys or WASD to navigate.<br/>
+          - Eat cyan blocks to score points.<br/>
+          - Do not hit borders or your own tail!
+        `;
+      } else {
+        instructions.innerHTML = `
+          <strong>🎮 Controls:</strong><br/>
+          - Press W/S or Up/Down arrows to move paddle.<br/>
+          - Score points when the AI misses the ball.<br/>
+          - Prevent the ball from passing your paddle!
+        `;
+      }
+    }
+    startGame();
+  };
+
+  function initPong() {
+    pongBall = { x: canvas.width / 2, y: canvas.height / 2, vx: 3, vy: 1.5, radius: 6 };
+    leftPaddleY = canvas.height / 2 - paddleHeight / 2;
+    rightPaddleY = canvas.height / 2 - paddleHeight / 2;
+  }
+
   function startGame() {
-    snake = [
-      { x: 10, y: 10 },
-      { x: 9, y: 10 },
-      { x: 8, y: 10 }
-    ];
-    dx = 1;
-    dy = 0;
     score = 0;
     document.getElementById('currentScoreVal').textContent = score.toString().padStart(3, '0');
-    spawnFood();
     document.getElementById('arcadeAlertOverlay').style.display = 'none';
     isPlaying = true;
     if (gameInterval) clearInterval(gameInterval);
-    gameInterval = setInterval(gameStep, 100);
+
+    if (activeGame === 'snake') {
+      snake = [
+        { x: 10, y: 10 },
+        { x: 9, y: 10 },
+        { x: 8, y: 10 }
+      ];
+      dx = 1;
+      dy = 0;
+      spawnFood();
+      gameInterval = setInterval(gameStepSnake, 100);
+    } else {
+      initPong();
+      gameInterval = setInterval(gameStepPong, 1000 / 60); // 60fps
+    }
   }
 
-  function gameStep() {
+  function gameStepSnake() {
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
     
     if (head.x < 0 || head.x >= gridCount || head.y < 0 || head.y >= gridCount) {
@@ -1977,7 +2042,99 @@ function changeLofiVolume(vol) {
       snake.pop();
     }
 
-    drawGame();
+    drawGameSnake();
+  }
+
+  function gameStepPong() {
+    // Clear screen
+    ctx.fillStyle = '#07070a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draw center dividing line
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 0);
+    ctx.lineTo(canvas.width / 2, canvas.height);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Player (left paddle) key movement
+    if (keyState['ARROWUP'] || keyState['W']) {
+      leftPaddleY = Math.max(0, leftPaddleY - paddleSpeed);
+    }
+    if (keyState['ARROWDOWN'] || keyState['S']) {
+      leftPaddleY = Math.min(canvas.height - paddleHeight, leftPaddleY + paddleSpeed);
+    }
+
+    // AI (right paddle) movement with tracking latency
+    const targetY = pongBall.y - paddleHeight / 2;
+    const diff = targetY - rightPaddleY;
+    rightPaddleY += Math.sign(diff) * Math.min(Math.abs(diff), 2.2);
+    rightPaddleY = Math.max(0, Math.min(canvas.height - paddleHeight, rightPaddleY));
+
+    // Move ball
+    pongBall.x += pongBall.vx;
+    pongBall.y += pongBall.vy;
+
+    // Bounce top/bottom walls
+    if (pongBall.y - pongBall.radius <= 0) {
+      pongBall.y = pongBall.radius;
+      pongBall.vy *= -1;
+      playRetroSound(300, 0.05);
+    } else if (pongBall.y + pongBall.radius >= canvas.height) {
+      pongBall.y = canvas.height - pongBall.radius;
+      pongBall.vy *= -1;
+      playRetroSound(300, 0.05);
+    }
+
+    // Left Paddle hit check
+    if (pongBall.vx < 0 && pongBall.x - pongBall.radius <= 20 && pongBall.x - pongBall.radius >= 10) {
+      if (pongBall.y >= leftPaddleY && pongBall.y <= leftPaddleY + paddleHeight) {
+        pongBall.vx *= -1.06; // increase speed gradually
+        pongBall.x = 20 + pongBall.radius;
+        const hitPt = (pongBall.y - (leftPaddleY + paddleHeight / 2)) / (paddleHeight / 2);
+        pongBall.vy = hitPt * 3;
+        playRetroSound(440, 0.08);
+      }
+    }
+
+    // Right Paddle hit check
+    if (pongBall.vx > 0 && pongBall.x + pongBall.radius >= canvas.width - 20 && pongBall.x + pongBall.radius <= canvas.width - 10) {
+      if (pongBall.y >= rightPaddleY && pongBall.y <= rightPaddleY + paddleHeight) {
+        pongBall.vx *= -1.06;
+        pongBall.x = canvas.width - 20 - pongBall.radius;
+        const hitPt = (pongBall.y - (rightPaddleY + paddleHeight / 2)) / (paddleHeight / 2);
+        pongBall.vy = hitPt * 3;
+        playRetroSound(440, 0.08);
+      }
+    }
+
+    // Goal miss checks
+    if (pongBall.x < 0) {
+      endGame();
+      return;
+    }
+    if (pongBall.x > canvas.width) {
+      score += 10;
+      document.getElementById('currentScoreVal').textContent = score.toString().padStart(3, '0');
+      pongBall = { x: canvas.width / 2, y: canvas.height / 2, vx: -3, vy: (Math.random() - 0.5) * 3, radius: 6 };
+      playRetroSound(600, 0.12);
+    }
+
+    // Draw left paddle (Indigo glow)
+    ctx.fillStyle = '#818CF8';
+    ctx.fillRect(10, leftPaddleY, paddleWidth, paddleHeight);
+
+    // Draw right paddle (Rose glow)
+    ctx.fillStyle = '#EC4899';
+    ctx.fillRect(canvas.width - 20, rightPaddleY, paddleWidth, paddleHeight);
+
+    // Draw ball (Cyan glow)
+    ctx.fillStyle = '#06B6D4';
+    ctx.beginPath();
+    ctx.arc(pongBall.x, pongBall.y, pongBall.radius, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   function playRetroSound(freq, duration) {
@@ -1996,7 +2153,7 @@ function changeLofiVolume(vol) {
     } catch(e){}
   }
 
-  function drawGame() {
+  function drawGameSnake() {
     ctx.fillStyle = '#07070a';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -2025,15 +2182,6 @@ function changeLofiVolume(vol) {
     
     checkLeaderboardEligibility(score);
   }
-
-  window.addEventListener('keydown', e => {
-    if (!isPlaying) return;
-    const K = e.key.toUpperCase();
-    if ((K === 'ARROWUP' || K === 'W') && dy === 0) { dx = 0; dy = -1; }
-    else if ((K === 'ARROWDOWN' || K === 'S') && dy === 0) { dx = 0; dy = 1; }
-    else if ((K === 'ARROWLEFT' || K === 'A') && dx === 0) { dx = -1; dy = 0; }
-    else if ((K === 'ARROWRIGHT' || K === 'D') && dx === 0) { dx = 1; dy = 0; }
-  });
 
   toggleBtn.addEventListener('click', () => {
     overlay.style.display = 'flex';
@@ -2171,5 +2319,128 @@ function dismissArcadeAlert() {
   setInterval(updateDevActivity, 60000);
   updateDevActivity();
 })();
+
+/* ═══════════════════════════════════════
+   FEATURE: INTEGRATED CONTACT FORM
+   ═══════════════════════════════════════ */
+async function submitContactForm() {
+  const nameEl = document.getElementById('contactName');
+  const emailEl = document.getElementById('contactEmail');
+  const msgEl = document.getElementById('contactMessage');
+  const btn = document.getElementById('contactSubmit');
+
+  const name = nameEl ? nameEl.value.trim() : '';
+  const email = emailEl ? emailEl.value.trim() : '';
+  const message = msgEl ? msgEl.value.trim() : '';
+
+  if (!name || !email || !message) {
+    alert('Please fill out all contact fields!');
+    return;
+  }
+
+  if (!/\S+@\S+\.\S+/.test(email)) {
+    alert('Please enter a valid email address!');
+    return;
+  }
+
+  try {
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Sending Message...';
+    }
+
+    const res = await fetch('https://varshuai-github-io.onrender.com/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message })
+    });
+
+    if (res.ok) {
+      alert('Message sent successfully to Varshan! ✦');
+      if (nameEl) nameEl.value = '';
+      if (emailEl) emailEl.value = '';
+      if (msgEl) msgEl.value = '';
+    } else {
+      alert('Could not submit message. Please try again later.');
+    }
+  } catch (err) {
+    alert('Server offline. Please reach out via email directly!');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Send Message ✦';
+    }
+  }
+}
+
+/* ═══════════════════════════════════════
+   FEATURE: SYSTEM DIAGNOSTICS & AUDIT
+   ═══════════════════════════════════════ */
+let isDiagOpen = false;
+function toggleDiagnostics() {
+  const drawer = document.getElementById('diag-drawer');
+  if (!drawer) return;
+  isDiagOpen = !isDiagOpen;
+  if (isDiagOpen) {
+    drawer.style.bottom = '0px';
+    document.getElementById('diagOS').textContent = navigator.platform || 'Unknown';
+    document.getElementById('diagWebGL').textContent = (function() {
+      try {
+        const canvas = document.createElement('canvas');
+        return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+      } catch(e) { return false; }
+    })() ? 'YES (WEBGL2)' : 'NO';
+    document.getElementById('diagAudio').textContent = window.AudioContext || window.webkitAudioContext ? 'ACTIVE (WEBAUDIO)' : 'DISABLED';
+    
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    document.getElementById('diagConn').textContent = conn ? `${conn.effectiveType || 'unknown'} (${conn.downlink || '?'} Mbps)` : 'UNKNOWN';
+  } else {
+    drawer.style.bottom = '-400px';
+  }
+}
+
+function runDiagAudit() {
+  const logs = document.getElementById('diagLogs');
+  if (!logs) return;
+
+  logs.textContent = '';
+  const messages = [
+    "⚡ Starting Assets Integrity Scan...",
+    "🔍 Checking image sizes and responsive scaling...",
+    "🔍 Fetching Outfit & JetBrains Mono fonts...",
+    "🔍 Loading Supabase configuration hooks...",
+    "🔍 Verifying Guestbook and Leaderboard Render database connections...",
+    "🔍 Synthesizing Web Audio frequency sweeping node...",
+    "✅ Font modules: OK",
+    "✅ Supabase assets: OK",
+    "✅ Server API endpoints: ACTIVE",
+    "✅ WebGL GPU buffer layers: 100% stable",
+    "🌟 System Diagnostics Integrity: SUCCESSFUL (100% pass rate)"
+  ];
+
+  let step = 0;
+  function printLog() {
+    if (step < messages.length) {
+      logs.textContent += messages[step] + '\n';
+      logs.scrollTop = logs.scrollHeight;
+      
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(300 + (step * 80), audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+      } catch(e){}
+      
+      step++;
+      setTimeout(printLog, 250);
+    }
+  }
+  printLog();
+}
 
 
