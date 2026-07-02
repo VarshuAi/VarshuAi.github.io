@@ -171,32 +171,104 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
    CINEMA INTRO CONTROLLER
    Total runtime: ~4.4 seconds
    ═══════════════════════════════ */
-(function introController() {
+(function biosIntroController() {
   const intro = document.getElementById('intro');
-  const skip  = document.getElementById('intro-skip');
-  if (!intro) return;
+  const termLines = document.getElementById('bios-lines');
+  if (!intro || !termLines) return;
 
-  // Lock scroll while intro plays
   document.body.classList.add('intro-on');
 
-  // How long the full sequence runs before auto-exit
-  const DURATION = 4400;
+  const biosLines = [
+    "VG-BIOS Version 5.2.2026 (C) 2026 Varshan SR",
+    "CPU: AMD Ryzen 9 7950X @ 4.50 GHz",
+    "SYSTEM MEMORY: 32768 MB (TEST COMPLETE: SUCCESS)",
+    "VIRTUAL CONTEXT HARDWARE: WebGL GPU BUFFER DETECTED",
+    "COMMENCING DECK PROTOCOL INTEGRITY DIAGNOSTIC...",
+    "",
+    "Loading stylesheet.css...................... SUCCESS",
+    "Initializing JavaScript runtime modules......... SUCCESS",
+    "Establishing connection to Render database...... ONLINE",
+    "Fetching public GitHub statistics............... SUCCESS",
+    "Active Dev Timezone: BENGALURU, INDIA (IST)",
+    "",
+    "===========================================================",
+    "STATUS: SECURE. SYSTEM LOADED SUCCESSFULLY.",
+    "===========================================================",
+    "",
+    "Click or Press ANY KEY to boot into deck..."
+  ];
+
+  let currentLine = 0;
+  let isDismissed = false;
 
   function dismiss() {
-    intro.classList.add('exit');
-    document.body.classList.remove('intro-on');
-    // Remove from DOM fully after fade transition ends
-    setTimeout(() => intro.remove(), 1050);
+    if (isDismissed) return;
+    isDismissed = true;
+    
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.4);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.5);
+    } catch(e){}
+
+    const flash = document.getElementById('intro-flash');
+    if (flash) {
+      flash.style.opacity = '1';
+      flash.style.background = '#39D353';
+    }
+    
+    setTimeout(() => {
+      intro.classList.add('exit');
+      document.body.classList.remove('intro-on');
+      setTimeout(() => intro.remove(), 1050);
+    }, 150);
   }
 
-  // Auto-dismiss after full animation
-  const autoTimer = setTimeout(dismiss, DURATION);
-
-  // Skip on click anywhere on the intro or on the skip text
-  intro.addEventListener('click', () => {
-    clearTimeout(autoTimer);
+  window.skipIntro = () => {
     dismiss();
-  });
+  };
+
+  function printNextLine() {
+    if (isDismissed) return;
+    if (currentLine < biosLines.length) {
+      termLines.textContent += biosLines[currentLine] + '\n';
+      
+      const term = document.getElementById('bios-terminal');
+      if (term) term.scrollTop = term.scrollHeight;
+
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(600 + (currentLine * 40), audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.008, audioCtx.currentTime);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.03);
+      } catch(e){}
+
+      currentLine++;
+      
+      let delay = 120 + Math.random() * 80;
+      if (currentLine === 5 || currentLine === 12) delay = 400;
+      setTimeout(printNextLine, delay);
+    } else {
+      intro.addEventListener('click', dismiss);
+      document.addEventListener('keydown', dismiss, { once: true });
+    }
+  }
+
+  setTimeout(printNextLine, 300);
 })();
 /* ═══════════════════════════════ */
 
@@ -312,9 +384,10 @@ function drawCanvas() {
 
     // Draw and animate particles
     pts.forEach(p => {
-      // Move particles
-      p.x += p.vx; 
-      p.y += p.vy;
+      // Move particles with optional music-driven speed boost
+      const speedMultiplier = 1 + (window.bgAudioIntensity ? (window.bgAudioIntensity / 255) * 2.5 : 0);
+      p.x += p.vx * speedMultiplier; 
+      p.y += p.vy * speedMultiplier;
 
       // Mouse attraction pull
       if (bgMouseX > 0) {
@@ -332,9 +405,10 @@ function drawCanvas() {
       if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
       if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
-      // Render particle
+      // Render particle with pulsing sizing
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      const dynamicRadius = p.r * (1 + (window.bgAudioIntensity ? (window.bgAudioIntensity / 255) * 1.5 : 0));
+      ctx.arc(p.x, p.y, dynamicRadius, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${getAccentRGB()},${p.a})`;
       ctx.fill();
     });
@@ -342,6 +416,7 @@ function drawCanvas() {
     // Draw connections only every 2 frames to optimize CPU load
     if (frameCount % 2 === 0) {
       const activeRGB = getAccentRGB();
+      const audioBoost = window.bgAudioIntensity ? window.bgAudioIntensity / 255 : 0;
       for (let i = 0; i < pts.length; i++) {
         // Draw connection to mouse
         if (bgMouseX > 0) {
@@ -352,7 +427,8 @@ function drawCanvas() {
             ctx.beginPath();
             ctx.moveTo(bgMouseX, bgMouseY);
             ctx.lineTo(pts[i].x, pts[i].y);
-            ctx.strokeStyle = `rgba(${activeRGB}, ${0.28 * (1 - md / 140)})`; // glowing dynamic line
+            const lineAlpha = Math.min(0.8, 0.28 * (1 - md / 140) * (1 + audioBoost * 2));
+            ctx.strokeStyle = `rgba(${activeRGB}, ${lineAlpha})`; // glowing dynamic line
             ctx.lineWidth = 0.6;
             ctx.stroke();
           }
@@ -367,7 +443,8 @@ function drawCanvas() {
             ctx.beginPath();
             ctx.moveTo(pts[i].x, pts[i].y);
             ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.strokeStyle = `rgba(${activeRGB}, ${0.12 * (1 - d / 120)})`; // dynamic connection
+            const connectionAlpha = Math.min(0.8, 0.12 * (1 - d / 120) * (1 + audioBoost * 2.5));
+            ctx.strokeStyle = `rgba(${activeRGB}, ${connectionAlpha})`; // dynamic connection
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -1714,7 +1791,64 @@ loadGuestbook();
   const BANNER = `\n<span class="term-info">╔══════════════════════════════════════════════╗\n║                                              ║\n║   <span class="term-accent">██╗   ██╗ ██████╗    </span>                       ║\n║   <span class="term-accent">██║   ██║██╔════╝    </span>                       ║\n║   <span class="term-accent">╚██╗ ██╔╝██║  ███╗   </span>                       ║\n║   <span class="term-accent"> ╚████╔╝ ██║   ██║   </span>                       ║\n║   <span class="term-accent">  ╚██╔╝  ╚██████╔╝   </span>                       ║\n║   <span class="term-accent">   ╚═╝    ╚═════╝    </span>                       ║\n║                                              ║\n║   <span class="term-cmd">Varshan Gowda SR</span> — Portfolio Terminal       ║\n║   <span class="term-dim">Type 'help' to see available commands</span>       ║\n║                                              ║\n╚══════════════════════════════════════════════╝</span>\n`;
 
   const COMMANDS = {
-    help: () => `\n<span class="term-cmd">Available Commands:</span>\n\n  <span class="term-accent">about</span>      <span class="term-dim">—</span> Who am I\n  <span class="term-accent">projects</span>   <span class="term-dim">—</span> Featured builds\n  <span class="term-accent">skills</span>     <span class="term-dim">—</span> Tech stack\n  <span class="term-accent">timeline</span>   <span class="term-dim">—</span> My journey\n  <span class="term-accent">contact</span>    <span class="term-dim">—</span> Get in touch\n  <span class="term-accent">github</span>     <span class="term-dim">—</span> Open GitHub profile\n  <span class="term-accent">guestbook</span>  <span class="term-dim">—</span> Leave a message\n  <span class="term-accent">ask</span>        <span class="term-dim">—</span> Ask the AI agent a question (usage: 'ask who are you')\n  <span class="term-accent">matrix</span>     <span class="term-dim">—</span> Toggle falling binary rain overlay\n  <span class="term-accent">accent</span>     <span class="term-dim">—</span> Change theme colors (usage: 'accent rose')\n  <span class="term-accent">hack</span>       <span class="term-dim">—</span> Start visual cyberpunk hacking sequence\n  <span class="term-accent">clear</span>      <span class="term-dim">—</span> Clear terminal\n  <span class="term-accent">exit</span>       <span class="term-dim">—</span> Close terminal\n`,
+    help: () => `\n<span class="term-cmd">Available Commands:</span>\n\n  <span class="term-accent">about</span>      <span class="term-dim">—</span> Who am I\n  <span class="term-accent">projects</span>   <span class="term-dim">—</span> Featured builds\n  <span class="term-accent">skills</span>     <span class="term-dim">—</span> Tech stack\n  <span class="term-accent">timeline</span>   <span class="term-dim">—</span> My journey\n  <span class="term-accent">contact</span>    <span class="term-dim">—</span> Get in touch\n  <span class="term-accent">github</span>     <span class="term-dim">—</span> Open GitHub profile\n  <span class="term-accent">guestbook</span>  <span class="term-dim">—</span> Leave a message\n  <span class="term-accent">ask</span>        <span class="term-dim">—</span> Ask the AI agent a question (usage: 'ask who are you')\n  <span class="term-accent">quest</span>      <span class="term-dim">—</span> Start secret terminal decryption quest\n  <span class="term-accent">matrix</span>     <span class="term-dim">—</span> Toggle falling binary rain overlay\n  <span class="term-accent">accent</span>     <span class="term-dim">—</span> Change theme colors (usage: 'accent rose')\n  <span class="term-accent">hack</span>       <span class="term-dim">—</span> Start visual cyberpunk hacking sequence\n  <span class="term-accent">clear</span>      <span class="term-dim">—</span> Clear terminal\n  <span class="term-accent">exit</span>       <span class="term-dim">—</span> Close terminal\n`,
+    quest: (args) => {
+      if (!window.questStep) window.questStep = 1;
+      const param = args ? args.trim().toLowerCase() : '';
+      
+      if (window.questStep === 1) {
+        if (param === 'decode tauri') {
+          window.questStep = 2;
+          playSynthBeep(600, 'sine', 0.1, 0.15);
+          return `<span class="term-accent">[CORRECT] Decryption successful. Memory segment 1 unlocked!</span>\n` +
+                 `<span class="term-cmd">--- LEVEL 2 ---</span>\n` +
+                 `<span class="term-dim">Register Hex Decipher query:</span> Identify the hexadecimal value of decimal 255.\n` +
+                 `Type: <span class="term-accent">quest hex [hex_value]</span> (Hint: 2 lowercase characters)`;
+        } else {
+          return `<span class="term-warn">[LEVEL 1 - ENCRYPTED DATAFRAME]</span>\n` +
+                 `Decipher the Base64 security string: "VGF1cmk="\n` +
+                 `Type: <span class="term-accent">quest decode [decoded_word]</span>`;
+        }
+      }
+      
+      if (window.questStep === 2) {
+        if (param === 'hex ff') {
+          window.questStep = 3;
+          playSynthBeep(800, 'sine', 0.1, 0.15);
+          return `<span class="term-accent">[CORRECT] Register decoded. Sector 2 bypassed!</span>\n` +
+                 `<span class="term-cmd">--- LEVEL 3 ---</span>\n` +
+                 `<span class="term-dim">Firewall Bypass validation:</span> Type the theme accent preset name representing green.\n` +
+                 `Type: <span class="term-accent">quest green [accent_name]</span> (Hint: Check options under 'help')`;
+        } else {
+          return `<span class="term-warn">[LEVEL 2 - REGISTER LOCKED]</span>\n` +
+                 `Identify the hexadecimal value of decimal 255.\n` +
+                 `Type: <span class="term-accent">quest hex [hex_value]</span>`;
+        }
+      }
+      
+      if (window.questStep === 3) {
+        if (param === 'green emerald') {
+          window.questStep = 4;
+          playSynthBeep(523.25, 'triangle', 0.15, 0.1);
+          setTimeout(() => playSynthBeep(659.25, 'triangle', 0.15, 0.1), 120);
+          setTimeout(() => playSynthBeep(783.99, 'triangle', 0.15, 0.1), 240);
+          setTimeout(() => playSynthBeep(1046.5, 'triangle', 0.2, 0.35), 360);
+          
+          document.documentElement.style.setProperty('--accent', '#39D353');
+          document.documentElement.style.setProperty('--accent-2', '#00FF41');
+          
+          return `<span class="term-accent">╔══════════════════════════════════════════════╗\n║                QUEST COMPLETE!               ║\n║        SECRET GLOW PRESENT UNLOCKED          ║\n║      System Theme updated to TOXIC NEON      ║\n╚══════════════════════════════════════════════╝</span>`;
+        } else {
+          return `<span class="term-warn">[LEVEL 3 - FIREWALL SHIELD ACTIVE]</span>\n` +
+                 `Type the theme accent preset name representing green.\n` +
+                 `Type: <span class="term-accent">quest green [accent_name]</span>`;
+        }
+      }
+      
+      if (window.questStep === 4) {
+        return `<span class="term-accent">System diagnostics report 100% security integrity. Secret Toxic theme active. To reset, type 'accent indigo'.</span>`;
+      }
+    },
     ask: (args) => {
       if (!args.trim()) {
         return `<span class="term-warn">Usage: ask [your question here]</span>\n<span class="term-dim">Example: ask how can I hire you?</span>`;
@@ -2120,6 +2254,12 @@ function setupLofiVisualizer() {
       dataArray.fill(0);
     }
     
+    let totalVal = 0;
+    for (let i = 0; i < bufferLength; i++) {
+      totalVal += dataArray[i];
+    }
+    window.bgAudioIntensity = totalVal / bufferLength;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const barWidth = (canvas.width / bufferLength) * 1.5;
     let barHeight;

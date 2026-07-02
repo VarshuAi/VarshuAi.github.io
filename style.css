@@ -2589,3 +2589,22 @@ body:not([data-theme="dark"]) .gh-img { filter: invert(1) hue-rotate(180deg) bri
   outline: 1.5px solid var(--accent);
   z-index: 10;
 }
+
+/* ── CRT BIOS Intro Styles ── */
+@keyframes bios-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.crt-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+  z-index: 6;
+}
+#intro-skip:hover {
+  border-color: #FFF !important;
+  color: #FFF !important;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
