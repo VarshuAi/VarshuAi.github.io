@@ -1661,12 +1661,13 @@ loadGuestbook();
    FEATURE: LO-FI AUDIO PLAYER & VISUALIZER
    ═══════════════════════════════════════ */
 const lofiTracks = [
-  { title: "Lofi Beats - Cyber Ambient", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-  { title: "Neon Skyline Chillout", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-  { title: "Cyber Sunset Lounge", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+  { title: "Lofi Beats - Chill Session", url: "https://assets.codepen.io/4358584/Anitek_-_01_-_Kisses.mp3" },
+  { title: "Sunset Skyline Instrumental", url: "https://assets.codepen.io/4358584/Anitek_-_02_-_Kisses_Instrumental.mp3" }
 ];
 let currentLofiIndex = 0;
-let lofiAudio = new Audio(lofiTracks[currentLofiIndex].url);
+let lofiAudio = new Audio();
+lofiAudio.crossOrigin = "anonymous";
+lofiAudio.src = lofiTracks[currentLofiIndex].url;
 let lofiAudioCtx = null;
 let lofiAnalyser = null;
 let lofiSource = null;
@@ -1993,6 +1994,11 @@ async function submitHighScore() {
   } catch(e) {
     alert('Server error.');
   }
+}
+
+function dismissArcadeAlert() {
+  const overlay = document.getElementById('arcadeAlertOverlay');
+  if (overlay) overlay.style.display = 'none';
 }
 
 
