@@ -455,30 +455,64 @@ const FEATURED_FALLBACK = [
   }
 ];
 
+const BUILDING_FALLBACK = [
+  {
+    name: "VarshuAI Tools",
+    status: "Active",
+    description: "A collection of AI-powered CLI utilities built with Python and Rust - personal toolkit that does the boring stuff so I can focus on building.",
+    tech: ["Python", "Rust", "CLI", "AI"]
+  },
+  {
+    name: "Open Source Experiments",
+    status: "Active",
+    description: "Constantly exploring new tools, languages, and ideas. If it looks interesting, I build a prototype. Most of it ends up on GitHub.",
+    tech: ["GitHub", "Open Source", "Experiments"]
+  },
+  {
+    name: "This Portfolio v4",
+    status: "Upcoming",
+    description: "Always iterating. The next version is already being planned - more interactions, more personality, more me.",
+    tech: ["Web", "Design", "JS"]
+  }
+];
+
 async function loadFeaturedBuilds() {
   const container = document.getElementById('featuredBuilds');
+  const buildingContainer = document.getElementById('currentlyBuilding');
   if (!container) return;
 
-  let featured = [];
+  let db = [];
 
   try {
     const res = await fetch('https://varshuai-github-io.onrender.com/api/projects');
     if (res.ok) {
-      featured = await res.json();
+      db = await res.json();
     } else {
       const resStatic = await fetch('projects_db.json');
-      if (resStatic.ok) featured = await resStatic.json();
+      if (resStatic.ok) db = await resStatic.json();
     }
   } catch (err) {
     console.warn("Could not load database, using fallback featured project.");
   }
 
-  if (!featured || !featured.length) {
-    featured = FEATURED_FALLBACK;
+  let projects = [];
+  let building = [];
+
+  if (Array.isArray(db)) {
+    projects = db.filter(p => !p.type || p.type === 'project');
+    building = db.filter(p => p.type === 'building');
   }
 
+  if (!projects || !projects.length) {
+    projects = FEATURED_FALLBACK;
+  }
+  if (!building || !building.length) {
+    building = BUILDING_FALLBACK;
+  }
+
+  // Render Projects Grid
   container.innerHTML = '';
-  featured.forEach(project => {
+  projects.forEach(project => {
     const card = document.createElement('div');
     card.className = 'featured-card reveal';
     
@@ -505,9 +539,36 @@ async function loadFeaturedBuilds() {
     `;
     container.appendChild(card);
   });
+
+  // Render Currently Building Grid
+  if (buildingContainer) {
+    buildingContainer.innerHTML = '';
+    building.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = `building-card reveal reveal-delay-${index % 3}`;
+      
+      const statusText = item.status || 'Active';
+      const isUpcoming = statusText.toLowerCase().includes('upcoming') || statusText.toLowerCase().includes('planned');
+      
+      card.innerHTML = `
+        <div class="building-header">
+          <span class="live-dot" style="${isUpcoming ? 'background:#F59E0B' : 'background:#10B981'}"></span>
+          <span class="live-label" style="${isUpcoming ? 'color:#F59E0B' : 'color:#10B981'}">${statusText}</span>
+        </div>
+        <h3>${item.name}</h3>
+        <p>${item.description}</p>
+        <div class="building-tags">
+          ${item.tech.map(t => `<span>${t}</span>`).join('')}
+        </div>
+      `;
+      buildingContainer.appendChild(card);
+    });
+  }
   
-  if (typeof revObs !== 'undefined') {
-    container.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+  if (typeof revObs !== 'undefined' && revObs) {
+    document.querySelectorAll('.featured-card.reveal, .building-card.reveal').forEach(el => {
+      revObs.observe(el);
+    });
   }
 }
 

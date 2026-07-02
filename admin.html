@@ -255,17 +255,29 @@
       <div class="main-form">
         <div class="form-row">
           <div class="form-group">
-            <label for="pId">Project Unique ID (url slug)</label>
-            <input type="text" id="pId" placeholder="e.g. altercontroller">
+            <label for="pType">Item Type (Section Location)</label>
+            <select id="pType" onchange="toggleFormFields()">
+              <option value="project">🚀 Featured Showcase Project</option>
+              <option value="building">🔨 Currently Building Status</option>
+            </select>
           </div>
           <div class="form-group">
-            <label for="pStatus">Build Status</label>
+            <label for="pStatus">Build Status / Live Status</label>
             <select id="pStatus">
               <option value="Active Development">Active Development</option>
               <option value="Production Release">Production Release</option>
               <option value="Experimental Build">Experimental Build</option>
               <option value="Completed">Completed</option>
+              <option value="Active">Active (Building)</option>
+              <option value="Upcoming">Upcoming (Planned)</option>
             </select>
+          </div>
+        </div>
+
+        <div class="form-row" id="idRow">
+          <div class="form-group">
+            <label for="pId">Project Unique ID (url slug)</label>
+            <input type="text" id="pId" placeholder="e.g. altercontroller">
           </div>
         </div>
 
@@ -410,7 +422,10 @@
       projects.forEach(p => {
         const div = document.createElement('div');
         div.className = `project-item ${p.id === activeProjectId ? 'active' : ''}`;
-        div.textContent = p.name;
+        
+        const typeEmoji = p.type === 'building' ? '🔨 ' : '🚀 ';
+        div.textContent = typeEmoji + p.name;
+        
         div.onclick = () => {
           activeProjectId = p.id;
           renderProjectList();
@@ -420,8 +435,30 @@
       });
     }
 
+    function toggleFormFields() {
+      const type = document.getElementById('pType').value;
+      const idRow = document.getElementById('idRow');
+      
+      const taglineField = document.getElementById('pTagline').closest('.form-group');
+      const detailsField = document.getElementById('pDetails').closest('.form-group');
+      const attachmentsField = document.getElementById('downloadsList').closest('.form-group');
+
+      if (type === 'building') {
+        if (idRow) idRow.style.display = 'none';
+        if (taglineField) taglineField.style.display = 'none';
+        if (detailsField) detailsField.style.display = 'none';
+        if (attachmentsField) attachmentsField.style.display = 'none';
+      } else {
+        if (idRow) idRow.style.display = 'block';
+        if (taglineField) taglineField.style.display = 'block';
+        if (detailsField) detailsField.style.display = 'block';
+        if (attachmentsField) attachmentsField.style.display = 'block';
+      }
+    }
+
     function loadProjectIntoForm(id) {
       const p = projects.find(proj => proj.id === id) || defaultProject;
+      document.getElementById('pType').value = p.type || 'project';
       document.getElementById('pId').value = p.id || '';
       document.getElementById('pName').value = p.name || '';
       document.getElementById('pStatus').value = p.status || 'Active Development';
@@ -431,6 +468,7 @@
       document.getElementById('pDetails').value = p.details || '';
       
       renderDownloadsList(p.downloads || []);
+      toggleFormFields();
     }
 
     function renderDownloadsList(downloads) {
@@ -474,6 +512,7 @@
       const newId = `project-${Date.now().toString().slice(-4)}`;
       const newP = {
         id: newId,
+        type: "project",
         name: "New Build Project",
         tagline: "Short tagline summarizing target build goals",
         status: "Active Development",
@@ -493,15 +532,24 @@
       const pIndex = projects.findIndex(p => p.id === activeProjectId);
       if (pIndex === -1) return;
 
-      projects[pIndex].id = id;
+      const type = document.getElementById('pType').value;
+      projects[pIndex].type = type;
       projects[pIndex].name = document.getElementById('pName').value.trim();
       projects[pIndex].status = document.getElementById('pStatus').value;
-      projects[pIndex].tagline = document.getElementById('pTagline').value.trim();
       projects[pIndex].tech = document.getElementById('pTech').value.split(',').map(s => s.trim()).filter(Boolean);
       projects[pIndex].description = document.getElementById('pDescription').value.trim();
-      projects[pIndex].details = document.getElementById('pDetails').value.trim();
 
-      activeProjectId = id;
+      if (type === 'project') {
+        projects[pIndex].id = id || activeProjectId;
+        projects[pIndex].tagline = document.getElementById('pTagline').value.trim();
+        projects[pIndex].details = document.getElementById('pDetails').value.trim();
+        activeProjectId = projects[pIndex].id;
+      } else {
+        projects[pIndex].tagline = '';
+        projects[pIndex].details = '';
+        projects[pIndex].downloads = [];
+      }
+
       renderProjectList();
 
       if (isServerConnected) {
