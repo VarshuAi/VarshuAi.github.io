@@ -1596,10 +1596,14 @@ loadGuestbook();
       tag.y2d = tag.y * zoom + H / 2;
       tag.scale = zoom;
 
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const color1 = isDark ? '6, 182, 212' : '8, 145, 178';
+      const color2 = isDark ? '129, 140, 248' : '79, 70, 229';
+
       const alpha = (tag.z + radius) / (2 * radius); // 0 to 1
       ctx.save();
       ctx.font = `bold ${Math.max(10, 11 * tag.scale)}px 'Outfit', sans-serif`;
-      ctx.fillStyle = tag.z > 0 ? `rgba(6, 182, 212, ${Math.max(0.25, alpha)})` : `rgba(129, 140, 248, ${Math.max(0.25, alpha)})`;
+      ctx.fillStyle = tag.z > 0 ? `rgba(${color1}, ${Math.max(0.25, alpha)})` : `rgba(${color2}, ${Math.max(0.25, alpha)})`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(tag.text, tag.x2d, tag.y2d);
@@ -1637,13 +1641,13 @@ loadGuestbook();
   // Handle clicking a tag
   canvas.addEventListener('click', e => {
     const rect = canvas.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+    const clickX = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const clickY = (e.clientY - rect.top) * (canvas.height / rect.height);
 
     // Check if clicked near any tag
     for (let tag of tagObjects) {
       const distance = Math.hypot(tag.x2d - clickX, tag.y2d - clickY);
-      if (distance < 22 * tag.scale) {
+      if (distance < 25 * tag.scale) {
         // Trigger corresponding tech stack modal by looking up element title
         const match = Array.from(document.querySelectorAll('.stack-item')).find(el => el.dataset.tip?.toLowerCase() === tag.text.toLowerCase());
         if (match) {
