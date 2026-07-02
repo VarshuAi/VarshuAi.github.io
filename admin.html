@@ -7,10 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=1.1" />
+  <link rel="stylesheet" href="style.css?v=1.2" />
   <style>
+    /* Restore system cursor since custom cursor markup is absent here */
+    * {
+      cursor: auto !important;
+    }
+    a, button, select, input, textarea, [role="button"], .project-item, .upload-zone {
+      cursor: pointer !important;
+    }
     body {
-      background: var(--bg-1);
+      background: var(--bg);
       color: var(--text-1);
       font-family: 'Outfit', sans-serif;
       margin: 0;
@@ -314,7 +321,7 @@
   <script>
     // System Theme Initialization
     const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.className = `theme-${savedTheme}`;
+    document.documentElement.setAttribute('data-theme', savedTheme);
 
     let projects = [];
     let activeProjectId = 'altercontroller';
