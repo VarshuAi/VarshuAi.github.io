@@ -1791,7 +1791,14 @@ loadGuestbook();
   const BANNER = `\n<span class="term-info">╔══════════════════════════════════════════════╗\n║                                              ║\n║   <span class="term-accent">██╗   ██╗ ██████╗    </span>                       ║\n║   <span class="term-accent">██║   ██║██╔════╝    </span>                       ║\n║   <span class="term-accent">╚██╗ ██╔╝██║  ███╗   </span>                       ║\n║   <span class="term-accent"> ╚████╔╝ ██║   ██║   </span>                       ║\n║   <span class="term-accent">  ╚██╔╝  ╚██████╔╝   </span>                       ║\n║   <span class="term-accent">   ╚═╝    ╚═════╝    </span>                       ║\n║                                              ║\n║   <span class="term-cmd">Varshan Gowda SR</span> — Portfolio Terminal       ║\n║   <span class="term-dim">Type 'help' to see available commands</span>       ║\n║                                              ║\n╚══════════════════════════════════════════════╝</span>\n`;
 
   const COMMANDS = {
-    help: () => `\n<span class="term-cmd">Available Commands:</span>\n\n  <span class="term-accent">about</span>      <span class="term-dim">—</span> Who am I\n  <span class="term-accent">projects</span>   <span class="term-dim">—</span> Featured builds\n  <span class="term-accent">skills</span>     <span class="term-dim">—</span> Tech stack\n  <span class="term-accent">timeline</span>   <span class="term-dim">—</span> My journey\n  <span class="term-accent">contact</span>    <span class="term-dim">—</span> Get in touch\n  <span class="term-accent">github</span>     <span class="term-dim">—</span> Open GitHub profile\n  <span class="term-accent">guestbook</span>  <span class="term-dim">—</span> Leave a message\n  <span class="term-accent">ask</span>        <span class="term-dim">—</span> Ask the AI agent a question (usage: 'ask who are you')\n  <span class="term-accent">quest</span>      <span class="term-dim">—</span> Start secret terminal decryption quest\n  <span class="term-accent">matrix</span>     <span class="term-dim">—</span> Toggle falling binary rain overlay\n  <span class="term-accent">accent</span>     <span class="term-dim">—</span> Change theme colors (usage: 'accent rose')\n  <span class="term-accent">hack</span>       <span class="term-dim">—</span> Start visual cyberpunk hacking sequence\n  <span class="term-accent">clear</span>      <span class="term-dim">—</span> Clear terminal\n  <span class="term-accent">exit</span>       <span class="term-dim">—</span> Close terminal\n`,
+    help: () => `\n<span class="term-cmd">Available Commands:</span>\n\n  <span class="term-accent">about</span>      <span class="term-dim">—</span> Who am I\n  <span class="term-accent">projects</span>   <span class="term-dim">—</span> Featured builds\n  <span class="term-accent">skills</span>     <span class="term-dim">—</span> Tech stack\n  <span class="term-accent">timeline</span>   <span class="term-dim">—</span> My journey\n  <span class="term-accent">contact</span>    <span class="term-dim">—</span> Get in touch\n  <span class="term-accent">github</span>     <span class="term-dim">—</span> Open GitHub profile\n  <span class="term-accent">guestbook</span>  <span class="term-dim">—</span> Leave a message\n  <span class="term-accent">ask</span>        <span class="term-dim">—</span> Ask the AI agent a question (usage: 'ask who are you')\n  <span class="term-accent">quest</span>      <span class="term-dim">—</span> Start secret terminal decryption quest\n  <span class="term-accent">play</span>       <span class="term-dim">—</span> Stream any song from JioSaavn (usage: 'play linkin park')\n  <span class="term-accent">matrix</span>     <span class="term-dim">—</span> Toggle falling binary rain overlay\n  <span class="term-accent">accent</span>     <span class="term-dim">—</span> Change theme colors (usage: 'accent rose')\n  <span class="term-accent">hack</span>       <span class="term-dim">—</span> Start visual cyberpunk hacking sequence\n  <span class="term-accent">clear</span>      <span class="term-dim">—</span> Clear terminal\n  <span class="term-accent">exit</span>       <span class="term-dim">—</span> Close terminal\n`,
+    play: (args) => {
+      if (!args || !args.trim()) {
+        return `<span class="term-warn">Usage: play [song_name]</span>\n<span class="term-dim">Example: play starboy</span>`;
+      }
+      playFromJioSaavn(args);
+      return `<span class="term-info">→ Initiating JioSaavn query lookup for "${args}"...</span>`;
+    },
     quest: (args) => {
       if (!window.questStep) window.questStep = 1;
       const param = args ? args.trim().toLowerCase() : '';
@@ -3194,5 +3201,110 @@ function loadGitHubHeatmap() {
     statsEl.textContent = `${totalCommits.toLocaleString()} commits in the last year`;
   }
 }
+
+/* ── FEATURE: DYNAMIC ONLINE JIOSAAVN AUDIO STREAMING CLIENT ── */
+async function playFromJioSaavn(query) {
+  if (!query || !query.trim()) return;
+  const titleEl = document.getElementById('lofiTrack');
+  const termOutput = document.getElementById('termOutput');
+  const termBody = document.getElementById('termBody');
+  
+  if (termOutput) {
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'term-info';
+    infoDiv.textContent = `[JIOSAAVN]: Searching for "${query}"...`;
+    termOutput.appendChild(infoDiv);
+    if (termBody) termBody.scrollTop = termBody.scrollHeight;
+  }
+
+  try {
+    const searchRes = await fetch(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(query)}`);
+    if (!searchRes.ok) throw new Error('Search failed');
+    const searchJson = await searchRes.json();
+    
+    let songs = [];
+    if (searchJson.data && searchJson.data.results) {
+      songs = searchJson.data.results;
+    } else if (searchJson.data) {
+      songs = Array.isArray(searchJson.data) ? searchJson.data : (searchJson.data.songs || []);
+    } else {
+      songs = searchJson;
+    }
+    
+    if (!songs || songs.length === 0) {
+      throw new Error('No songs found matching query');
+    }
+
+    const song = songs[0];
+    let playUrl = '';
+    
+    if (song.downloadUrl && song.downloadUrl.length > 0) {
+      playUrl = song.downloadUrl[song.downloadUrl.length - 1].url;
+    } else {
+      const detailsRes = await fetch(`https://saavn.dev/api/songs?ids=${song.id}`);
+      if (!detailsRes.ok) throw new Error('Details fetch failed');
+      const detailsJson = await detailsRes.json();
+      
+      let detailSongs = [];
+      if (detailsJson.data) {
+        detailSongs = Array.isArray(detailsJson.data) ? detailsJson.data : [detailsJson.data];
+      } else {
+        detailSongs = Array.isArray(detailsJson) ? detailsJson : [detailsJson];
+      }
+      
+      const detailSong = detailSongs[0];
+      if (detailSong && detailSong.downloadUrl && detailSong.downloadUrl.length > 0) {
+        playUrl = detailSong.downloadUrl[detailSong.downloadUrl.length - 1].url;
+      }
+    }
+
+    if (!playUrl) {
+      throw new Error('No audio streaming URL available');
+    }
+
+    const songTitleStr = song.name || song.title || 'Unknown Title';
+    const artistStr = song.primaryArtists || (Array.isArray(song.artists) ? song.artists.join(', ') : (song.artists || 'Unknown Artist'));
+    const trackTitle = `${songTitleStr} - ${artistStr}`;
+    
+    lofiAudio.src = playUrl;
+    lofiAudio.load();
+    
+    if (titleEl) {
+      titleEl.textContent = trackTitle;
+    }
+    
+    setupLofiVisualizer();
+    if (lofiAudioCtx && lofiAudioCtx.state === 'suspended') {
+      lofiAudioCtx.resume();
+    }
+    
+    lofiAudio.play();
+    
+    const playBtn = document.getElementById('lofiPlayBtn');
+    if (playBtn) playBtn.textContent = '⏸';
+
+    // Start disc spinning animation
+    const disc = document.getElementById('lofiDisc');
+    const lofiContainer = document.getElementById('lofiPlayer');
+    if (lofiContainer) lofiContainer.classList.add('playing');
+
+    if (termOutput) {
+      const successDiv = document.createElement('div');
+      successDiv.className = 'term-accent';
+      successDiv.textContent = `[JIOSAAVN]: Found "${trackTitle}". Initialized audio stream context. Now playing...`;
+      termOutput.appendChild(successDiv);
+      if (termBody) termBody.scrollTop = termBody.scrollHeight;
+    }
+  } catch(err) {
+    if (termOutput) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'term-warn';
+      errorDiv.textContent = `[JIOSAAVN ERROR]: ${err.message}. Please try another query.`;
+      termOutput.appendChild(errorDiv);
+      if (termBody) termBody.scrollTop = termBody.scrollHeight;
+    }
+  }
+}
+window.playFromJioSaavn = playFromJioSaavn;
 
 

@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=3.1" />
+  <link rel="stylesheet" href="style.css?v=3.2" />
 
   <!-- INTRO CINEMA STYLES  -  inline so they load before anything else -->
   <style>
@@ -931,6 +931,10 @@
     </div>
     <div class="lofi-controls">
       <div class="lofi-track-info" id="lofiTrack">Lofi Coding Session</div>
+      <div style="display:flex; margin-bottom:6px; gap:4px; align-items:center; width:100%;">
+        <input type="text" id="lofiSearchInput" placeholder="Search JioSaavn..." style="flex:1; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.15); border-radius:4px; padding:3px 6px; font-size:0.65rem; color:#FFF; font-family:'JetBrains Mono',monospace; outline:none; transition:border-color 0.2s;" onkeydown="if(event.key==='Enter') playFromJioSaavn(this.value)" />
+        <button onclick="playFromJioSaavn(document.getElementById('lofiSearchInput').value)" style="background:var(--accent); border:none; border-radius:4px; padding:3px 6px; color:#FFF; font-size:0.62rem; cursor:pointer; font-family:'JetBrains Mono',monospace; font-weight:700;">PLAY</button>
+      </div>
       <div class="lofi-btn-row">
         <button class="lofi-btn" onclick="prevLofi()" title="Previous">⏮</button>
         <button class="lofi-btn" onclick="toggleLofi()" id="lofiPlayBtn" title="Play/Pause">▶</button>
@@ -1052,7 +1056,7 @@
     <button onclick="togglePianoPanel(false)" style="color:#EF4444;background:none;border:none;cursor:pointer;font-weight:700;font-size:0.75rem;padding:0;outline:none">CLOSE</button>
   </div>
 
-  <script src="app.js?v=3.1"></script>
+  <script src="app.js?v=3.2"></script>
 </body>
 </html>
 

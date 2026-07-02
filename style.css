@@ -2246,7 +2246,7 @@ body:not([data-theme="dark"]) .gh-img { filter: invert(1) hue-rotate(180deg) bri
 }
 .lofi-player:hover, .lofi-player.expanded {
   width: 340px;
-  height: 70px;
+  height: 96px;
   border-color: var(--accent);
   border-radius: var(--r-lg);
   padding: 12px 16px;
