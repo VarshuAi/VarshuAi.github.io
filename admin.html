@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Project Builder Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: var(--bg-1);
+      color: var(--text-1);
+      font-family: 'Outfit', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .admin-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+    }
+    .header-row h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+    .server-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    .status-online {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .status-offline {
+      background: rgba(245, 158, 11, 0.1);
+      color: #F59E0B;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 768px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .sidebar {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      height: fit-content;
+    }
+    .sidebar h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 16px 0;
+      color: var(--text-3);
+    }
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .project-item {
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .project-item:hover, .project-item.active {
+      border-color: var(--accent);
+      background: var(--bg-2);
+      color: var(--accent);
+    }
+    .main-form {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+    }
+    .form-group {
+      margin-bottom: 24px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--text-2);
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      color: var(--text-1);
+      padding: 12px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      background: var(--bg-1);
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .dropzone:hover {
+      border-color: var(--accent);
+    }
+    .action-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 32px;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      justify-content: flex-end;
+    }
+    .btn {
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(6, 182, 212, 0.35);
+    }
+    .btn-secondary {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-2);
+      border-color: var(--text-3);
+    }
+    .downloads-list {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .download-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+    }
+    .download-item button {
+      background: none;
+      border: none;
+      color: #EF4444;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .download-form {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body class="theme-light">
+  <div class="admin-container">
+    <div class="header-row">
+      <div>
+        <h1>Project Builder Dashboard</h1>
+        <p style="color:var(--text-3);margin:4px 0 0 0">Configure and upload project installers locally or export configuration</p>
+      </div>
+      <div id="connectionStatus" class="server-status status-offline">API SERVER OFFLINE</div>
+    </div>
+
+    <div class="grid-layout">
+      <div class="sidebar">
+        <h2>Your Builds</h2>
+        <div class="project-list" id="projectList">
+          <!-- Dynamically populated -->
+        </div>
+        <button class="btn btn-secondary" style="width:100%;margin-top:20px" onclick="createNewProject()">+ Add Build</button>
+      </div>
+
+      <div class="main-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="pId">Project Unique ID (url slug)</label>
+            <input type="text" id="pId" placeholder="e.g. altercontroller">
+          </div>
+          <div class="form-group">
+            <label for="pStatus">Build Status</label>
+            <select id="pStatus">
+              <option value="Active Development">Active Development</option>
+              <option value="Production Release">Production Release</option>
+              <option value="Experimental Build">Experimental Build</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="pName">Project Name</label>
+          <input type="text" id="pName" placeholder="e.g. AlterController Companion">
+        </div>
+
+        <div class="form-group">
+          <label for="pTagline">Tagline</label>
+          <input type="text" id="pTagline" placeholder="e.g. Companion App & Latency Optimization Suite">
+        </div>
+
+        <div class="form-group">
+          <label for="pTech">Technologies / Tech Stack (comma separated)</label>
+          <input type="text" id="pTech" placeholder="e.g. Rust, Tauri, React Native, Go">
+        </div>
+
+        <div class="form-group">
+          <label for="pDescription">Card Snippet / Short Description</label>
+          <textarea id="pDescription" rows="3" placeholder="A brief sentence for the project highlight card..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="pDetails">Detailed Documentation (Markdown supported)</label>
+          <textarea id="pDetails" rows="8" placeholder="### Key Features&#10;- Feature 1&#10;- Feature 2"></textarea>
+        </div>
+
+        <div class="form-group" style="border-top:1px solid var(--border);padding-top:24px">
+          <label>File Attachments (.exe, .apk, etc.)</label>
+          <div class="downloads-list" id="downloadsList">
+            <!-- Attached files -->
+          </div>
+
+          <div class="download-form">
+            <input type="text" id="dlLabel" placeholder="Button Label (e.g. Download Companion)" style="flex: 2">
+            <input type="text" id="dlFile" placeholder="Filename (e.g. Setup.exe)" style="flex: 2">
+            <button class="btn btn-secondary" onclick="addFileAttachment()">Attach File</button>
+          </div>
+
+          <div style="margin-top:20px">
+            <label>Upload File to Local Companion Server</label>
+            <div class="dropzone" id="dropzone">
+              Drag & Drop file (.exe or .apk) here, or click to select
+              <input type="file" id="fileInput" style="display:none">
+            </div>
+            <div id="uploadProgress" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--accent);margin-top:8px"></div>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button class="btn btn-secondary" id="exportBtn" onclick="exportJSON()">Export JSON Config</button>
+          <button class="btn btn-primary" onclick="saveProject()">Save Build</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // System Theme Initialization
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.className = `theme-${savedTheme}`;
+
+    let projects = [];
+    let activeProjectId = 'altercontroller';
+    let isServerConnected = false;
+
+    // Default Fallback project
+    const defaultProject = {
+      id: "altercontroller",
+      name: "AlterController Suite",
+      tagline: "Companion App & Latency Optimization Suite",
+      status: "Active Development",
+      description: "Zero-GC binary communication pipe, inline Web Worker timers, and elevated priority companion to turn your mobile device into a low-latency gamepad.",
+      tech: ["Rust", "Tauri", "React Native", "Expo", "Python", "Go"],
+      details: "A comprehensive companion suite that bridges mobile screens and PC games with zero-allocations, direct buffer transmissions over WebSockets, and ADB port forwarding over USB.\n\n### Key Features\n- **Zero-GC Communication**: Packets are serialized as 14-byte binary ArrayBuffers, avoiding JavaScript garbage collection jitter.\n- **Inline Web Workers**: Polling timers run on a dedicated worker thread to bypass browser clamping.\n- **Process Elevation**: Win32 API elevations ensure companion priority under load.\n- **Cross-Platform**: Companions built in Rust/Tauri for PC and Expo/React Native for mobile.",
+      downloads: [
+        {
+          filename: "Setup_AlterController.exe",
+          label: "Download Windows Companion (.exe)"
+        },
+        {
+          filename: "AlterController_v1.0.apk",
+          label: "Download Android App (.apk)"
+        }
+      ]
+    };
+
+    // Check Server Connection & Load Data
+    async function initDashboard() {
+      try {
+        const response = await fetch('/api/projects');
+        if (response.ok) {
+          projects = await response.json();
+          isServerConnected = true;
+          const statusEl = document.getElementById('connectionStatus');
+          statusEl.textContent = 'LOCAL API SERVER CONNECTED';
+          statusEl.className = 'server-status status-online';
+        }
+      } catch (err) {
+        console.warn("API server not connected. Operating in Static Mode.");
+        // Try local storage
+        const stored = localStorage.getItem('projects_db');
+        if (stored) {
+          projects = JSON.parse(stored);
+        } else {
+          projects = [defaultProject];
+        }
+      }
+
+      renderProjectList();
+      loadProjectIntoForm(activeProjectId);
+    }
+
+    function renderProjectList() {
+      const listContainer = document.getElementById('projectList');
+      listContainer.innerHTML = '';
+      projects.forEach(p => {
+        const div = document.createElement('div');
+        div.className = `project-item ${p.id === activeProjectId ? 'active' : ''}`;
+        div.textContent = p.name;
+        div.onclick = () => {
+          activeProjectId = p.id;
+          renderProjectList();
+          loadProjectIntoForm(activeProjectId);
+        };
+        listContainer.appendChild(div);
+      });
+    }
+
+    function loadProjectIntoForm(id) {
+      const p = projects.find(proj => proj.id === id) || defaultProject;
+      document.getElementById('pId').value = p.id || '';
+      document.getElementById('pName').value = p.name || '';
+      document.getElementById('pStatus').value = p.status || 'Active Development';
+      document.getElementById('pTagline').value = p.tagline || '';
+      document.getElementById('pTech').value = p.tech ? p.tech.join(', ') : '';
+      document.getElementById('pDescription').value = p.description || '';
+      document.getElementById('pDetails').value = p.details || '';
+      
+      renderDownloadsList(p.downloads || []);
+    }
+
+    function renderDownloadsList(downloads) {
+      const container = document.getElementById('downloadsList');
+      container.innerHTML = '';
+      downloads.forEach((d, index) => {
+        const div = document.createElement('div');
+        div.className = 'download-item';
+        div.innerHTML = `
+          <span>${d.label} (<code>${d.filename}</code>)</span>
+          <button onclick="removeAttachment(${index})">Remove</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function addFileAttachment() {
+      const label = document.getElementById('dlLabel').value.trim();
+      const file = document.getElementById('dlFile').value.trim();
+      if (!label || !file) return;
+
+      const p = projects.find(proj => proj.id === activeProjectId);
+      if (p) {
+        if (!p.downloads) p.downloads = [];
+        p.downloads.push({ label, filename: file });
+        renderDownloadsList(p.downloads);
+        document.getElementById('dlLabel').value = '';
+        document.getElementById('dlFile').value = '';
+      }
+    }
+
+    function removeAttachment(index) {
+      const p = projects.find(proj => proj.id === activeProjectId);
+      if (p && p.downloads) {
+        p.downloads.splice(index, 1);
+        renderDownloadsList(p.downloads);
+      }
+    }
+
+    function createNewProject() {
+      const newId = `project-${Date.now().toString().slice(-4)}`;
+      const newP = {
+        id: newId,
+        name: "New Build Project",
+        tagline: "Short tagline summarizing target build goals",
+        status: "Active Development",
+        description: "Short highlight description.",
+        tech: ["HTML", "JavaScript"],
+        details: "Detailed walkthrough description.",
+        downloads: []
+      };
+      projects.push(newP);
+      activeProjectId = newId;
+      renderProjectList();
+      loadProjectIntoForm(activeProjectId);
+    }
+
+    async function saveProject() {
+      const id = document.getElementById('pId').value.trim();
+      const pIndex = projects.findIndex(p => p.id === activeProjectId);
+      if (pIndex === -1) return;
+
+      projects[pIndex].id = id;
+      projects[pIndex].name = document.getElementById('pName').value.trim();
+      projects[pIndex].status = document.getElementById('pStatus').value;
+      projects[pIndex].tagline = document.getElementById('pTagline').value.trim();
+      projects[pIndex].tech = document.getElementById('pTech').value.split(',').map(s => s.trim()).filter(Boolean);
+      projects[pIndex].description = document.getElementById('pDescription').value.trim();
+      projects[pIndex].details = document.getElementById('pDetails').value.trim();
+
+      activeProjectId = id;
+      renderProjectList();
+
+      if (isServerConnected) {
+        try {
+          const res = await fetch('/api/projects', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(projects)
+          });
+          if (res.ok) {
+            alert('Project database saved successfully to projects_db.json!');
+          } else {
+            alert('Error saving to server database.');
+          }
+        } catch (err) {
+          alert('Local API server went offline.');
+        }
+      } else {
+        localStorage.setItem('projects_db', JSON.stringify(projects));
+        alert('Saved locally to browser storage. Click "Export JSON Config" to copy into codebase!');
+      }
+    }
+
+    function exportJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(projects, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href",     dataStr);
+      downloadAnchor.setAttribute("download", "projects_db.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    // Drag and Drop & Upload Files Handling
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const uploadProgress = document.getElementById('uploadProgress');
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'var(--accent)';
+    });
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.style.borderColor = 'var(--border)';
+    });
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'var(--border)';
+      if (e.dataTransfer.files.length) {
+        handleUpload(e.dataTransfer.files[0]);
+      }
+    });
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) {
+        handleUpload(fileInput.files[0]);
+      }
+    });
+
+    async function handleUpload(file) {
+      if (!isServerConnected) {
+        uploadProgress.textContent = "Upload only works when running companion Node.js server. Please download files locally.";
+        return;
+      }
+
+      uploadProgress.textContent = `Uploading ${file.name}...`;
+
+      try {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            'X-Filename': file.name
+          },
+          body: file
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          uploadProgress.textContent = `Uploaded successfully to ${result.path}! Auto-attributing to build...`;
+          
+          // Populate labels
+          document.getElementById('dlFile').value = file.name;
+          document.getElementById('dlLabel').value = `Download ${file.name.split('.').slice(0,-1).join('.')} (.${file.name.split('.').pop()})`;
+        } else {
+          uploadProgress.textContent = `Upload failed: ${result.error}`;
+        }
+      } catch (err) {
+        uploadProgress.textContent = `Upload failed: Local server connection error.`;
+      }
+    }
+
+    initDashboard();
+  </script>
+</body>
+</html>

@@ -1677,3 +1677,159 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border-md
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================
+   FEATURED BUILD SECTION STYLES
+   ========================================== */
+#featuredBuilds {
+  margin-top: var(--s6);
+  margin-bottom: var(--s10);
+}
+.featured-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: var(--s8);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--sh-2);
+  transition: all 0.3s var(--ease);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+.featured-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-xl);
+  padding: 2px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.25; /* Always show a subtle glow for the building project */
+  transition: opacity 0.3s;
+}
+.featured-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(6, 182, 212, 0.15);
+}
+.featured-card:hover::before {
+  opacity: 1;
+}
+.fc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  text-transform: uppercase;
+  width: fit-content;
+  z-index: 2;
+}
+.fc-badge-active {
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--accent);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+.fc-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent);
+  animation: fc-pulse 1.5s infinite;
+}
+@keyframes fc-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(6, 182, 212, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+}
+.fc-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--s8);
+  flex-wrap: wrap;
+  z-index: 2;
+}
+@media (max-width: 768px) {
+  .fc-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s6);
+  }
+  .fc-actions {
+    width: 100%;
+  }
+  .fc-actions .btn-solid {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    justify-content: center;
+  }
+}
+.fc-info {
+  flex: 1;
+}
+.fc-info h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+}
+.fc-tagline {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 0 0 14px 0;
+}
+.fc-desc {
+  font-size: 1rem;
+  color: var(--text-2);
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+  max-width: 750px;
+}
+.fc-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fc-tech .pill {
+  background: var(--bg-1);
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.fc-actions .btn-solid {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-main);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 14px 28px;
+  border-radius: var(--r-md);
+  background: var(--accent-gradient, linear-gradient(135deg, #06B6D4, #0891B2));
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+.fc-actions .btn-solid:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+}

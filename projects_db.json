@@ -1,0 +1,43 @@
+[
+  {
+    "id": "altercontroller",
+    "name": "AlterController Suite",
+    "tagline": "Companion App & Latency Optimization Suite",
+    "status": "Active Development",
+    "description": "Zero-GC binary communication pipe, inline Web Worker timers, and elevated priority companion to turn your mobile device into a low-latency gamepad.",
+    "tech": [
+      "Rust",
+      "Tauri",
+      "React Native",
+      "Expo",
+      "Python",
+      "Go"
+    ],
+    "details": "A comprehensive companion suite that bridges mobile screens and PC games with zero-allocations, direct buffer transmissions over WebSockets, and ADB port forwarding over USB.\n\n### Key Features\n- **Zero-GC Communication**: Packets are serialized as 14-byte binary ArrayBuffers, avoiding JavaScript garbage collection jitter.\n- **Inline Web Workers**: Polling timers run on a dedicated worker thread to bypass browser clamping.\n- **Process Elevation**: Win32 API elevations ensure companion priority under load.\n- **Cross-Platform**: Companions built in Rust/Tauri for PC and Expo/React Native for mobile.",
+    "downloads": [
+      {
+        "filename": "Setup_AlterController.exe",
+        "label": "Download Windows Companion (.exe)",
+        "icon": "windows"
+      },
+      {
+        "filename": "AlterController_v1.0.apk",
+        "label": "Download Android App (.apk)",
+        "icon": "android"
+      }
+    ]
+  },
+  {
+    "id": "project-6091",
+    "name": "New Build Project",
+    "tagline": "Short tagline summarizing target build goals",
+    "status": "Active Development",
+    "description": "Short highlight description.",
+    "tech": [
+      "HTML",
+      "JavaScript"
+    ],
+    "details": "Detailed walkthrough description.",
+    "downloads": []
+  }
+]

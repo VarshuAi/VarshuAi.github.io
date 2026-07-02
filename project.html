@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Details - Varshan Gowda SR</title>
+  <meta name="description" content="Detailed project documentation and build details." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: var(--bg-1);
+      color: var(--text-1);
+      font-family: 'Outfit', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .detail-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 80px 24px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+      margin-bottom: 32px;
+    }
+    .back-btn:hover {
+      color: var(--accent);
+    }
+    .project-header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+    .project-title-area h1 {
+      font-size: clamp(2.5rem, 6vw, 3.5rem);
+      font-weight: 900;
+      margin: 0 0 12px 0;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+    }
+    .project-tagline {
+      font-size: 1.25rem;
+      color: var(--text-2);
+      margin: 0 0 20px 0;
+      max-width: 700px;
+      line-height: 1.5;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-active {
+      background: rgba(6, 182, 212, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+    .badge-active .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 1.5s infinite;
+    }
+    .tech-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .pill {
+      background: var(--bg-2);
+      color: var(--text-2);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .project-body-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 48px;
+    }
+    @media (max-width: 900px) {
+      .project-body-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .content-area {
+      line-height: 1.7;
+      font-size: 1.05rem;
+      color: var(--text-1);
+    }
+    .content-area h2, .content-area h3 {
+      color: var(--text-1);
+      letter-spacing: -0.02em;
+      margin-top: 40px;
+    }
+    .content-area h2 {
+      font-size: 1.8rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+    .content-area h3 {
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+    }
+    .content-area ul {
+      padding-left: 20px;
+      margin-bottom: 24px;
+    }
+    .content-area li {
+      margin-bottom: 10px;
+    }
+    .sidebar-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      position: sticky;
+      top: 40px;
+      box-shadow: var(--shadow-sm);
+    }
+    .sidebar-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0 0 16px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-1);
+    }
+    .download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--accent-gradient, linear-gradient(135deg, #06B6D4, #0891B2));
+      color: #fff;
+      text-decoration: none;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 14px 20px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(6, 182, 212, 0.4);
+    }
+    .download-btn svg {
+      flex-shrink: 0;
+    }
+    .dl-icon-badge {
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .empty-downloads {
+      color: var(--text-3);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 12px 0;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); }
+      70% { box-shadow: 0 0 0 6px rgba(6, 182, 212, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+    }
+  </style>
+</head>
+<body class="theme-light"> <!-- Class updated dynamically by script -->
+  <div class="detail-container">
+    <a href="index.html" class="back-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      BACK TO PORTFOLIO
+    </a>
+
+    <div class="project-header-section">
+      <div class="project-title-area">
+        <div class="badge badge-active" id="projBadge">
+          <span class="dot"></span>
+          <span id="projStatus">Active Build</span>
+        </div>
+        <h1 id="projName">AlterController Companion</h1>
+        <p class="project-tagline" id="projTagline">Low-latency Companion Suite for Custom Compilations</p>
+        <div class="tech-pills" id="projTech">
+          <!-- Dynamic Pills -->
+        </div>
+      </div>
+    </div>
+
+    <div class="project-body-grid">
+      <div class="content-area" id="projContent">
+        <!-- Rendered Description Content -->
+      </div>
+
+      <div class="sidebar-area">
+        <div class="sidebar-card">
+          <h3 class="sidebar-title">Downloads & Files</h3>
+          <div id="projDownloads">
+            <!-- Dynamic Download Buttons -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // System Theme Initialization
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.className = `theme-${savedTheme}`;
+
+    // Helper: Parse markdown-like headers and lists to HTML
+    function parseMarkdown(text) {
+      if (!text) return '';
+      return text
+        .replace(/### (.*)/g, '<h3>$1</h3>')
+        .replace(/## (.*)/g, '<h2>$1</h2>')
+        .replace(/\n- (.*)/g, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>')
+        // Clean double nested lists
+        .replace(/<\/ul>\s*<ul>/g, '')
+        .replace(/\n\n/g, '<br/>');
+    }
+
+    // Default Fallback Database
+    const FALLBACK_PROJECTS = {
+      "altercontroller": {
+        name: "AlterController Companion",
+        tagline: "Companion App & Latency Optimization Suite",
+        status: "Active Development",
+        description: "Zero-GC binary communication pipe, inline Web Worker timers, and elevated priority companion to turn your mobile device into a low-latency gamepad.",
+        tech: ["Rust", "Tauri", "React Native", "Expo", "Python", "Go"],
+        details: "A comprehensive companion suite that bridges mobile screens and PC games with zero-allocations, direct buffer transmissions over WebSockets, and ADB port forwarding over USB.\n\n### Key Features\n- **Zero-GC Communication**: Packets are serialized as 14-byte binary ArrayBuffers, avoiding JavaScript garbage collection jitter.\n- **Inline Web Workers**: Polling timers run on a dedicated worker thread to bypass browser clamping.\n- **Process Elevation**: Win32 API elevations ensure companion priority under load.\n- **Cross-Platform**: Companions built in Rust/Tauri for PC and Expo/React Native for mobile.",
+        downloads: [
+          {
+            filename: "Setup_AlterController.exe",
+            label: "Download Windows Companion (.exe)",
+            icon: "windows"
+          },
+          {
+            filename: "AlterController_v1.0.apk",
+            label: "Download Android App (.apk)",
+            icon: "android"
+          }
+        ]
+      }
+    };
+
+    // Load Project Details
+    async function loadProjectDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const projectId = params.get('id') || 'altercontroller';
+
+      let project = null;
+
+      try {
+        const response = await fetch('/api/projects');
+        if (response.ok) {
+          const db = await response.json();
+          project = db.find(p => p.id === projectId);
+        }
+      } catch (err) {
+        console.warn("Could not reach API backend, falling back to local fallback data", err);
+      }
+
+      // Use local fallback if API fetch fails or doesn't find project
+      if (!project) {
+        project = FALLBACK_PROJECTS[projectId];
+      }
+
+      if (!project) {
+        document.getElementById('projName').textContent = "Project Not Found";
+        document.getElementById('projTagline').textContent = "We couldn't locate this project file.";
+        return;
+      }
+
+      // Title & Headings
+      document.title = `${project.name} - Varshan Gowda SR`;
+      document.getElementById('projName').textContent = project.name;
+      document.getElementById('projTagline').textContent = project.tagline;
+      document.getElementById('projStatus').textContent = project.status;
+
+      // Status Badge Styling
+      const statusBadge = document.getElementById('projBadge');
+      if (project.status.toLowerCase().includes('active') || project.status.toLowerCase().includes('building')) {
+        statusBadge.className = 'badge badge-active';
+      } else {
+        statusBadge.className = 'badge';
+        statusBadge.style.background = 'var(--bg-2)';
+        statusBadge.style.border = '1px solid var(--border)';
+        statusBadge.style.color = 'var(--text-3)';
+        const dot = statusBadge.querySelector('.dot');
+        if (dot) dot.remove();
+      }
+
+      // Tech Pills
+      const techContainer = document.getElementById('projTech');
+      techContainer.innerHTML = '';
+      if (project.tech && project.tech.length) {
+        project.tech.forEach(t => {
+          const p = document.createElement('span');
+          p.className = 'pill';
+          p.textContent = t;
+          techContainer.appendChild(p);
+        });
+      }
+
+      // Description Body
+      const bodyContainer = document.getElementById('projContent');
+      bodyContainer.innerHTML = parseMarkdown(project.details || project.description);
+
+      // Downloads Section
+      const downloadContainer = document.getElementById('projDownloads');
+      downloadContainer.innerHTML = '';
+      if (project.downloads && project.downloads.length) {
+        project.downloads.forEach(d => {
+          const btn = document.createElement('a');
+          btn.href = `/downloads/${d.filename}`;
+          btn.download = d.filename;
+          btn.className = 'download-btn';
+          
+          let fileExt = d.filename.split('.').pop().toUpperCase();
+
+          btn.innerHTML = `
+            <span>${d.label}</span>
+            <span class="dl-icon-badge">${fileExt}</span>
+          `;
+          downloadContainer.appendChild(btn);
+        });
+      } else {
+        downloadContainer.innerHTML = `<div class="empty-downloads">No downloadable files attached to this build.</div>`;
+      }
+    }
+
+    loadProjectDetails();
+  </script>
+</body>
+</html>
