@@ -9,6 +9,7 @@ const DOWNLOADS_DIR = path.resolve(__dirname, 'downloads');
 const DB_FILE = path.resolve(__dirname, 'projects_db.json');
 const GUESTBOOK_FILE = path.resolve(__dirname, 'guestbook_db.json');
 const VISITS_FILE = path.resolve(__dirname, 'visits_db.json');
+const LEADERBOARD_FILE = path.resolve(__dirname, 'leaderboard_db.json');
 
 // Admin Auth Token (Set via environment variables when hosting)
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'secure-local-development-key';
@@ -57,6 +58,9 @@ if (!fs.existsSync(GUESTBOOK_FILE)) {
 }
 if (!fs.existsSync(VISITS_FILE)) {
   fs.writeFileSync(VISITS_FILE, JSON.stringify({ count: 0 }, null, 2));
+}
+if (!fs.existsSync(LEADERBOARD_FILE)) {
+  fs.writeFileSync(LEADERBOARD_FILE, JSON.stringify([], null, 2));
 }
 
 const MIME_TYPES = {
@@ -259,6 +263,96 @@ function saveVisitsDatabase(dataString, callback) {
     req.end();
   } else {
     fs.writeFile(VISITS_FILE, dataString, 'utf8', callback);
+  }
+}
+
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || '';
+
+function getLeaderboardDatabase(callback) {
+  if (IS_CLOUD_MODE) {
+    const url = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/leaderboard_db.json`;
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          callback(null, data);
+        } else {
+          fs.readFile(LEADERBOARD_FILE, 'utf8', (err, localData) => {
+            if (err) callback(new Error('Leaderboard fetch failed'));
+            else callback(null, localData);
+          });
+        }
+      });
+    }).on('error', err => callback(err));
+  } else {
+    fs.readFile(LEADERBOARD_FILE, 'utf8', callback);
+  }
+}
+
+function saveLeaderboardDatabase(dataString, callback) {
+  if (IS_CLOUD_MODE) {
+    const supabaseUrl = new URL(`${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/leaderboard_db.json`);
+    const options = {
+      method: 'PUT',
+      hostname: supabaseUrl.hostname,
+      path: supabaseUrl.pathname,
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'apiKey': SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'x-upsert': 'true'
+      }
+    };
+    const req = https.request(options, (res) => {
+      let resBody = '';
+      res.on('data', chunk => resBody += chunk);
+      res.on('end', () => {
+        if (res.statusCode === 200) callback(null);
+        else callback(new Error('Leaderboard save failed: ' + resBody));
+      });
+    });
+    req.on('error', err => callback(err));
+    req.write(dataString);
+    req.end();
+  } else {
+    fs.writeFile(LEADERBOARD_FILE, dataString, 'utf8', callback);
+  }
+}
+
+function sendDiscordAlert(name, message) {
+  if (!DISCORD_WEBHOOK_URL) return;
+  try {
+    const discordUrl = new URL(DISCORD_WEBHOOK_URL);
+    const payload = JSON.stringify({
+      embeds: [{
+        title: "📝 New Guestbook Message",
+        description: `**${name}** left a message on your portfolio!`,
+        color: 8490232, // Indigo
+        fields: [
+          { name: "Message", value: `"${message}"` },
+          { name: "Time", value: new Date().toLocaleString() }
+        ],
+        footer: { text: "VarshuAI Portfolio Alerts" }
+      }]
+    });
+    
+    const options = {
+      method: 'POST',
+      hostname: discordUrl.hostname,
+      path: discordUrl.pathname,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
+    
+    const req = https.request(options);
+    req.on('error', () => {}); // Silent catch
+    req.write(payload);
+    req.end();
+  } catch (e) {
+    // Silent catch
   }
 }
 
@@ -536,6 +630,7 @@ const server = http.createServer((req, res) => {
               res.writeHead(500, { 'Content-Type': 'application/json' });
               res.end(JSON.stringify({ error: 'Could not save guestbook' }));
             } else {
+              sendDiscordAlert(name.trim(), message.trim());
               res.writeHead(200, { 'Content-Type': 'application/json' });
               res.end(JSON.stringify({ success: true }));
             }
@@ -615,6 +710,106 @@ const server = http.createServer((req, res) => {
       } catch (e) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Invalid visits data' }));
+      }
+    });
+    return;
+  }
+
+  // GET /api/leaderboard
+  if (pathname === '/api/leaderboard' && req.method === 'GET') {
+    getLeaderboardDatabase((err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Could not read leaderboard' }));
+      } else {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(data);
+      }
+    });
+    return;
+  }
+
+  // POST /api/leaderboard
+  if (pathname === '/api/leaderboard' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => {
+      try {
+        const { name, score } = JSON.parse(body);
+        const parsedScore = parseInt(score, 10);
+        if (!name || isNaN(parsedScore) || name.length > 20 || parsedScore < 0) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid name (max 20 chars) or score.' }));
+          return;
+        }
+        getLeaderboardDatabase((err, data) => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Could not read database' }));
+            return;
+          }
+          const scores = JSON.parse(data);
+          scores.push({ name: name.trim(), score: parsedScore, timestamp: new Date().toISOString() });
+          // Sort descending and keep top 10
+          scores.sort((a, b) => b.score - a.score);
+          const topScores = scores.slice(0, 10);
+          
+          saveLeaderboardDatabase(JSON.stringify(topScores, null, 2), saveErr => {
+            if (saveErr) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Could not save leaderboard' }));
+            } else {
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: true }));
+            }
+          });
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
+  // DELETE /api/leaderboard
+  if (pathname === '/api/leaderboard' && req.method === 'DELETE') {
+    if (!isAuthorized(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Unauthorized' }));
+      return;
+    }
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => {
+      try {
+        const { index } = JSON.parse(body);
+        getLeaderboardDatabase((err, data) => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Could not read database' }));
+            return;
+          }
+          const scores = JSON.parse(data);
+          if (index < 0 || index >= scores.length) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid index' }));
+            return;
+          }
+          scores.splice(index, 1);
+          saveLeaderboardDatabase(JSON.stringify(scores, null, 2), saveErr => {
+            if (saveErr) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Could not save database' }));
+            } else {
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: true }));
+            }
+          });
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid JSON' }));
       }
     });
     return;

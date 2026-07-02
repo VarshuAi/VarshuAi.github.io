@@ -1520,3 +1520,479 @@ loadGuestbook();
   });
 })();
 
+/* ═══════════════════════════════════════
+   FEATURE: 3D TAG CLOUD SPHERE
+   ═══════════════════════════════════════ */
+;(function initTagSphere() {
+  const canvas = document.getElementById('tag-sphere-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const tags = [
+    'Python', 'JavaScript', 'Rust', 'Go', 'HTML', 'CSS',
+    'Shell', 'Git', 'GitHub', 'Node.js', 'React', 'Tauri',
+    'Docker', 'Linux', 'AI/ML', 'Open Source', 'Automation', 'Systems'
+  ];
+
+  let tagObjects = [];
+  const radius = 120;
+  let W = canvas.width = 400;
+  let H = canvas.height = 300;
+  
+  // Track angles and coordinates
+  let pitch = 0.003;
+  let yaw = 0.003;
+  let isDragging = false;
+  let lastMouseX = 0;
+  let lastMouseY = 0;
+
+  // Distribute points evenly on a sphere
+  for (let i = 0; i < tags.length; i++) {
+    const phi = Math.acos(-1 + (2 * i) / tags.length);
+    const theta = Math.sqrt(tags.length * Math.PI) * phi;
+
+    tagObjects.push({
+      text: tags[i],
+      x: radius * Math.cos(theta) * Math.sin(phi),
+      y: radius * Math.sin(theta) * Math.sin(phi),
+      z: radius * Math.cos(phi),
+      scale: 1,
+      x2d: 0,
+      y2d: 0
+    });
+  }
+
+  function rotateX(tag, angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    const y1 = tag.y * cos - tag.z * sin;
+    const z1 = tag.z * cos + tag.y * sin;
+    tag.y = y1;
+    tag.z = z1;
+  }
+
+  function rotateY(tag, angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    const x1 = tag.x * cos - tag.z * sin;
+    const z1 = tag.z * cos + tag.x * sin;
+    tag.x = x1;
+    tag.z = z1;
+  }
+
+  function updateAndRender() {
+    ctx.clearRect(0, 0, W, H);
+    
+    // Sort tags by Z (depth) so back tags draw behind front tags
+    const sorted = [...tagObjects].sort((a, b) => b.z - a.z);
+
+    sorted.forEach(tag => {
+      rotateX(tag, pitch);
+      rotateY(tag, yaw);
+
+      const perspective = 250;
+      const zoom = perspective / (perspective + tag.z);
+      tag.x2d = tag.x * zoom + W / 2;
+      tag.y2d = tag.y * zoom + H / 2;
+      tag.scale = zoom;
+
+      const alpha = (tag.z + radius) / (2 * radius); // 0 to 1
+      ctx.save();
+      ctx.font = `bold ${Math.max(10, 11 * tag.scale)}px 'Outfit', sans-serif`;
+      ctx.fillStyle = tag.z > 0 ? `rgba(6, 182, 212, ${Math.max(0.25, alpha)})` : `rgba(129, 140, 248, ${Math.max(0.25, alpha)})`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(tag.text, tag.x2d, tag.y2d);
+      ctx.restore();
+    });
+
+    if (!isDragging) {
+      pitch *= 0.98;
+      yaw *= 0.98;
+      if (Math.abs(pitch) < 0.0005) pitch = 0.0015 * (Math.random() > 0.5 ? 1 : -1);
+      if (Math.abs(yaw) < 0.0005) yaw = 0.0015 * (Math.random() > 0.5 ? 1 : -1);
+    }
+
+    requestAnimationFrame(updateAndRender);
+  }
+
+  canvas.addEventListener('mousedown', e => {
+    isDragging = true;
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+  });
+
+  window.addEventListener('mouseup', () => { isDragging = false; });
+
+  canvas.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const dx = e.clientX - lastMouseX;
+    const dy = e.clientY - lastMouseY;
+    yaw = dx * 0.005;
+    pitch = -dy * 0.005;
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+  });
+
+  // Handle clicking a tag
+  canvas.addEventListener('click', e => {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    // Check if clicked near any tag
+    for (let tag of tagObjects) {
+      const distance = Math.hypot(tag.x2d - clickX, tag.y2d - clickY);
+      if (distance < 22 * tag.scale) {
+        // Trigger corresponding tech stack modal by looking up element title
+        const match = Array.from(document.querySelectorAll('.stack-item')).find(el => el.dataset.tip?.toLowerCase() === tag.text.toLowerCase());
+        if (match) {
+          match.click();
+          break;
+        }
+      }
+    }
+  });
+
+  updateAndRender();
+})();
+
+/* ═══════════════════════════════════════
+   FEATURE: LO-FI AUDIO PLAYER & VISUALIZER
+   ═══════════════════════════════════════ */
+const lofiTracks = [
+  { title: "Lofi Beats - Cyber Ambient", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+  { title: "Neon Skyline Chillout", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+  { title: "Cyber Sunset Lounge", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+];
+let currentLofiIndex = 0;
+let lofiAudio = new Audio(lofiTracks[currentLofiIndex].url);
+let lofiAudioCtx = null;
+let lofiAnalyser = null;
+let lofiSource = null;
+
+function setupLofiVisualizer() {
+  if (lofiAudioCtx) return;
+  
+  const canvas = document.getElementById('visualizer-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  
+  lofiAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  lofiAnalyser = lofiAudioCtx.createAnalyser();
+  lofiAnalyser.fftSize = 64;
+  
+  lofiSource = lofiAudioCtx.createMediaElementSource(lofiAudio);
+  lofiSource.connect(lofiAnalyser);
+  lofiAnalyser.connect(lofiAudioCtx.destination);
+  
+  const bufferLength = lofiAnalyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
+  
+  function drawVisualizer() {
+    requestAnimationFrame(drawVisualizer);
+    if (!lofiAudio.paused) {
+      lofiAnalyser.getByteFrequencyData(dataArray);
+    } else {
+      dataArray.fill(0);
+    }
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const barWidth = (canvas.width / bufferLength) * 1.5;
+    let barHeight;
+    let x = 0;
+    
+    for (let i = 0; i < bufferLength; i++) {
+      barHeight = dataArray[i] / 4;
+      ctx.fillStyle = `rgba(6, 182, 212, ${0.4 + barHeight / 50})`;
+      ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+      x += barWidth + 2;
+    }
+  }
+  
+  drawVisualizer();
+}
+
+function toggleLofi() {
+  const player = document.getElementById('lofiPlayer');
+  const playBtn = document.getElementById('lofiPlayBtn');
+  if (!player) return;
+  
+  if (lofiAudioCtx && lofiAudioCtx.state === 'suspended') {
+    lofiAudioCtx.resume();
+  }
+  
+  if (lofiAudio.paused) {
+    setupLofiVisualizer();
+    lofiAudio.play();
+    player.classList.add('playing', 'expanded');
+    playBtn.textContent = '⏸';
+  } else {
+    lofiAudio.pause();
+    player.classList.remove('playing');
+    playBtn.textContent = '▶';
+  }
+}
+
+function nextLofi() {
+  currentLofiIndex = (currentLofiIndex + 1) % lofiTracks.length;
+  loadLofiTrack();
+}
+
+function prevLofi() {
+  currentLofiIndex = (currentLofiIndex - 1 + lofiTracks.length) % lofiTracks.length;
+  loadLofiTrack();
+}
+
+function loadLofiTrack() {
+  const titleEl = document.getElementById('lofiTrack');
+  const wasPlaying = !lofiAudio.paused;
+  
+  lofiAudio.pause();
+  lofiAudio.src = lofiTracks[currentLofiIndex].url;
+  lofiAudio.load();
+  if (titleEl) titleEl.textContent = lofiTracks[currentLofiIndex].title;
+  
+  if (wasPlaying) {
+    lofiAudio.play();
+  }
+}
+
+function changeLofiVolume(vol) {
+  lofiAudio.volume = vol;
+}
+
+/* ═══════════════════════════════════════
+   FEATURE: MINI ARCADE SNAKE GAME & LEADERBOARD
+   ═══════════════════════════════════════ */
+;(function initArcade() {
+  const overlay = document.getElementById('arcade-overlay');
+  const toggleBtn = document.getElementById('arcadeToggle');
+  const closeBtn = document.getElementById('arcadeClose');
+  const canvas = document.getElementById('arcade-canvas');
+  if (!overlay || !toggleBtn || !canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  const gridCount = 20;
+  let gridSize = canvas.width / gridCount;
+
+  let snake = [];
+  let food = { x: 0, y: 0 };
+  let dx = 1;
+  let dy = 0;
+  let score = 0;
+  let gameInterval = null;
+  let isPlaying = false;
+
+  function handleResize() {
+    canvas.width = 400;
+    canvas.height = 400;
+    gridSize = canvas.width / gridCount;
+  }
+  handleResize();
+
+  function spawnFood() {
+    food.x = Math.floor(Math.random() * gridCount);
+    food.y = Math.floor(Math.random() * gridCount);
+    for (let cell of snake) {
+      if (cell.x === food.x && cell.y === food.y) {
+        spawnFood();
+        return;
+      }
+    }
+  }
+
+  function startGame() {
+    snake = [
+      { x: 10, y: 10 },
+      { x: 9, y: 10 },
+      { x: 8, y: 10 }
+    ];
+    dx = 1;
+    dy = 0;
+    score = 0;
+    document.getElementById('currentScoreVal').textContent = score.toString().padStart(3, '0');
+    spawnFood();
+    document.getElementById('arcadeAlertOverlay').style.display = 'none';
+    isPlaying = true;
+    if (gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(gameStep, 100);
+  }
+
+  function gameStep() {
+    const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+    
+    if (head.x < 0 || head.x >= gridCount || head.y < 0 || head.y >= gridCount) {
+      endGame();
+      return;
+    }
+
+    for (let i = 0; i < snake.length; i++) {
+      if (snake[i].x === head.x && snake[i].y === head.y) {
+        endGame();
+        return;
+      }
+    }
+
+    snake.unshift(head);
+
+    if (head.x === food.x && head.y === food.y) {
+      score += 10;
+      document.getElementById('currentScoreVal').textContent = score.toString().padStart(3, '0');
+      playRetroSound(800, 0.05);
+      spawnFood();
+    } else {
+      snake.pop();
+    }
+
+    drawGame();
+  }
+
+  function playRetroSound(freq, duration) {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch(e){}
+  }
+
+  function drawGame() {
+    ctx.fillStyle = '#07070a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    snake.forEach((cell, idx) => {
+      ctx.fillStyle = idx === 0 ? '#818CF8' : '#06B6D4';
+      ctx.fillRect(cell.x * gridSize + 1, cell.y * gridSize + 1, gridSize - 2, gridSize - 2);
+    });
+
+    ctx.save();
+    ctx.fillStyle = '#34D399';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#34D399';
+    ctx.beginPath();
+    ctx.arc(food.x * gridSize + gridSize/2, food.y * gridSize + gridSize/2, gridSize/2.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function endGame() {
+    isPlaying = false;
+    clearInterval(gameInterval);
+    playRetroSound(150, 0.3);
+    
+    document.getElementById('alertScore').textContent = score;
+    document.getElementById('arcadeAlertOverlay').style.display = 'flex';
+    
+    checkLeaderboardEligibility(score);
+  }
+
+  window.addEventListener('keydown', e => {
+    if (!isPlaying) return;
+    const K = e.key.toUpperCase();
+    if ((K === 'ARROWUP' || K === 'W') && dy === 0) { dx = 0; dy = -1; }
+    else if ((K === 'ARROWDOWN' || K === 'S') && dy === 0) { dx = 0; dy = 1; }
+    else if ((K === 'ARROWLEFT' || K === 'A') && dx === 0) { dx = -1; dy = 0; }
+    else if ((K === 'ARROWRIGHT' || K === 'D') && dx === 0) { dx = 1; dy = 0; }
+  });
+
+  toggleBtn.addEventListener('click', () => {
+    overlay.style.display = 'flex';
+    requestAnimationFrame(() => {
+      overlay.classList.add('active');
+      loadLeaderboard();
+      startGame();
+    });
+  });
+
+  closeBtn.addEventListener('click', () => {
+    overlay.classList.remove('active');
+    clearInterval(gameInterval);
+    isPlaying = false;
+    setTimeout(() => { overlay.style.display = 'none'; }, 300);
+  });
+
+  window.resetArcadeGame = startGame;
+})();
+
+async function loadLeaderboard() {
+  const container = document.getElementById('leaderboardWall');
+  if (!container) return;
+  try {
+    const res = await fetch('https://varshuai-github-io.onrender.com/api/leaderboard');
+    if (!res.ok) throw new Error('Failed');
+    const scores = await res.json();
+    if (!scores.length) {
+      container.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-3)">No scores yet!</td></tr>';
+      return;
+    }
+    
+    document.getElementById('hiScoreVal').textContent = scores[0].score.toString().padStart(3, '0');
+    
+    container.innerHTML = scores.map((s, i) => `
+      <tr>
+        <td style="color:var(--accent-2)">#${i+1}</td>
+        <td>${s.name}</td>
+        <td style="font-weight:700;color:#FFF">${s.score}</td>
+      </tr>
+    `).join('');
+  } catch(e) {
+    container.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-3)">Error loading.</td></tr>';
+  }
+}
+
+async function checkLeaderboardEligibility(score) {
+  const submitForm = document.getElementById('scoreSubmitForm');
+  const restartMsg = document.getElementById('scoreRestartMsg');
+  submitForm.style.display = 'none';
+  restartMsg.style.display = 'block';
+
+  try {
+    const res = await fetch('https://varshuai-github-io.onrender.com/api/leaderboard');
+    if (res.ok) {
+      const scores = await res.json();
+      if (scores.length < 10 || score > scores[scores.length - 1].score) {
+        submitForm.style.display = 'block';
+        restartMsg.style.display = 'none';
+      }
+    }
+  } catch(e){}
+}
+
+async function submitHighScore() {
+  const nameEl = document.getElementById('arcadeName');
+  const name = nameEl ? nameEl.value.trim() : 'AAA';
+  const score = parseInt(document.getElementById('alertScore').textContent, 10);
+  
+  if (!name) {
+    alert('Please enter your initials!');
+    return;
+  }
+
+  try {
+    const res = await fetch('https://varshuai-github-io.onrender.com/api/leaderboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, score })
+    });
+    if (res.ok) {
+      nameEl.value = '';
+      document.getElementById('scoreSubmitForm').style.display = 'none';
+      document.getElementById('scoreRestartMsg').style.display = 'block';
+      loadLeaderboard();
+    } else {
+      alert('Could not submit score.');
+    }
+  } catch(e) {
+    alert('Server error.');
+  }
+}
+
+

@@ -342,7 +342,14 @@
         <div id="guestbookAdmin" style="display:flex;flex-direction:column;gap:12px;max-height:400px;overflow-y:auto">
           <!-- Loaded dynamically -->
         </div>
-        <button class="btn btn-secondary" style="width:100%;margin-top:16px" onclick="loadGuestbookAdmin()">Refresh Messages</button>
+      </div>
+
+      <div class="main-form" style="margin-top:30px">
+        <h3 style="font-size:1.2rem;font-weight:700;color:var(--text-1);margin-bottom:16px">🎮 Arcade Leaderboard Rankings</h3>
+        <div id="leaderboardAdmin" style="display:flex;flex-direction:column;gap:12px;max-height:400px;overflow-y:auto">
+          <!-- Loaded dynamically -->
+        </div>
+        <button class="btn btn-secondary" style="width:100%;margin-top:16px" onclick="loadLeaderboardAdmin()">Refresh Leaderboard</button>
       </div>
     </div>
   </div>
@@ -761,6 +768,55 @@
 
     // Auto-load guestbook on page load
     loadGuestbookAdmin();
+
+    async function loadLeaderboardAdmin() {
+      const container = document.getElementById('leaderboardAdmin');
+      if (!container) return;
+      try {
+        const res = await fetch('https://varshuai-github-io.onrender.com/api/leaderboard');
+        if (!res.ok) throw new Error('Failed');
+        const scores = await res.json();
+        if (!scores.length) {
+          container.innerHTML = '<p style="color:var(--text-3);font-size:0.85rem">No leaderboard entries yet.</p>';
+          return;
+        }
+        container.innerHTML = scores.map((s, i) => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)">
+            <div>
+              <span style="font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:700;margin-right:8px">#${i+1}</span>
+              <strong style="color:var(--text-1)">${s.name}</strong> — <span style="color:var(--accent-2);font-weight:700">${s.score} pts</span>
+              <div style="color:var(--text-3);font-size:0.75rem;margin-top:2px">${new Date(s.timestamp).toLocaleString()}</div>
+            </div>
+            <button onclick="deleteLeaderboardEntry(${i})" style="background:#EF4444;color:#fff;border:none;padding:6px 12px;border-radius:var(--r-md);cursor:pointer;font-weight:600;font-size:0.8rem">Remove</button>
+          </div>
+        `).join('');
+      } catch(e) {
+        container.innerHTML = '<p style="color:var(--text-3);font-size:0.85rem">Could not load leaderboard.</p>';
+      }
+    }
+
+    async function deleteLeaderboardEntry(index) {
+      if (!confirm('Remove this leaderboard entry?')) return;
+      try {
+        const token = localStorage.getItem('admin_token') || '';
+        const res = await fetch('https://varshuai-github-io.onrender.com/api/leaderboard', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ index })
+        });
+        if (res.ok) {
+          alert('Leaderboard score deleted!');
+          loadLeaderboardAdmin();
+        } else {
+          alert('Failed to delete. Check authorization.');
+        }
+      } catch(e) {
+        alert('Server offline.');
+      }
+    }
+
+    // Auto-load leaderboard on page load
+    loadLeaderboardAdmin();
   </script>
 </body>
 </html>
