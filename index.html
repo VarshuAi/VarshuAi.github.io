@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=1.9" />
+  <link rel="stylesheet" href="style.css?v=2.0" />
 
   <!-- INTRO CINEMA STYLES  -  inline so they load before anything else -->
   <style>
@@ -214,6 +214,9 @@
   <div id="c-dot"></div>
   <div id="c-ring"><div class="ring-circle"></div></div>
 
+  <!-- PARTICLE TRAIL -->
+  <canvas id="particle-canvas"></canvas>
+
   <!-- NAV -->
   <header id="site-nav">
     <div class="nav-wrap">
@@ -273,6 +276,12 @@
           Available for interesting projects
         </div>
 
+        <div class="visitor-widget" id="visitorWidget">
+          <span class="vw-dot"></span>
+          <span class="vw-status" id="vwStatus">CHECKING...</span>
+          <span class="vw-divider"></span>
+          <span class="vw-count" id="vwCount">--- visits</span>
+        </div>
         <h1 class="hero-name" id="h-name">
           <span class="hn-plain">Varshan</span>
           <span class="hn-grad">Gowda SR</span>
@@ -728,6 +737,23 @@
     </div>
   </section>
 
+  <!-- GUESTBOOK -->
+  <section id="guestbook" class="guestbook-section">
+    <div class="wrap">
+      <div class="section-tag">Say Hello</div>
+      <h2 class="section-title reveal">Leave a <span class="grad-text">Message</span></h2>
+      <p class="section-sub reveal" style="max-width:560px;color:var(--text-2)">Drop your name and a quick note — whether it's a collab idea, feedback, or just saying hi.</p>
+      <div class="gb-form reveal" id="gbForm">
+        <input type="text" id="gbName" placeholder="Your name" maxlength="50" />
+        <textarea id="gbMessage" placeholder="Your message..." maxlength="280"></textarea>
+        <button class="gb-submit" id="gbSubmit" onclick="submitGuestbook()">Send ✦</button>
+      </div>
+      <div class="gb-wall" id="gbWall">
+        <div class="gb-empty">Loading messages...</div>
+      </div>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="wrap">
@@ -809,7 +835,24 @@
     </div>
   </div>
 
-  <script src="app.js?v=1.9"></script>
+  <!-- TERMINAL MODE -->
+  <button class="terminal-toggle" id="terminalToggle" aria-label="Open Terminal" title="Developer Terminal">>_</button>
+  <div id="terminal-overlay">
+    <div class="term-scanlines"></div>
+    <div class="term-header">
+      <span class="term-title">visitor@varshuai:~</span>
+      <button class="term-close" id="termClose">ESC — Close</button>
+    </div>
+    <div class="term-body" id="termBody">
+      <div class="term-output" id="termOutput"></div>
+    </div>
+    <div class="term-input-line">
+      <span class="term-prompt">visitor@varshuai:~$</span>
+      <input type="text" class="term-input" id="termInput" autocomplete="off" spellcheck="false" placeholder="type 'help' to start..." />
+    </div>
+  </div>
+
+  <script src="app.js?v=2.0"></script>
 </body>
 </html>
 

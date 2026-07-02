@@ -1225,3 +1225,298 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+/* ═══════════════════════════════════════
+   FEATURE: PARTICLE MOUSE TRAIL
+   60fps canvas particle system
+   ═══════════════════════════════════════ */
+;(function initParticleTrail() {
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
+  const canvas = document.getElementById('particle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let W, H;
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let mouseX = -100, mouseY = -100;
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  const particles = [];
+  const COLORS = ['#818CF8', '#06B6D4', '#A78BFA', '#34D399'];
+
+  class Particle {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.vx = (Math.random() - 0.5) * 2;
+      this.vy = (Math.random() - 0.5) * 2;
+      this.life = 1;
+      this.decay = 0.015 + Math.random() * 0.02;
+      this.size = 1.5 + Math.random() * 2;
+      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.life -= this.decay;
+      this.size *= 0.98;
+    }
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.life * 0.7;
+      ctx.fillStyle = this.color;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  let trailFrameCount = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, W, H);
+
+    trailFrameCount++;
+    if (trailFrameCount % 2 === 0 && mouseX > 0) {
+      particles.push(new Particle(mouseX, mouseY));
+      if (Math.random() > 0.5) particles.push(new Particle(mouseX, mouseY));
+    }
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      particles[i].update();
+      particles[i].draw();
+      if (particles[i].life <= 0) particles.splice(i, 1);
+    }
+  }
+  animate();
+})();
+
+/* ═══════════════════════════════════════
+   FEATURE: VISITOR COUNTER & STATUS
+   ═══════════════════════════════════════ */
+;(async function loadVisitorStats() {
+  const statusEl = document.getElementById('vwStatus');
+  const countEl = document.getElementById('vwCount');
+  const footerCount = document.getElementById('visit-count');
+
+  try {
+    const res = await fetch('https://varshuai-github-io.onrender.com/api/visits');
+    if (res.ok) {
+      const data = await res.json();
+      if (statusEl) { statusEl.textContent = 'ONLINE'; }
+      const formatted = data.count.toLocaleString();
+      if (countEl) countEl.textContent = formatted + ' visits';
+      if (footerCount) footerCount.textContent = formatted;
+    } else {
+      throw new Error('offline');
+    }
+  } catch {
+    if (statusEl) { statusEl.textContent = 'OFFLINE'; statusEl.style.color = '#EF4444'; }
+    if (countEl) countEl.textContent = '--- visits';
+  }
+})();
+
+/* ═══════════════════════════════════════
+   FEATURE: LIVE GUESTBOOK
+   ═══════════════════════════════════════ */
+function timeAgo(dateStr) {
+  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (seconds < 60) return 'just now';
+  if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+  if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+  if (seconds < 604800) return Math.floor(seconds / 86400) + 'd ago';
+  return new Date(dateStr).toLocaleDateString();
+}
+
+async function loadGuestbook() {
+  const wall = document.getElementById('gbWall');
+  if (!wall) return;
+  try {
+    const res = await fetch('https://varshuai-github-io.onrender.com/api/guestbook');
+    if (!res.ok) throw new Error('fail');
+    const msgs = await res.json();
+    if (!msgs.length) {
+      wall.innerHTML = '<div class="gb-empty">No messages yet. Be the first to say hello! 👋</div>';
+      return;
+    }
+    wall.innerHTML = msgs.slice().reverse().map(m => {
+      const initial = m.name.charAt(0).toUpperCase();
+      return `
+        <div class="gb-card reveal">
+          <div class="gb-card-header">
+            <div class="gb-avatar">${initial}</div>
+            <div>
+              <div class="gb-name">${m.name}</div>
+              <div class="gb-time">${timeAgo(m.timestamp)}</div>
+            </div>
+          </div>
+          <div class="gb-msg">${m.message}</div>
+        </div>`;
+    }).join('');
+    if (typeof revObs !== 'undefined' && revObs) {
+      wall.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+    }
+  } catch {
+    wall.innerHTML = '<div class="gb-empty">Could not load messages right now.</div>';
+  }
+}
+
+async function submitGuestbook() {
+  const nameEl = document.getElementById('gbName');
+  const msgEl = document.getElementById('gbMessage');
+  const btn = document.getElementById('gbSubmit');
+  if (!nameEl || !msgEl) return;
+
+  const name = nameEl.value.trim();
+  const message = msgEl.value.trim();
+
+  if (!name || !message) {
+    alert('Please enter both your name and a message.');
+    return;
+  }
+  if (name.length > 50 || message.length > 280) {
+    alert('Name max 50 chars, message max 280 chars.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    const res = await fetch('https://varshuai-github-io.onrender.com/api/guestbook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, message })
+    });
+    if (res.ok) {
+      nameEl.value = '';
+      msgEl.value = '';
+      loadGuestbook();
+    } else {
+      alert('Could not submit. Please try again.');
+    }
+  } catch {
+    alert('Server offline. Please try later.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send ✦';
+  }
+}
+
+loadGuestbook();
+
+/* ═══════════════════════════════════════
+   FEATURE: RETRO CYBERPUNK TERMINAL
+   ═══════════════════════════════════════ */
+;(function initTerminal() {
+  const overlay = document.getElementById('terminal-overlay');
+  const toggleBtn = document.getElementById('terminalToggle');
+  const closeBtn = document.getElementById('termClose');
+  const output = document.getElementById('termOutput');
+  const input = document.getElementById('termInput');
+  const body = document.getElementById('termBody');
+  if (!overlay || !toggleBtn || !input || !output) return;
+
+  const cmdHistory = [];
+  let historyIndex = -1;
+
+  const BANNER = `\n<span class="term-info">╔══════════════════════════════════════════════╗\n║                                              ║\n║   <span class="term-accent">██╗   ██╗ ██████╗    </span>                       ║\n║   <span class="term-accent">██║   ██║██╔════╝    </span>                       ║\n║   <span class="term-accent">╚██╗ ██╔╝██║  ███╗   </span>                       ║\n║   <span class="term-accent"> ╚████╔╝ ██║   ██║   </span>                       ║\n║   <span class="term-accent">  ╚██╔╝  ╚██████╔╝   </span>                       ║\n║   <span class="term-accent">   ╚═╝    ╚═════╝    </span>                       ║\n║                                              ║\n║   <span class="term-cmd">Varshan Gowda SR</span> — Portfolio Terminal       ║\n║   <span class="term-dim">Type 'help' to see available commands</span>       ║\n║                                              ║\n╚══════════════════════════════════════════════╝</span>\n`;
+
+  const COMMANDS = {
+    help: () => `\n<span class="term-cmd">Available Commands:</span>\n\n  <span class="term-accent">about</span>      <span class="term-dim">—</span> Who am I\n  <span class="term-accent">projects</span>   <span class="term-dim">—</span> Featured builds\n  <span class="term-accent">skills</span>     <span class="term-dim">—</span> Tech stack\n  <span class="term-accent">timeline</span>   <span class="term-dim">—</span> My journey\n  <span class="term-accent">contact</span>    <span class="term-dim">—</span> Get in touch\n  <span class="term-accent">github</span>     <span class="term-dim">—</span> Open GitHub profile\n  <span class="term-accent">guestbook</span>  <span class="term-dim">—</span> Leave a message\n  <span class="term-accent">clear</span>      <span class="term-dim">—</span> Clear terminal\n  <span class="term-accent">exit</span>       <span class="term-dim">—</span> Close terminal\n`,
+    about: () => { scrollToAndClose('#about'); return `<span class="term-info">→ Navigating to About section...</span>`; },
+    projects: () => { scrollToAndClose('#projects'); return `<span class="term-info">→ Navigating to Projects section...</span>`; },
+    skills: () => { scrollToAndClose('#stack'); return `<span class="term-info">→ Navigating to Tech Stack section...</span>`; },
+    timeline: () => { scrollToAndClose('#timeline'); return `<span class="term-info">→ Navigating to Timeline section...</span>`; },
+    contact: () => { scrollToAndClose('#contact'); return `<span class="term-info">→ Navigating to Contact section...</span>`; },
+    guestbook: () => { scrollToAndClose('#guestbook'); return `<span class="term-info">→ Navigating to Guestbook section...</span>`; },
+    github: () => { window.open('https://github.com/VarshuAi', '_blank'); return `<span class="term-info">→ Opening GitHub profile in new tab...</span>`; },
+    clear: () => { output.innerHTML = ''; return ''; },
+    exit: () => { closeTerminal(); return ''; }
+  };
+
+  function scrollToAndClose(selector) {
+    setTimeout(() => {
+      closeTerminal();
+      setTimeout(() => {
+        const el = document.querySelector(selector);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 350);
+    }, 500);
+  }
+
+  function openTerminal() {
+    overlay.style.display = 'flex';
+    requestAnimationFrame(() => overlay.classList.add('active'));
+    output.innerHTML = BANNER;
+    input.focus();
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeTerminal() {
+    overlay.classList.remove('active');
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 300);
+  }
+
+  function processCommand(cmd) {
+    const trimmed = cmd.trim().toLowerCase();
+    if (!trimmed) return;
+
+    cmdHistory.push(trimmed);
+    historyIndex = cmdHistory.length;
+
+    output.innerHTML += `\n<span class="term-dim">visitor@varshuai:~$</span> <span class="term-cmd">${cmd}</span>\n`;
+
+    if (COMMANDS[trimmed]) {
+      const result = COMMANDS[trimmed]();
+      if (result) output.innerHTML += result + '\n';
+    } else {
+      output.innerHTML += `<span class="term-warn">Command not found: '${trimmed}'. Type 'help' for available commands.</span>\n`;
+    }
+
+    body.scrollTop = body.scrollHeight;
+  }
+
+  toggleBtn.addEventListener('click', openTerminal);
+  closeBtn.addEventListener('click', closeTerminal);
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      processCommand(input.value);
+      input.value = '';
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (historyIndex > 0) { historyIndex--; input.value = cmdHistory[historyIndex]; }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex < cmdHistory.length - 1) { historyIndex++; input.value = cmdHistory[historyIndex]; }
+      else { historyIndex = cmdHistory.length; input.value = ''; }
+    } else if (e.key === 'Escape') {
+      closeTerminal();
+    }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === '`' && e.ctrlKey) {
+      e.preventDefault();
+      if (overlay.classList.contains('active')) closeTerminal();
+      else openTerminal();
+    }
+  });
+})();
+

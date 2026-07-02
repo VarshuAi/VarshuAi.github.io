@@ -336,6 +336,14 @@
           </div>
         </div>
       </div>
+
+      <div class="main-form" style="margin-top:30px">
+        <h3 style="font-size:1.2rem;font-weight:700;color:var(--text-1);margin-bottom:16px">📝 Guestbook Messages</h3>
+        <div id="guestbookAdmin" style="display:flex;flex-direction:column;gap:12px;max-height:400px;overflow-y:auto">
+          <!-- Loaded dynamically -->
+        </div>
+        <button class="btn btn-secondary" style="width:100%;margin-top:16px" onclick="loadGuestbookAdmin()">Refresh Messages</button>
+      </div>
     </div>
   </div>
 
@@ -704,6 +712,55 @@
     }
 
     initDashboard();
+
+    async function loadGuestbookAdmin() {
+      const container = document.getElementById('guestbookAdmin');
+      if (!container) return;
+      try {
+        const res = await fetch('https://varshuai-github-io.onrender.com/api/guestbook');
+        if (!res.ok) throw new Error('Failed');
+        const messages = await res.json();
+        if (!messages.length) {
+          container.innerHTML = '<p style="color:var(--text-3);font-size:0.85rem">No guestbook messages yet.</p>';
+          return;
+        }
+        container.innerHTML = messages.map((m, i) => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)">
+            <div>
+              <strong style="color:var(--text-1)">${m.name}</strong>
+              <p style="color:var(--text-2);font-size:0.85rem;margin:4px 0 0">${m.message}</p>
+              <span style="color:var(--text-3);font-size:0.75rem">${new Date(m.timestamp).toLocaleString()}</span>
+            </div>
+            <button onclick="deleteGuestbookEntry(${i})" style="background:#EF4444;color:#fff;border:none;padding:6px 12px;border-radius:var(--r-md);cursor:pointer;font-weight:600;font-size:0.8rem">Delete</button>
+          </div>
+        `).join('');
+      } catch(e) {
+        container.innerHTML = '<p style="color:var(--text-3);font-size:0.85rem">Could not load guestbook. Server may be offline.</p>';
+      }
+    }
+
+    async function deleteGuestbookEntry(index) {
+      if (!confirm('Delete this guestbook entry?')) return;
+      try {
+        const token = localStorage.getItem('admin_token') || '';
+        const res = await fetch('https://varshuai-github-io.onrender.com/api/guestbook', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ index })
+        });
+        if (res.ok) {
+          alert('Entry deleted!');
+          loadGuestbookAdmin();
+        } else {
+          alert('Failed to delete. Check admin key.');
+        }
+      } catch(e) {
+        alert('Server offline.');
+      }
+    }
+
+    // Auto-load guestbook on page load
+    loadGuestbookAdmin();
   </script>
 </body>
 </html>

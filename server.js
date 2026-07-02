@@ -7,6 +7,8 @@ const https = require('https');
 const PORT = process.env.PORT || 3000;
 const DOWNLOADS_DIR = path.resolve(__dirname, 'downloads');
 const DB_FILE = path.resolve(__dirname, 'projects_db.json');
+const GUESTBOOK_FILE = path.resolve(__dirname, 'guestbook_db.json');
+const VISITS_FILE = path.resolve(__dirname, 'visits_db.json');
 
 // Admin Auth Token (Set via environment variables when hosting)
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'secure-local-development-key';
@@ -48,6 +50,13 @@ if (!fs.existsSync(DB_FILE)) {
       ]
     }
   ], null, 2));
+}
+
+if (!fs.existsSync(GUESTBOOK_FILE)) {
+  fs.writeFileSync(GUESTBOOK_FILE, JSON.stringify([], null, 2));
+}
+if (!fs.existsSync(VISITS_FILE)) {
+  fs.writeFileSync(VISITS_FILE, JSON.stringify({ count: 0 }, null, 2));
 }
 
 const MIME_TYPES = {
@@ -149,10 +158,114 @@ function saveProjectsDatabase(dataString, callback) {
   }
 }
 
+function getGuestbookDatabase(callback) {
+  if (IS_CLOUD_MODE) {
+    const url = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/guestbook_db.json`;
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          callback(null, data);
+        } else {
+          fs.readFile(GUESTBOOK_FILE, 'utf8', (err, localData) => {
+            if (err) callback(new Error('Guestbook fetch failed'));
+            else callback(null, localData);
+          });
+        }
+      });
+    }).on('error', err => callback(err));
+  } else {
+    fs.readFile(GUESTBOOK_FILE, 'utf8', callback);
+  }
+}
+
+function saveGuestbookDatabase(dataString, callback) {
+  if (IS_CLOUD_MODE) {
+    const supabaseUrl = new URL(`${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/guestbook_db.json`);
+    const options = {
+      method: 'PUT',
+      hostname: supabaseUrl.hostname,
+      path: supabaseUrl.pathname,
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'apiKey': SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'x-upsert': 'true'
+      }
+    };
+    const req = https.request(options, (res) => {
+      let resBody = '';
+      res.on('data', chunk => resBody += chunk);
+      res.on('end', () => {
+        if (res.statusCode === 200) callback(null);
+        else callback(new Error('Guestbook save failed: ' + resBody));
+      });
+    });
+    req.on('error', err => callback(err));
+    req.write(dataString);
+    req.end();
+  } else {
+    fs.writeFile(GUESTBOOK_FILE, dataString, 'utf8', callback);
+  }
+}
+
+function getVisitsDatabase(callback) {
+  if (IS_CLOUD_MODE) {
+    const url = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/visits_db.json`;
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          callback(null, data);
+        } else {
+          fs.readFile(VISITS_FILE, 'utf8', (err, localData) => {
+            if (err) callback(new Error('Visits fetch failed'));
+            else callback(null, localData);
+          });
+        }
+      });
+    }).on('error', err => callback(err));
+  } else {
+    fs.readFile(VISITS_FILE, 'utf8', callback);
+  }
+}
+
+function saveVisitsDatabase(dataString, callback) {
+  if (IS_CLOUD_MODE) {
+    const supabaseUrl = new URL(`${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/visits_db.json`);
+    const options = {
+      method: 'PUT',
+      hostname: supabaseUrl.hostname,
+      path: supabaseUrl.pathname,
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'apiKey': SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'x-upsert': 'true'
+      }
+    };
+    const req = https.request(options, (res) => {
+      let resBody = '';
+      res.on('data', chunk => resBody += chunk);
+      res.on('end', () => {
+        if (res.statusCode === 200) callback(null);
+        else callback(new Error('Visits save failed: ' + resBody));
+      });
+    });
+    req.on('error', err => callback(err));
+    req.write(dataString);
+    req.end();
+  } else {
+    fs.writeFile(VISITS_FILE, dataString, 'utf8', callback);
+  }
+}
+
 const server = http.createServer((req, res) => {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Filename, Authorization');
 
   if (req.method === 'OPTIONS') {
@@ -381,6 +494,129 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ error: 'File write error: ' + err.message }));
       });
     }
+    return;
+  }
+
+  // GET /api/guestbook
+  if (pathname === '/api/guestbook' && req.method === 'GET') {
+    getGuestbookDatabase((err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Could not read guestbook: ' + err.message }));
+      } else {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(data);
+      }
+    });
+    return;
+  }
+
+  // POST /api/guestbook
+  if (pathname === '/api/guestbook' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => {
+      try {
+        const { name, message } = JSON.parse(body);
+        if (!name || !message || name.length > 50 || message.length > 280) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid input. Name: 1-50 chars, Message: 1-280 chars.' }));
+          return;
+        }
+        getGuestbookDatabase((err, data) => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Could not read guestbook' }));
+            return;
+          }
+          const entries = JSON.parse(data);
+          entries.push({ name: name.trim(), message: message.trim(), timestamp: new Date().toISOString() });
+          saveGuestbookDatabase(JSON.stringify(entries, null, 2), saveErr => {
+            if (saveErr) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Could not save guestbook' }));
+            } else {
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: true }));
+            }
+          });
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
+  // DELETE /api/guestbook
+  if (pathname === '/api/guestbook' && req.method === 'DELETE') {
+    if (!isAuthorized(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Unauthorized' }));
+      return;
+    }
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => {
+      try {
+        const { index } = JSON.parse(body);
+        getGuestbookDatabase((err, data) => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Could not read guestbook' }));
+            return;
+          }
+          const entries = JSON.parse(data);
+          if (index < 0 || index >= entries.length) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid index' }));
+            return;
+          }
+          entries.splice(index, 1);
+          saveGuestbookDatabase(JSON.stringify(entries, null, 2), saveErr => {
+            if (saveErr) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Could not save guestbook' }));
+            } else {
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: true }));
+            }
+          });
+        });
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
+  // GET /api/visits
+  if (pathname === '/api/visits' && req.method === 'GET') {
+    getVisitsDatabase((err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Could not read visits' }));
+        return;
+      }
+      try {
+        const visits = JSON.parse(data);
+        visits.count = (visits.count || 0) + 1;
+        saveVisitsDatabase(JSON.stringify(visits, null, 2), saveErr => {
+          if (saveErr) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ count: visits.count, status: 'online' }));
+          } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ count: visits.count, status: 'online' }));
+          }
+        });
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid visits data' }));
+      }
+    });
     return;
   }
 
