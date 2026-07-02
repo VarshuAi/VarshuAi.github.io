@@ -506,8 +506,8 @@ async function loadFeaturedBuilds() {
     container.appendChild(card);
   });
   
-  if (window.revObs) {
-    container.querySelectorAll('.reveal').forEach(el => window.revObs.observe(el));
+  if (typeof revObs !== 'undefined') {
+    container.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
   }
 }
 
