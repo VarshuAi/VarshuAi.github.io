@@ -234,7 +234,13 @@
         <h1>Project Builder Dashboard</h1>
         <p style="color:var(--text-3);margin:4px 0 0 0">Configure and upload project installers locally or export configuration</p>
       </div>
-      <div id="connectionStatus" class="server-status status-offline">API SERVER OFFLINE</div>
+      <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        <div class="token-container" style="display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.8rem;">
+          <span style="color:var(--text-3)">ADMIN KEY:</span>
+          <input type="password" id="adminToken" placeholder="Enter key..." style="background:var(--bg-alt); border:1px solid var(--border); padding: 8px 12px; border-radius: var(--r-md); color:var(--text-1); font-family:var(--font-mono); font-size: 0.8rem; width:140px; box-sizing:border-box;" />
+        </div>
+        <div id="connectionStatus" class="server-status status-offline">API SERVER OFFLINE</div>
+      </div>
     </div>
 
     <div class="grid-layout">
@@ -323,6 +329,16 @@
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
+    // Admin Token Setup
+    const tokenInput = document.getElementById('adminToken');
+    if (tokenInput) {
+      tokenInput.value = localStorage.getItem('admin_token') || '';
+      tokenInput.addEventListener('input', () => {
+        localStorage.setItem('admin_token', tokenInput.value.trim());
+        initDashboard();
+      });
+    }
+
     let projects = [];
     let activeProjectId = 'altercontroller';
     let isServerConnected = false;
@@ -351,13 +367,27 @@
     // Check Server Connection & Load Data
     async function initDashboard() {
       try {
-        const response = await fetch('/api/projects');
-        if (response.ok) {
+        const token = localStorage.getItem('admin_token') || '';
+        const response = await fetch('/api/projects', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.status === 401) {
+          isServerConnected = true;
+          const statusEl = document.getElementById('connectionStatus');
+          statusEl.textContent = 'API UNAUTHORIZED (CHECK KEY)';
+          statusEl.className = 'server-status status-offline';
+          statusEl.style.background = 'rgba(239, 68, 68, 0.1)';
+          statusEl.style.color = '#EF4444';
+          statusEl.style.border = '1px solid rgba(239, 68, 68, 0.2)';
+        } else if (response.ok) {
           projects = await response.json();
           isServerConnected = true;
           const statusEl = document.getElementById('connectionStatus');
           statusEl.textContent = 'LOCAL API SERVER CONNECTED';
           statusEl.className = 'server-status status-online';
+          statusEl.style.background = '';
+          statusEl.style.color = '';
+          statusEl.style.border = '';
         }
       } catch (err) {
         console.warn("API server not connected. Operating in Static Mode.");
@@ -476,12 +506,18 @@
 
       if (isServerConnected) {
         try {
+          const token = localStorage.getItem('admin_token') || '';
           const res = await fetch('/api/projects', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify(projects)
           });
-          if (res.ok) {
+          if (res.status === 401) {
+            alert('Error: Unauthorized. Please enter a valid Admin Key at the top of the dashboard.');
+          } else if (res.ok) {
             alert('Project database saved successfully to projects_db.json!');
           } else {
             alert('Error saving to server database.');
@@ -540,13 +576,20 @@
       uploadProgress.textContent = `Uploading ${file.name}...`;
 
       try {
+        const token = localStorage.getItem('admin_token') || '';
         const response = await fetch('/api/upload', {
           method: 'POST',
           headers: {
-            'X-Filename': file.name
+            'X-Filename': file.name,
+            'Authorization': `Bearer ${token}`
           },
           body: file
         });
+
+        if (response.status === 401) {
+          uploadProgress.textContent = `Upload failed: Unauthorized. Please check your Admin Key.`;
+          return;
+        }
 
         const result = await response.json();
         if (result.success) {
