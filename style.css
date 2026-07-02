@@ -2529,3 +2529,48 @@ body:not([data-theme="dark"]) .gh-img { filter: invert(1) hue-rotate(180deg) bri
   .contact-form-row { grid-template-columns: 1fr !important; gap: 10px !important; }
 }
 
+
+/* ── Tech Stack Radar & Layout ── */
+.tech-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--s8);
+  align-items: center;
+  margin-top: var(--s8);
+}
+.radar-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--sh-2);
+  position: relative;
+  min-height: 360px;
+}
+#skills-radar-canvas {
+  width: 100%;
+  max-width: 320px;
+  height: 320px;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .tech-container {
+    grid-template-columns: 1fr;
+    gap: var(--s6);
+  }
+  .radar-box {
+    min-height: auto;
+  }
+}
+
+/* ── Web Audio Synth Piano Styles ── */
+.piano-key:active, .piano-key.active {
+  background: #818CF8 !important;
+  color: #fff !important;
+  transform: translateY(2px) scale(0.95);
+  box-shadow: 0 0 12px #818CF8;
+}

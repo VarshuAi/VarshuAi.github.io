@@ -119,6 +119,29 @@ function playSound(type) {
   }
 }
 
+function playSynthBeep(freq, type = 'sine', vol = 0.08, dur = 0.1) {
+  if (!audioEnabled) return;
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + dur);
+  } catch(e) {}
+}
+
+
 /* ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═  */
 
 const GH_USER = 'VarshuAi';
@@ -1783,17 +1806,46 @@ loadGuestbook();
   toggleBtn.addEventListener('click', openTerminal);
   closeBtn.addEventListener('click', closeTerminal);
 
+  const commandKeys = Object.keys(COMMANDS);
+  const hintEl = document.getElementById('termHint');
+
+  input.addEventListener('input', () => {
+    const val = input.value;
+    if (!val) {
+      if (hintEl) hintEl.textContent = '';
+      return;
+    }
+    const match = commandKeys.find(k => k.startsWith(val.toLowerCase()));
+    if (match && match !== val.toLowerCase()) {
+      const spacing = ' '.repeat(val.length);
+      if (hintEl) hintEl.textContent = spacing + match.slice(val.length);
+    } else {
+      if (hintEl) hintEl.textContent = '';
+    }
+  });
+
   input.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       processCommand(input.value);
       input.value = '';
+      if (hintEl) hintEl.textContent = '';
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const val = input.value;
+      const match = commandKeys.find(k => k.startsWith(val.toLowerCase()));
+      if (match) {
+        input.value = match;
+        if (hintEl) hintEl.textContent = '';
+      }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (historyIndex > 0) { historyIndex--; input.value = cmdHistory[historyIndex]; }
+      if (hintEl) hintEl.textContent = '';
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (historyIndex < cmdHistory.length - 1) { historyIndex++; input.value = cmdHistory[historyIndex]; }
       else { historyIndex = cmdHistory.length; input.value = ''; }
+      if (hintEl) hintEl.textContent = '';
     } else if (e.key === 'Escape') {
       closeTerminal();
     }
@@ -2603,5 +2655,267 @@ function runDiagAudit() {
   }
   printLog();
 }
+
+
+/* ── FEATURE: INTERACTIVE TECH RADAR CHART ── */
+function initRadarChart() {
+  const canvas = document.getElementById('skills-radar-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const skills = [
+    { name: 'Systems', value: 90, tools: 'Rust, Go, WebAssembly' },
+    { name: 'Frontend', value: 85, tools: 'React, JS, CSS Grid' },
+    { name: 'Scripting', value: 95, tools: 'Python, Bash, Scripting' },
+    { name: 'Databases', value: 75, tools: 'PostgreSQL, Supabase' },
+    { name: 'Desktop UI', value: 80, tools: 'Tauri, Desktop Apps' },
+    { name: 'DevOps/Shell', value: 90, tools: 'Docker, Linux, Shell' }
+  ];
+
+  const numSides = skills.length;
+  let center = { x: 0, y: 0 };
+  let maxRadius = 0;
+  let animPercent = 0;
+  let hoveredIndex = -1;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.resetTransform();
+    ctx.scale(dpr, dpr);
+    center = { x: rect.width / 2, y: rect.height / 2 };
+    maxRadius = Math.min(rect.width, rect.height) * 0.38;
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); if (animPercent >= 1) draw(); });
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    let closestIndex = -1;
+    let minDistance = 24;
+
+    for (let i = 0; i < numSides; i++) {
+      const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
+      const radius = (skills[i].value / 100) * maxRadius;
+      const vx = center.x + Math.cos(angle) * radius;
+      const vy = center.y + Math.sin(angle) * radius;
+
+      const dist = Math.hypot(mx - vx, my - vy);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestIndex = i;
+      }
+    }
+
+    if (closestIndex !== hoveredIndex) {
+      hoveredIndex = closestIndex;
+      if (hoveredIndex !== -1) {
+        playSynthBeep(260 + hoveredIndex * 70, 'sine', 0.06, 0.05);
+      }
+      if (animPercent >= 1) draw();
+    }
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    hoveredIndex = -1;
+    if (animPercent >= 1) draw();
+  });
+
+  function draw() {
+    const style = getComputedStyle(document.documentElement);
+    const accent = style.getPropertyValue('--accent').trim() || '#818CF8';
+    const accent2 = style.getPropertyValue('--accent-2').trim() || '#A78BFA';
+    const borderCol = style.getPropertyValue('--border').trim() || '#1F2937';
+    const textCol = style.getPropertyValue('--text-2').trim() || '#A0A0AB';
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Levels
+    ctx.strokeStyle = borderCol;
+    ctx.lineWidth = 1;
+    for (let level = 1; level <= 5; level++) {
+      const r = (level / 5) * maxRadius;
+      ctx.beginPath();
+      for (let i = 0; i < numSides; i++) {
+        const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
+        const x = center.x + Math.cos(angle) * r;
+        const y = center.y + Math.sin(angle) * r;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    // Axes
+    ctx.beginPath();
+    for (let i = 0; i < numSides; i++) {
+      const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
+      const x = center.x + Math.cos(angle) * maxRadius;
+      const y = center.y + Math.sin(angle) * maxRadius;
+      ctx.moveTo(center.x, center.y);
+      ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Data polygon
+    ctx.beginPath();
+    for (let i = 0; i < numSides; i++) {
+      const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
+      const radius = ((skills[i].value * animPercent) / 100) * maxRadius;
+      const x = center.x + Math.cos(angle) * radius;
+      const y = center.y + Math.sin(angle) * radius;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+
+    const fillGrad = ctx.createRadialGradient(center.x, center.y, 5, center.x, center.y, maxRadius);
+    fillGrad.addColorStop(0, accent + '18');
+    fillGrad.addColorStop(1, accent + '48');
+    ctx.fillStyle = fillGrad;
+    ctx.fill();
+
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Labels & Dots
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    for (let i = 0; i < numSides; i++) {
+      const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
+      const lx = center.x + Math.cos(angle) * (maxRadius + 18);
+      const ly = center.y + Math.sin(angle) * (maxRadius + 10);
+      
+      ctx.fillStyle = (hoveredIndex === i) ? '#FFF' : textCol;
+      ctx.fillText(skills[i].name, lx, ly);
+
+      const valRadius = ((skills[i].value * animPercent) / 100) * maxRadius;
+      const vx = center.x + Math.cos(angle) * valRadius;
+      const vy = center.y + Math.sin(angle) * valRadius;
+
+      ctx.beginPath();
+      ctx.arc(vx, vy, (hoveredIndex === i) ? 5 : 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = (hoveredIndex === i) ? '#FFF' : accent2;
+      ctx.fill();
+    }
+
+    // Tooltip Card
+    if (hoveredIndex !== -1) {
+      const skill = skills[hoveredIndex];
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.95)';
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 1;
+
+      const boxW = 160;
+      const boxH = 50;
+      const bx = center.x - boxW / 2;
+      const by = center.y - boxH / 2;
+
+      ctx.beginPath();
+      ctx.roundRect(bx, by, boxW, boxH, 6);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#FFF';
+      ctx.font = 'bold 9px "Outfit", sans-serif';
+      ctx.fillText(`${skill.name}: ${skill.value}%`, center.x, by + 16);
+
+      ctx.fillStyle = textCol;
+      ctx.font = '8px "JetBrains Mono", monospace';
+      ctx.fillText(skill.tools, center.x, by + 34);
+    }
+
+    if (animPercent < 1) {
+      animPercent += 0.04;
+      requestAnimationFrame(draw);
+    }
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      animPercent = 0;
+      draw();
+      obs.disconnect();
+    }
+  }, { threshold: 0.15 });
+  obs.observe(canvas);
+}
+
+/* ── FEATURE: PIANO KEYBOARD SYNTH MODULE ── */
+window.isSynthModeActive = false;
+
+function togglePianoPanel(forceState) {
+  const panel = document.getElementById('piano-panel');
+  if (!panel) return;
+
+  if (forceState !== undefined) {
+    window.isSynthModeActive = forceState;
+  } else {
+    window.isSynthModeActive = !window.isSynthModeActive;
+  }
+
+  if (window.isSynthModeActive) {
+    panel.style.transform = 'translateY(0)';
+    const btn = document.getElementById('synthToggle');
+    if (btn) btn.style.color = '#818CF8';
+  } else {
+    panel.style.transform = 'translateY(150%)';
+    const btn = document.getElementById('synthToggle');
+    if (btn) btn.style.color = '';
+  }
+}
+
+function initPianoSynth() {
+  const container = document.getElementById('pianoKeysContainer');
+  if (!container) return;
+
+  container.querySelectorAll('.piano-key').forEach(el => {
+    const freq = parseFloat(el.dataset.note);
+    el.addEventListener('mousedown', () => {
+      el.classList.add('active');
+      playSynthBeep(freq, 'triangle', 0.18, 0.55);
+    });
+    el.addEventListener('mouseup', () => el.classList.remove('active'));
+    el.addEventListener('mouseleave', () => el.classList.remove('active'));
+  });
+
+  document.addEventListener('keydown', e => {
+    if (!window.isSynthModeActive) return;
+    const tag = document.activeElement ? document.activeElement.tagName : '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+    const key = e.key.toUpperCase();
+    const keyEl = document.querySelector(`.piano-key[data-letter="${key}"]`);
+    if (keyEl && !e.repeat) {
+      keyEl.classList.add('active');
+      const freq = parseFloat(keyEl.dataset.note);
+      playSynthBeep(freq, 'triangle', 0.18, 0.55);
+    }
+  });
+
+  document.addEventListener('keyup', e => {
+    if (!window.isSynthModeActive) return;
+    const key = e.key.toUpperCase();
+    const keyEl = document.querySelector(`.piano-key[data-letter="${key}"]`);
+    if (keyEl) {
+      keyEl.classList.remove('active');
+    }
+  });
+}
+
+// Call features on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  initRadarChart();
+  initPianoSynth();
+});
 
 
