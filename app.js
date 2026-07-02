@@ -462,7 +462,7 @@ async function loadFeaturedBuilds() {
   let featured = [];
 
   try {
-    const res = await fetch('/api/projects');
+    const res = await fetch('https://varshuai-github-io.onrender.com/api/projects');
     if (res.ok) {
       featured = await res.json();
     } else {

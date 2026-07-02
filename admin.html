@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=1.3" />
+  <link rel="stylesheet" href="style.css?v=1.4" />
   <style>
     /* Restore system cursor since custom cursor markup is absent here */
     * {
@@ -368,7 +368,7 @@
     async function initDashboard() {
       try {
         const token = localStorage.getItem('admin_token') || '';
-        const response = await fetch('/api/projects', {
+        const response = await fetch('https://varshuai-github-io.onrender.com/api/projects', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.status === 401) {
@@ -507,7 +507,7 @@
       if (isServerConnected) {
         try {
           const token = localStorage.getItem('admin_token') || '';
-          const res = await fetch('/api/projects', {
+          const res = await fetch('https://varshuai-github-io.onrender.com/api/projects', {
             method: 'POST',
             headers: { 
               'Content-Type': 'application/json',
@@ -577,7 +577,7 @@
 
       try {
         const token = localStorage.getItem('admin_token') || '';
-        const response = await fetch('/api/upload', {
+        const response = await fetch('https://varshuai-github-io.onrender.com/api/upload', {
           method: 'POST',
           headers: {
             'X-Filename': file.name,
