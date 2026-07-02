@@ -2384,5 +2384,36 @@ body:not([data-theme="dark"]) .gh-img { filter: invert(1) hue-rotate(180deg) bri
   .arcade-right { flex: none; height: auto; }
   .arcade-toggle { bottom: 70px; right: 16px; width: 42px; height: 42px; font-size: 1.05rem; }
   .lofi-player { bottom: 16px; left: 16px; }
+  .about-dashboard { grid-template-columns: 1fr; }
+}
+
+/* ═══════════ ABOUT DASHBOARD ═══════════ */
+.about-dashboard {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s5);
+}
+.about-dash-card {
+  padding: var(--s6);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.dev-status-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: var(--r-md);
+}
+.pulsing {
+  animation: pulse-glow 2.5s ease infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.15); }
 }
 

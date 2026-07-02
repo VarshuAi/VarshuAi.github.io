@@ -224,36 +224,115 @@ function initCanvas() {
 }
 
 let frameCount = 0;
+let bgMouseX = -1000;
+let bgMouseY = -1000;
+
+window.addEventListener('mousemove', e => {
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  bgMouseX = e.clientX - rect.left;
+  bgMouseY = e.clientY - rect.top;
+});
+
+window.addEventListener('mouseleave', () => {
+  bgMouseX = -1000;
+  bgMouseY = -1000;
+});
+
+window.isMatrixMode = false;
+window.matrixColumns = [];
+const matrixFontSize = 14;
+
 function drawCanvas() {
   if (!ctx || !canvas) return;
   frameCount++;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Move particles every frame
-  pts.forEach(p => {
-    p.x += p.vx; p.y += p.vy;
-    if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
-    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${p.c},${p.a})`;
-    ctx.fill();
-  });
+  if (window.isMatrixMode) {
+    ctx.fillStyle = 'rgba(10, 10, 12, 0.08)'; // fading trail matching dark background
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Draw connections only every 2 frames to reduce CPU load
-  if (frameCount % 2 === 0) {
-    for (let i = 0; i < pts.length; i++) {
-      for (let j = i + 1; j < pts.length; j++) {
-        const dx = pts[i].x - pts[j].x;
-        const dy = pts[i].y - pts[j].y;
-        const d  = Math.sqrt(dx * dx + dy * dy);
-        if (d < 100) {
-          ctx.beginPath();
-          ctx.moveTo(pts[i].x, pts[i].y);
-          ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.strokeStyle = `rgba(79,70,229,${0.06 * (1 - d / 100)})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
+    ctx.fillStyle = '#00FF41'; // classic matrix green
+    ctx.font = `${matrixFontSize}px monospace`;
+
+    if (window.matrixColumns.length === 0) {
+      const cols = Math.floor(canvas.width / matrixFontSize);
+      window.matrixColumns = Array.from({ length: cols }, () => Math.floor(Math.random() * -30));
+    }
+
+    window.matrixColumns.forEach((y, i) => {
+      const text = Math.random() > 0.5 ? '1' : '0';
+      const x = i * matrixFontSize;
+      ctx.fillText(text, x, y * matrixFontSize);
+
+      if (y * matrixFontSize > canvas.height && Math.random() > 0.98) {
+        window.matrixColumns[i] = 0;
+      } else {
+        window.matrixColumns[i]++;
+      }
+    });
+  } else {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw and animate particles
+    pts.forEach(p => {
+      // Move particles
+      p.x += p.vx; 
+      p.y += p.vy;
+
+      // Mouse attraction pull
+      if (bgMouseX > 0) {
+        const dx = bgMouseX - p.x;
+        const dy = bgMouseY - p.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 180) {
+          // Gravitate towards mouse slightly
+          p.x += dx * 0.005;
+          p.y += dy * 0.005;
+        }
+      }
+
+      // Bounce off borders
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+      // Render particle
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.c},${p.a})`;
+      ctx.fill();
+    });
+
+    // Draw connections only every 2 frames to optimize CPU load
+    if (frameCount % 2 === 0) {
+      for (let i = 0; i < pts.length; i++) {
+        // Draw connection to mouse
+        if (bgMouseX > 0) {
+          const mdx = bgMouseX - pts[i].x;
+          const mdy = bgMouseY - pts[i].y;
+          const md = Math.hypot(mdx, mdy);
+          if (md < 140) {
+            ctx.beginPath();
+            ctx.moveTo(bgMouseX, bgMouseY);
+            ctx.lineTo(pts[i].x, pts[i].y);
+            ctx.strokeStyle = `rgba(6, 182, 212, ${0.18 * (1 - md / 140)})`; // glowing cyan line
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+
+        // Draw connections between particles
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const d  = Math.hypot(dx, dy);
+          if (d < 120) {
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = `rgba(129, 140, 248, ${0.08 * (1 - d / 120)})`; // indigo connection
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
         }
       }
     }
@@ -1435,7 +1514,7 @@ loadGuestbook();
   const BANNER = `\n<span class="term-info">╔══════════════════════════════════════════════╗\n║                                              ║\n║   <span class="term-accent">██╗   ██╗ ██████╗    </span>                       ║\n║   <span class="term-accent">██║   ██║██╔════╝    </span>                       ║\n║   <span class="term-accent">╚██╗ ██╔╝██║  ███╗   </span>                       ║\n║   <span class="term-accent"> ╚████╔╝ ██║   ██║   </span>                       ║\n║   <span class="term-accent">  ╚██╔╝  ╚██████╔╝   </span>                       ║\n║   <span class="term-accent">   ╚═╝    ╚═════╝    </span>                       ║\n║                                              ║\n║   <span class="term-cmd">Varshan Gowda SR</span> — Portfolio Terminal       ║\n║   <span class="term-dim">Type 'help' to see available commands</span>       ║\n║                                              ║\n╚══════════════════════════════════════════════╝</span>\n`;
 
   const COMMANDS = {
-    help: () => `\n<span class="term-cmd">Available Commands:</span>\n\n  <span class="term-accent">about</span>      <span class="term-dim">—</span> Who am I\n  <span class="term-accent">projects</span>   <span class="term-dim">—</span> Featured builds\n  <span class="term-accent">skills</span>     <span class="term-dim">—</span> Tech stack\n  <span class="term-accent">timeline</span>   <span class="term-dim">—</span> My journey\n  <span class="term-accent">contact</span>    <span class="term-dim">—</span> Get in touch\n  <span class="term-accent">github</span>     <span class="term-dim">—</span> Open GitHub profile\n  <span class="term-accent">guestbook</span>  <span class="term-dim">—</span> Leave a message\n  <span class="term-accent">clear</span>      <span class="term-dim">—</span> Clear terminal\n  <span class="term-accent">exit</span>       <span class="term-dim">—</span> Close terminal\n`,
+    help: () => `\n<span class="term-cmd">Available Commands:</span>\n\n  <span class="term-accent">about</span>      <span class="term-dim">—</span> Who am I\n  <span class="term-accent">projects</span>   <span class="term-dim">—</span> Featured builds\n  <span class="term-accent">skills</span>     <span class="term-dim">—</span> Tech stack\n  <span class="term-accent">timeline</span>   <span class="term-dim">—</span> My journey\n  <span class="term-accent">contact</span>    <span class="term-dim">—</span> Get in touch\n  <span class="term-accent">github</span>     <span class="term-dim">—</span> Open GitHub profile\n  <span class="term-accent">guestbook</span>  <span class="term-dim">—</span> Leave a message\n  <span class="term-accent">matrix</span>     <span class="term-dim">—</span> Toggle falling binary rain overlay\n  <span class="term-accent">accent</span>     <span class="term-dim">—</span> Change theme colors (usage: 'accent rose')\n  <span class="term-accent">hack</span>       <span class="term-dim">—</span> Start visual cyberpunk hacking sequence\n  <span class="term-accent">clear</span>      <span class="term-dim">—</span> Clear terminal\n  <span class="term-accent">exit</span>       <span class="term-dim">—</span> Close terminal\n`,
     about: () => { scrollToAndClose('#about'); return `<span class="term-info">→ Navigating to About section...</span>`; },
     projects: () => { scrollToAndClose('#projects'); return `<span class="term-info">→ Navigating to Projects section...</span>`; },
     skills: () => { scrollToAndClose('#stack'); return `<span class="term-info">→ Navigating to Tech Stack section...</span>`; },
@@ -1443,6 +1522,51 @@ loadGuestbook();
     contact: () => { scrollToAndClose('#contact'); return `<span class="term-info">→ Navigating to Contact section...</span>`; },
     guestbook: () => { scrollToAndClose('#guestbook'); return `<span class="term-info">→ Navigating to Guestbook section...</span>`; },
     github: () => { window.open('https://github.com/VarshuAi', '_blank'); return `<span class="term-info">→ Opening GitHub profile in new tab...</span>`; },
+    matrix: () => {
+      window.isMatrixMode = !window.isMatrixMode;
+      if (window.isMatrixMode) {
+        window.matrixColumns = [];
+        return `<span class="term-accent">→ Matrix Mode: ENABLED. System overlay activated.</span>`;
+      } else {
+        return `<span class="term-info">→ Matrix Mode: DISABLED. Restored default starfield.</span>`;
+      }
+    },
+    accent: (args) => {
+      const color = args ? args.trim().toLowerCase() : '';
+      const presets = {
+        rose: { accent: '#F43F5E', accent2: '#FDA4AF' },
+        emerald: { accent: '#10B981', accent2: '#6EE7B7' },
+        indigo: { accent: '#4F46E5', accent2: '#818CF8' },
+        neon: { accent: '#06B6D4', accent2: '#A78BFA' }
+      };
+      if (presets[color]) {
+        document.documentElement.style.setProperty('--accent', presets[color].accent);
+        document.documentElement.style.setProperty('--accent-2', presets[color].accent2);
+        return `<span class="term-accent">→ Accent palette updated to ${color.toUpperCase()} successfully.</span>`;
+      } else {
+        return `<span class="term-warn">Usage: accent [rose | emerald | indigo | neon]</span>`;
+      }
+    },
+    hack: () => {
+      let step = 0;
+      const lines = [
+        "Initializing payload execution...",
+        "Bypassing sandbox constraints...",
+        "Extracting kernel memory offsets...",
+        "Injecting WebAssembly visual pipe...",
+        "Connection established. Access granted."
+      ];
+      function printNext() {
+        if (step < lines.length) {
+          output.innerHTML += `<span class="term-warn">[SYS] ${lines[step]}</span>\n`;
+          body.scrollTop = body.scrollHeight;
+          step++;
+          setTimeout(printNext, 400);
+        }
+      }
+      printNext();
+      return `<span class="term-info">Executing hack sequence:</span>`;
+    },
     clear: () => { output.innerHTML = ''; return ''; },
     exit: () => { closeTerminal(); return ''; }
   };
@@ -1474,19 +1598,22 @@ loadGuestbook();
   }
 
   function processCommand(cmd) {
-    const trimmed = cmd.trim().toLowerCase();
-    if (!trimmed) return;
+    const parts = cmd.trim().split(/\s+/);
+    const command = parts[0].toLowerCase();
+    const args = parts.slice(1).join(' ');
+    
+    if (!command) return;
 
-    cmdHistory.push(trimmed);
+    cmdHistory.push(cmd.trim());
     historyIndex = cmdHistory.length;
 
     output.innerHTML += `\n<span class="term-dim">visitor@varshuai:~$</span> <span class="term-cmd">${cmd}</span>\n`;
 
-    if (COMMANDS[trimmed]) {
-      const result = COMMANDS[trimmed]();
+    if (COMMANDS[command]) {
+      const result = COMMANDS[command](args);
       if (result) output.innerHTML += result + '\n';
     } else {
-      output.innerHTML += `<span class="term-warn">Command not found: '${trimmed}'. Type 'help' for available commands.</span>\n`;
+      output.innerHTML += `<span class="term-warn">Command not found: '${command}'. Type 'help' for available commands.</span>\n`;
     }
 
     body.scrollTop = body.scrollHeight;
@@ -2004,5 +2131,45 @@ function dismissArcadeAlert() {
   const overlay = document.getElementById('arcadeAlertOverlay');
   if (overlay) overlay.style.display = 'none';
 }
+
+/* ═══════════════════════════════════════
+   FEATURE: LIVE DEV ACTIVITY STATUS
+   ═══════════════════════════════════════ */
+;(function initDevActivity() {
+  function updateDevActivity() {
+    const dot = document.getElementById('devStatusDot');
+    const text = document.getElementById('devStatusText');
+    const sub = document.getElementById('devStatusSub');
+    if (!dot || !text || !sub) return;
+
+    // Bengaluru IST timezone is GMT+5.5
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const istOffset = 5.5 * 3600000;
+    const istTime = new Date(utc + istOffset);
+
+    const hours = istTime.getHours();
+    const timeString = istTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    sub.textContent = `Local time: ${timeString} (Bengaluru)`;
+
+    if (hours >= 9 && hours < 18) {
+      dot.style.background = '#10B981';
+      dot.style.boxShadow = '0 0 8px #10B981';
+      text.textContent = 'varshan is building/shipping...';
+    } else if (hours >= 18 && hours < 23) {
+      dot.style.background = '#06B6D4';
+      dot.style.boxShadow = '0 0 8px #06B6D4';
+      text.textContent = 'varshan is writing code & learning...';
+    } else {
+      dot.style.background = '#F59E0B';
+      dot.style.boxShadow = '0 0 8px #F59E0B';
+      text.textContent = 'varshan is dreaming about systems...';
+    }
+  }
+
+  setInterval(updateDevActivity, 60000);
+  updateDevActivity();
+})();
 
 
