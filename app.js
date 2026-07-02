@@ -675,12 +675,22 @@ async function loadGitHubTimeline() {
 
   const fallbackMilestones = [
     {
-      year: "2025 - Present",
+      year: "2026 - Present",
       events: [
         {
           title: "Created 200+ Repositories & Growing",
           desc: "Shipped utilities, AI tools, and full desktop wrappers. Deep dive into systems.",
           meta: "Present Activity"
+        }
+      ]
+    },
+    {
+      year: "2025",
+      events: [
+        {
+          title: "Dynamic Integrations & Live Audio Synthesizers",
+          desc: "Built custom lo-fi music engines, dynamic particle grids, and Render databases.",
+          meta: "2025 Milestone"
         }
       ]
     },
