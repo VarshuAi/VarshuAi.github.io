@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2.6" />
+  <link rel="stylesheet" href="style.css?v=2.7" />
 
   <!-- INTRO CINEMA STYLES  -  inline so they load before anything else -->
   <style>
@@ -676,48 +676,11 @@
     <div class="wrap">
       <div class="section-tag">Journey</div>
       <h2 class="section-title reveal">My <span class="grad-text">Timeline</span></h2>
-      <div class="timeline">
-
-        <div class="tl-item reveal">
-          <div class="tl-dot"></div>
-          <div class="tl-line"></div>
-          <div class="tl-year">Oct 2022</div>
-          <div class="tl-card">
-            <h4>First GitHub Commit</h4>
-            <p>Created my GitHub account and pushed my first repo. Started the journey into building things that actually work.</p>
-          </div>
+      <div class="timeline" id="github-timeline-feed">
+        <div class="proj-loading" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 40px 0; gap: 12px;">
+          <div class="spinner"></div>
+          <span style="font-family:var(--mono); font-size:0.8rem; color:var(--text-3)">Fetching GitHub activity timeline...</span>
         </div>
-
-        <div class="tl-item reveal reveal-delay-1">
-          <div class="tl-dot"></div>
-          <div class="tl-line"></div>
-          <div class="tl-year">2023</div>
-          <div class="tl-card">
-            <h4>100+ Repos Milestone</h4>
-            <p>Crossed 100 public repositories. Started exploring Python deeply  -  automation scripts, bots, tools. Everything was getting built.</p>
-          </div>
-        </div>
-
-        <div class="tl-item reveal reveal-delay-2">
-          <div class="tl-dot"></div>
-          <div class="tl-line"></div>
-          <div class="tl-year">2024</div>
-          <div class="tl-card">
-            <h4>Rust, Go & Desktop Apps</h4>
-            <p>Levelled up into systems programming with Rust and Go. Discovered Tauri  -  started building real desktop applications.</p>
-          </div>
-        </div>
-
-        <div class="tl-item reveal reveal-delay-3">
-          <div class="tl-dot tl-dot-active"></div>
-          <div class="tl-year">2025  -  Now</div>
-          <div class="tl-card tl-card-active">
-            <h4>200+ Repos &amp; Growing</h4>
-            <p>Over <span class="github-repos-dynamic">204</span> repositories shipped. <span class="github-followers-dynamic">136</span> followers. Building AI tools, open source utilities, and whatever sparks the next idea.</p>
-            <span class="tl-current">Present</span>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
@@ -1043,7 +1006,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=2.6"></script>
+  <script src="app.js?v=2.7"></script>
 </body>
 </html>
 

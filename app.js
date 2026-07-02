@@ -668,6 +668,156 @@ async function loadRepos() {
   }
 }
 
+/* ── GITHUB TIMELINE FEED ── */
+async function loadGitHubTimeline() {
+  const container = document.getElementById('github-timeline-feed');
+  if (!container) return;
+
+  const fallbackMilestones = [
+    {
+      year: "2025 - Present",
+      events: [
+        {
+          title: "Created 200+ Repositories & Growing",
+          desc: "Shipped utilities, AI tools, and full desktop wrappers. Deep dive into systems.",
+          meta: "Present Activity"
+        }
+      ]
+    },
+    {
+      year: "2024",
+      events: [
+        {
+          title: "Leveled Up: Rust, Go & Desktop Tauri Builds",
+          desc: "Discovered Tauri, compiled low-latency utilities, and explored systems engineering.",
+          meta: "Active shipping"
+        }
+      ]
+    },
+    {
+      year: "2023",
+      events: [
+        {
+          title: "100+ Repos Milestone",
+          desc: "Crossed 100 public code repositories. Focused on Python scripts, bots, automation, and API bridges.",
+          meta: "Learning & compounding"
+        }
+      ]
+    },
+    {
+      year: "2022",
+      events: [
+        {
+          title: "First GitHub Account & Commit",
+          desc: "Created the VarshuAi profile and shipped my very first repository.",
+          meta: "October 2022"
+        }
+      ]
+    }
+  ];
+
+  function renderFallback() {
+    container.innerHTML = fallbackMilestones.map(yGroup => `
+      <div class="gh-timeline-year-group">
+        <div class="gh-timeline-year-header">
+          <span class="gh-year-text">${yGroup.year}</span>
+        </div>
+        <div class="gh-timeline-events">
+          ${yGroup.events.map(ev => `
+            <div class="gh-timeline-event">
+              <div class="gh-event-badge">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <div class="gh-event-card">
+                <div class="gh-event-title">${ev.title}</div>
+                <p style="font-size:0.78rem;color:var(--text-2);line-height:1.5">${ev.desc}</p>
+                <div style="font-size:0.68rem;color:var(--text-3);margin-top:6px">${ev.meta}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  try {
+    const res = await fetch(`https://api.github.com/users/${GH_USER}/repos?sort=created&per_page=60&direction=desc`);
+    if (!res.ok) throw new Error('API Rate Limit or Offline');
+    const reposData = await res.json();
+    if (!reposData.length) {
+      renderFallback();
+      return;
+    }
+
+    const groups = {};
+    reposData.forEach(repo => {
+      if (!repo.created_at) return;
+      const date = new Date(repo.created_at);
+      const year = date.getFullYear().toString();
+      const month = date.toLocaleString('default', { month: 'long' });
+
+      if (!groups[year]) groups[year] = {};
+      if (!groups[year][month]) groups[year][month] = [];
+      groups[year][month].push(repo);
+    });
+
+    let html = '';
+    const sortedYears = Object.keys(groups).sort((a, b) => b - a);
+
+    sortedYears.forEach(year => {
+      html += `
+        <div class="gh-timeline-year-group">
+          <div class="gh-timeline-year-header">
+            <span class="gh-year-text">${year}</span>
+          </div>
+          <div class="gh-timeline-events">
+      `;
+
+      const months = groups[year];
+      const sortedMonths = Object.keys(months).sort((a, b) => {
+        return new Date(a + " 1, 2000") - new Date(b + " 1, 2000");
+      }).reverse();
+
+      sortedMonths.forEach(month => {
+        const repoList = months[month];
+        html += `
+          <div class="gh-timeline-event">
+            <div class="gh-event-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="gh-event-card">
+              <div class="gh-event-title">Created ${repoList.length} repository/repositories in <strong style="color:var(--text-1)">${month}</strong></div>
+              <div class="gh-event-repos-list">
+                ${repoList.map(r => `
+                  <a href="${r.html_url}" target="_blank" class="gh-repo-item">
+                    <span class="gh-repo-name">${r.name}</span>
+                    ${r.description ? `<span class="gh-repo-desc">${r.description}</span>` : ''}
+                    <div class="gh-repo-meta">
+                      <span>⭐ ${r.stargazers_count}</span>
+                      <span>🍴 ${r.forks_count}</span>
+                      ${r.language ? `<span>💻 ${r.language}</span>` : ''}
+                    </div>
+                  </a>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  } catch (err) {
+    console.warn("GitHub rate-limit hit or offline. Using milestones fallback.");
+    renderFallback();
+  }
+}
+
 /* ── GITHUB PROFILE ── */
 async function loadProfile() {
   try {
@@ -748,6 +898,7 @@ loadFeaturedBuilds();
 loadRepos();
 loadViews();
 loadArticles();
+loadGitHubTimeline();
 
 /* ══════════════════════════════════════
    EASTER EGG — type "varshan" anywhere
