@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=1.8" />
+  <link rel="stylesheet" href="style.css?v=1.9" />
   <style>
     /* Restore system cursor since custom cursor markup is absent here */
     * {
@@ -328,9 +328,12 @@
           </div>
         </div>
 
-        <div class="action-row">
+        <div class="action-row" style="display:flex; justify-content:space-between; gap:10px;">
           <button class="btn btn-secondary" id="exportBtn" onclick="exportJSON()">Export JSON Config</button>
-          <button class="btn btn-primary" onclick="saveProject()">Save Build</button>
+          <div style="display:flex; gap:10px;">
+            <button class="btn" style="background:#EF4444; color:#ffffff; border:none; padding:10px 20px; border-radius: var(--r-md); cursor:pointer; font-weight:600;" onclick="deleteProject()">Delete Item</button>
+            <button class="btn btn-primary" onclick="saveProject()">Save Build</button>
+          </div>
         </div>
       </div>
     </div>
@@ -576,6 +579,52 @@
       } else {
         localStorage.setItem('projects_db', JSON.stringify(projects));
         alert('Saved locally to browser storage. Click "Export JSON Config" to copy into codebase!');
+      }
+    }
+
+    async function deleteProject() {
+      if (!activeProjectId) return;
+      
+      const p = projects.find(proj => proj.id === activeProjectId);
+      if (!p) return;
+
+      const confirmDelete = confirm(`Are you sure you want to delete "${p.name}"? This will permanently remove it from the database.`);
+      if (!confirmDelete) return;
+
+      const pIndex = projects.findIndex(proj => proj.id === activeProjectId);
+      if (pIndex !== -1) {
+        projects.splice(pIndex, 1);
+        
+        // Select another project if available
+        activeProjectId = projects.length ? projects[0].id : '';
+        renderProjectList();
+        loadProjectIntoForm(activeProjectId);
+
+        if (isServerConnected) {
+          try {
+            const token = localStorage.getItem('admin_token') || '';
+            const res = await fetch('https://varshuai-github-io.onrender.com/api/projects', {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify(projects)
+            });
+            if (res.status === 401) {
+              alert('Deletion saved locally, but server update was unauthorized.');
+            } else if (res.ok) {
+              alert('Build deleted and database updated successfully!');
+            } else {
+              alert('Deleted locally, but failed to sync changes to server.');
+            }
+          } catch (err) {
+            alert('Deleted locally. Sync failed (Server offline).');
+          }
+        } else {
+          localStorage.setItem('projects_db', JSON.stringify(projects));
+          alert('Deleted from local browser storage. Export JSON Config to update codebase.');
+        }
       }
     }
 
