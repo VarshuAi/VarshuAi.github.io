@@ -9,6 +9,7 @@ import { FeaturedProjectCard } from "@/components/showcase/FeaturedProjectCard";
 import { SecondaryProjectCard } from "@/components/showcase/SecondaryProjectCard";
 import { OpenSourceProjectCard } from "@/components/showcase/OpenSourceProjectCard";
 import { TechnicalManifesto } from "@/components/identity/TechnicalManifesto";
+import { OpenSourceSection } from "@/components/github/OpenSourceSection";
 import { SystemsConsole } from "@/components/hero/SystemsConsole";
 import { PROFILE } from "@/data/profile";
 import { ArrowRight, ArrowUpRight, Mail } from "lucide-react";
@@ -171,11 +172,18 @@ export default function HomePage() {
           </Container>
         </section>
 
+        {/* OPEN SOURCE / GITHUB IDENTITY */}
+        <section id="open-source" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
+          <Container size="wide">
+            <OpenSourceSection />
+          </Container>
+        </section>
+
         {/* PHILOSOPHY & ABOUT */}
         <section id="about" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
           <Container size="wide">
             <SectionHeader
-              kicker="03 // ENGINEERING DISCIPLINE"
+              kicker="04 // ENGINEERING DISCIPLINE"
               title="How I Approach Software"
               description="A clear stance on building reliable, maintainable systems that outlast hype cycles."
             />

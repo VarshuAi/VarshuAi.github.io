@@ -62,6 +62,12 @@ export function Header() {
               Work
             </a>
             <a
+              href="#open-source"
+              className="text-[#9E988F] hover:text-[#F5F0E8] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] py-1"
+            >
+              Open Source
+            </a>
+            <a
               href="#about"
               className="text-[#9E988F] hover:text-[#F5F0E8] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] py-1"
             >
@@ -112,6 +118,13 @@ export function Header() {
               className="text-[#9E988F] hover:text-[#F5F0E8] py-2 border-b border-[rgba(245,240,232,0.04)]"
             >
               Work
+            </a>
+            <a
+              href="#open-source"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-[#9E988F] hover:text-[#F5F0E8] py-2 border-b border-[rgba(245,240,232,0.04)]"
+            >
+              Open Source
             </a>
             <a
               href="#about"
