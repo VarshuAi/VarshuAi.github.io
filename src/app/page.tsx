@@ -7,8 +7,9 @@ import { Badge } from "@/components/primitives/Badge";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/primitives/Card";
 import { SectionHeader } from "@/components/primitives/SectionHeader";
 import { ProjectCard } from "@/components/primitives/ProjectCard";
+import { SystemsConsole } from "@/components/hero/SystemsConsole";
 import { PROFILE } from "@/data/profile";
-import { ArrowRight, Mail, Terminal, Cpu, Layers, Code } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Mail, Terminal, Cpu, Layers, Code } from "lucide-react";
 import { GithubIcon } from "@/components/icons/GithubIcon";
 
 export default function HomePage() {
@@ -17,97 +18,103 @@ export default function HomePage() {
       <Header />
 
       <main id="main-content" className="flex-1">
-        {/* HERO SECTION */}
-        <section className="pt-16 pb-20 sm:pt-24 sm:pb-28 border-b border-[rgba(245,240,232,0.06)] relative overflow-hidden">
-          <Container>
-            <div className="max-w-4xl space-y-8">
-              {/* Eyebrow / Status */}
-              <div className="flex flex-wrap items-center gap-3">
-                <Badge variant="live" size="sm">
-                  Available for Select Engineering Roles
-                </Badge>
-                <span className="text-[#68635B] font-mono text-xs">•</span>
-                <span className="font-mono text-xs text-[#9E988F] uppercase tracking-wider">
-                  Bangalore, IN
-                </span>
-              </div>
-
-              {/* Primary Identity & Manifesto Headline */}
-              <div className="space-y-4">
-                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-medium tracking-tight text-[#F5F0E8] leading-[1.08]">
-                  Varshan Gowda S R
-                </h1>
-                <p className="font-mono text-base sm:text-lg text-[#C8FF00] tracking-tight">
-                  CSE • AI/ML • Full-Stack Developer
-                </p>
-              </div>
-
-              {/* Non-cliché statement */}
-              <div className="space-y-4 text-base sm:text-xl text-[#9E988F] font-normal leading-relaxed max-w-2xl">
-                <p>
-                  I am a young engineer who <span className="text-[#F5F0E8] font-medium">actually builds software</span>.
-                  Transforming mathematical and computer science foundations into resilient, production-grade applications.
-                </p>
-                <p className="text-sm sm:text-base text-[#68635B]">
-                  Specializing in machine learning integration, distributed full-stack systems, and native mobile client architectures.
-                </p>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="pt-2 flex flex-wrap items-center gap-3">
-                <Button
-                  variant="primary"
-                  size="md"
-                  href="#projects"
-                  icon={<ArrowRight className="w-4 h-4" />}
-                  iconPosition="right"
-                >
-                  Explore Systems
-                </Button>
-
-                <Button
-                  variant="secondary"
-                  size="md"
-                  href="https://github.com/varshuai"
-                  isExternal
-                  icon={<GithubIcon className="w-4 h-4" />}
-                  iconPosition="left"
-                >
-                  GitHub / varshuai
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="md"
-                  href="mailto:contact@varshan.dev"
-                  icon={<Mail className="w-4 h-4" />}
-                  iconPosition="left"
-                >
-                  Direct Email
-                </Button>
-              </div>
-
-              {/* Engineering Telemetry Strip */}
-              <div className="pt-8 mt-8 border-t border-[rgba(245,240,232,0.06)] grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs">
-                <div>
-                  <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Role / Discipline</div>
-                  <div className="text-[#F5F0E8] mt-1">Systems Engineer</div>
+        {/* HERO SECTION — EDITORIAL ASYMMETRIC GRID */}
+        <section className="pt-12 pb-16 sm:pt-20 sm:pb-24 border-b border-[rgba(245,240,232,0.06)] relative overflow-hidden">
+          <Container size="wide">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Left Column: Typography & Intent */}
+              <div className="lg:col-span-7 space-y-6 sm:space-y-7">
+                {/* Micro Details: Currently Building Status */}
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <Badge variant="live" size="sm" className="bg-[#121212] text-[#F5F0E8] border-[rgba(245,240,232,0.1)]">
+                    CURRENTLY BUILDING
+                  </Badge>
+                  <span className="text-[#68635B] font-mono text-xs hidden sm:inline">•</span>
+                  <span className="font-mono text-xs text-[#9E988F] tracking-wide">
+                    A1 Swaara · FLUXA · VelorioLabs
+                  </span>
                 </div>
-                <div>
-                  <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Primary Focus</div>
-                  <div className="text-[#F5F0E8] mt-1">AI/ML & Full-Stack</div>
+
+                {/* Name & Positioning */}
+                <div className="space-y-3">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-[50px] font-medium tracking-tight text-[#F5F0E8] leading-[1.08]">
+                    VARSHAN GOWDA S R
+                  </h1>
+                  <p className="font-mono text-xs sm:text-sm text-[#C8FF00] tracking-widest uppercase font-semibold">
+                    CSE • AI/ML • FULL-STACK DEVELOPER
+                  </p>
                 </div>
-                <div>
-                  <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Mobile Stack</div>
-                  <div className="text-[#F5F0E8] mt-1">Flutter • Android</div>
+
+                {/* Stance & Manifesto */}
+                <div className="space-y-3 max-w-xl">
+                  <p className="text-lg sm:text-xl lg:text-2xl text-[#F5F0E8] font-normal leading-snug">
+                    &ldquo;I build software, explore AI/ML, and contribute to open source.&rdquo;
+                  </p>
+                  <p className="text-sm sm:text-base text-[#9E988F] leading-relaxed">
+                    Engineering robust, high-performance systems from first principles — across distributed backends, applied machine learning pipelines, and responsive client architectures.
+                  </p>
                 </div>
-                <div>
-                  <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Status</div>
-                  <div className="text-[#C8FF00] mt-1 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF00]" />
-                    Building Systems
+
+                {/* Call To Actions */}
+                <div className="pt-2 flex flex-wrap items-center gap-3">
+                  <Button
+                    variant="primary"
+                    size="md"
+                    href="#projects"
+                    icon={<ArrowRight className="w-4 h-4" />}
+                    iconPosition="right"
+                  >
+                    View Work
+                  </Button>
+
+                  <Button
+                    variant="secondary"
+                    size="md"
+                    href="https://github.com/varshuai"
+                    isExternal
+                    icon={<ArrowUpRight className="w-4 h-4 text-[#9E988F]" />}
+                    iconPosition="right"
+                  >
+                    GitHub ↗
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="md"
+                    href="/resume.pdf"
+                    isExternal
+                    icon={<ArrowUpRight className="w-3.5 h-3.5 text-[#68635B]" />}
+                    iconPosition="right"
+                  >
+                    Resume
+                  </Button>
+                </div>
+
+                {/* Micro Telemetry Bar */}
+                <div className="pt-6 mt-6 border-t border-[rgba(245,240,232,0.06)] grid grid-cols-2 sm:grid-cols-3 gap-4 font-mono text-xs">
+                  <div>
+                    <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Location</div>
+                    <div className="text-[#F5F0E8] mt-0.5">Bangalore, IN (UTC+5:30)</div>
+                  </div>
+                  <div>
+                    <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Core Stack</div>
+                    <div className="text-[#F5F0E8] mt-0.5">Next.js • Flutter • PyTorch</div>
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Direct Channel</div>
+                    <a
+                      href="mailto:contact@varshan.dev"
+                      className="text-[#C8FF00] hover:underline mt-0.5 inline-block"
+                    >
+                      contact@varshan.dev
+                    </a>
                   </div>
                 </div>
+              </div>
+
+              {/* Right Column: Visual Systems Console */}
+              <div className="lg:col-span-5 w-full">
+                <SystemsConsole />
               </div>
             </div>
           </Container>
@@ -115,7 +122,7 @@ export default function HomePage() {
 
         {/* FEATURED PROJECTS / SYSTEMS */}
         <section id="projects" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
-          <Container>
+          <Container size="wide">
             <SectionHeader
               kicker="01 // ARCHITECTURE & SYSTEMS"
               title="Selected Engineering Projects"
@@ -147,9 +154,9 @@ export default function HomePage() {
           </Container>
         </section>
 
-        {/* CAPABILITIES & ARCHITECTURAL DEPTH (NO GENERIC LOGO WALL) */}
+        {/* CAPABILITIES & ARCHITECTURAL DEPTH */}
         <section id="capabilities" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
-          <Container>
+          <Container size="wide">
             <SectionHeader
               kicker="02 // TECHNICAL SCOPE"
               title="Engineering Competencies"
@@ -204,9 +211,9 @@ export default function HomePage() {
           </Container>
         </section>
 
-        {/* PHILOSOPHY & STANCE */}
-        <section id="philosophy" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
-          <Container>
+        {/* PHILOSOPHY & ABOUT */}
+        <section id="about" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
+          <Container size="wide">
             <SectionHeader
               kicker="03 // ENGINEERING DISCIPLINE"
               title="How I Approach Software"
@@ -251,7 +258,7 @@ export default function HomePage() {
 
         {/* DIRECT TRANSMISSION / CONTACT */}
         <section id="contact" className="py-16 sm:py-24">
-          <Container>
+          <Container size="wide">
             <div className="rounded-lg bg-[#121212] border border-[rgba(245,240,232,0.08)] p-6 sm:p-10 relative overflow-hidden">
               <div className="max-w-2xl space-y-6">
                 <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#9E988F]">
