@@ -20,6 +20,14 @@ export interface ProjectItem {
   }[];
 }
 
+export interface TechnicalCategory {
+  number: string;
+  title: string;
+  subcategories: string[];
+  description: string;
+  contextTechnologies: string[];
+}
+
 export interface ProfileData {
   name: string;
   role: string;
@@ -30,6 +38,13 @@ export interface ProfileData {
   githubUrl: string;
   email: string;
   manifesto: string[];
+  technicalIdentity: {
+    categories: TechnicalCategory[];
+    compactStack: {
+      languages: string[];
+      technologies: string[];
+    };
+  };
   capabilities: {
     domain: string;
     description: string;
@@ -51,6 +66,54 @@ export const PROFILE: ProfileData = {
     "I am an engineer who actually builds software — taking systems from first-principles architectural reasoning to resilient, production implementations.",
     "My focus is where high-throughput backend services, modern machine learning models, and uncompromising client experiences converge.",
   ],
+  technicalIdentity: {
+    categories: [
+      {
+        number: "01",
+        title: "AI / ML",
+        subcategories: ["Machine Learning", "GenAI", "AI-powered applications"],
+        description:
+          "Applied model architectures, neural inference pipelines, and intelligent speech/audio processing systems.",
+        contextTechnologies: ["PyTorch", "Model Inference", "Embeddings", "Acoustic DSP"],
+      },
+      {
+        number: "02",
+        title: "SOFTWARE",
+        subcategories: ["Full-Stack Development", "APIs", "Developer Tools"],
+        description:
+          "Resilient full-stack web platforms, type-safe API boundaries, and low-latency synchronization engines.",
+        contextTechnologies: ["Next.js", "React", "Node.js", "WebSockets", "Redis", "TypeScript"],
+      },
+      {
+        number: "03",
+        title: "MOBILE",
+        subcategories: ["Flutter", "Android", "Kotlin", "Jetpack Compose"],
+        description:
+          "High-performance native Android media applications and cross-platform clients engineered for zero frame drops.",
+        contextTechnologies: ["Flutter", "Android", "Kotlin", "Jetpack Compose", "ExoPlayer", "Coroutines"],
+      },
+      {
+        number: "04",
+        title: "OPEN SOURCE",
+        subcategories: ["GitHub", "Open Source Contributions", "VelorioLabs"],
+        description:
+          "Sovereign developer infrastructure, experimental tooling suites, and collective public repositories.",
+        contextTechnologies: ["GitHub @varshuai", "VelorioLabs Collective", "AetherEye", "TeleVortex", "Termux-Vault"],
+      },
+    ],
+    compactStack: {
+      languages: ["Python", "Java", "C++", "Dart", "Kotlin"],
+      technologies: [
+        "Flutter",
+        "Android",
+        "Jetpack Compose",
+        "React",
+        "Node.js",
+        "Git",
+        "GitHub",
+      ],
+    },
+  },
   capabilities: [
     {
       domain: "Computer Science & Distributed Systems",

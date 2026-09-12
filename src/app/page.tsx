@@ -4,14 +4,14 @@ import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/primitives/Container";
 import { Button } from "@/components/primitives/Button";
 import { Badge } from "@/components/primitives/Badge";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/primitives/Card";
 import { SectionHeader } from "@/components/primitives/SectionHeader";
 import { FeaturedProjectCard } from "@/components/showcase/FeaturedProjectCard";
 import { SecondaryProjectCard } from "@/components/showcase/SecondaryProjectCard";
 import { OpenSourceProjectCard } from "@/components/showcase/OpenSourceProjectCard";
+import { TechnicalManifesto } from "@/components/identity/TechnicalManifesto";
 import { SystemsConsole } from "@/components/hero/SystemsConsole";
 import { PROFILE } from "@/data/profile";
-import { ArrowRight, ArrowUpRight, Mail, Terminal, Cpu, Layers, Code } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Mail } from "lucide-react";
 import { GithubIcon } from "@/components/icons/GithubIcon";
 
 export default function HomePage() {
@@ -155,60 +155,19 @@ export default function HomePage() {
           </Container>
         </section>
 
-        {/* CAPABILITIES & ARCHITECTURAL DEPTH */}
+        {/* WHAT I BUILD — TECHNICAL IDENTITY */}
         <section id="capabilities" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
           <Container size="wide">
             <SectionHeader
               kicker="02 // TECHNICAL SCOPE"
-              title="Engineering Competencies"
-              description="Structured by technical discipline and theoretical depth rather than superficial logo lists."
+              title="WHAT I BUILD"
+              description="Editorial technical direction across machine intelligence, distributed backends, native client software, and open-source systems."
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {PROFILE.capabilities.map((cap, index) => {
-                const icons = [
-                  <Cpu key="cpu" className="w-5 h-5 text-[#C8FF00]" />,
-                  <Layers key="layers" className="w-5 h-5 text-[#C8FF00]" />,
-                  <Code key="code" className="w-5 h-5 text-[#C8FF00]" />,
-                  <Terminal key="term" className="w-5 h-5 text-[#C8FF00]" />,
-                ];
-
-                return (
-                  <Card key={cap.domain} interactive className="flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="p-2 rounded bg-[#161616] border border-[rgba(245,240,232,0.08)]">
-                          {icons[index % icons.length]}
-                        </div>
-                        <span className="font-mono text-xs text-[#68635B]">0{index + 1}</span>
-                      </div>
-
-                      <CardHeader className="p-0 mb-3">
-                        <CardTitle className="text-lg text-[#F5F0E8]">
-                          {cap.domain}
-                        </CardTitle>
-                        <CardDescription className="text-sm text-[#9E988F] pt-1">
-                          {cap.description}
-                        </CardDescription>
-                      </CardHeader>
-                    </div>
-
-                    <div className="pt-4 mt-6 border-t border-[rgba(245,240,232,0.06)]">
-                      <div className="flex flex-wrap gap-1.5">
-                        {cap.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="font-mono text-[11px] px-2 py-0.5 rounded bg-[#161616] text-[#9E988F] border border-[rgba(245,240,232,0.06)]"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
+            <TechnicalManifesto
+              categories={PROFILE.technicalIdentity.categories}
+              compactStack={PROFILE.technicalIdentity.compactStack}
+            />
           </Container>
         </section>
 
