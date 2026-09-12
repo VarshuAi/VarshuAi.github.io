@@ -10,6 +10,8 @@ import { SecondaryProjectCard } from "@/components/showcase/SecondaryProjectCard
 import { OpenSourceProjectCard } from "@/components/showcase/OpenSourceProjectCard";
 import { TechnicalManifesto } from "@/components/identity/TechnicalManifesto";
 import { OpenSourceSection } from "@/components/github/OpenSourceSection";
+import { CurrentlyBuilding } from "@/components/about/CurrentlyBuilding";
+import { AboutSection } from "@/components/about/AboutSection";
 import { SystemsConsole } from "@/components/hero/SystemsConsole";
 import { PROFILE } from "@/data/profile";
 import { ArrowRight, ArrowUpRight, Mail } from "lucide-react";
@@ -179,11 +181,26 @@ export default function HomePage() {
           </Container>
         </section>
 
-        {/* PHILOSOPHY & ABOUT */}
+        {/* CURRENTLY BUILDING & ABOUT SECTION */}
         <section id="about" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
           <Container size="wide">
+            <div className="space-y-20 sm:space-y-24">
+              {/* SECTION 1: CURRENTLY BUILDING */}
+              <div id="currently-building" className="scroll-mt-24">
+                <CurrentlyBuilding />
+              </div>
+
+              {/* SECTION 2: ABOUT */}
+              <AboutSection />
+            </div>
+          </Container>
+        </section>
+
+        {/* PHILOSOPHY & STANCE */}
+        <section id="philosophy" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
+          <Container size="wide">
             <SectionHeader
-              kicker="04 // ENGINEERING DISCIPLINE"
+              kicker="05 // ENGINEERING DISCIPLINE"
               title="How I Approach Software"
               description="A clear stance on building reliable, maintainable systems that outlast hype cycles."
             />
