@@ -1,4 +1,24 @@
-import { ProjectData } from "@/components/primitives/ProjectCard";
+export interface ProjectItem {
+  id: string;
+  index: string;
+  title: string;
+  tagline: string;
+  category: string;
+  status: "Active" | "Shipped" | "Production" | "Open Source";
+  description: string;
+  architectureHighlights: string[];
+  techStack: string[];
+  image?: string;
+  githubUrl?: string;
+  apkUrl?: string;
+  liveUrl?: string;
+  ecosystem?: {
+    name: string;
+    tagline: string;
+    stack: string;
+    url: string;
+  }[];
+}
 
 export interface ProfileData {
   name: string;
@@ -15,7 +35,7 @@ export interface ProfileData {
     description: string;
     technologies: string[];
   }[];
-  projects: ProjectData[];
+  projects: ProjectItem[];
 }
 
 export const PROFILE: ProfileData = {
@@ -54,60 +74,83 @@ export const PROFILE: ProfileData = {
       domain: "Mobile & Client Engineering",
       description:
         "Cross-platform and native mobile software designed for fluid gestures, offline-first data consistency, and native hardware integration.",
-      technologies: ["Flutter", "Android", "Dart", "Kotlin", "State Management", "Local Cache Pipelines"],
+      technologies: ["Flutter", "Android", "Dart", "Kotlin", "Jetpack Compose", "Local Cache Pipelines"],
     },
   ],
   projects: [
     {
       id: "a1-swaara",
-      index: "SYS_01",
+      index: "01",
       title: "A1 Swaara",
-      tagline: "High-Fidelity Audio & Speech Intelligence Platform",
-      category: "AI/ML • Mobile & Audio Processing",
-      status: "Active",
+      tagline: "Modern Sovereign Android Music Player",
+      category: "Mobile · Flutter · Android",
+      status: "Production",
       description:
-        "An intelligent audio and acoustic processing system designed for real-time speech analytics, low-latency audio capture, and neural voice synthesis.",
+        "A modern Android music player focused on a clean listening experience. Built with custom audio routing, on-device caching, and zero telemetry overhead.",
       architectureHighlights: [
-        "Architected low-latency audio capture and streaming pipeline",
-        "Engineered on-device audio preprocessing with acoustic noise suppression",
-        "Integrated lightweight ML inference models for instantaneous classification",
+        "Unthrottled audio stream resolution up to 320 kbps with low latency",
+        "Hardware-accelerated equalizer shaping and real-time spectrum feedback",
+        "Offline caching engine with resilient local database state storage",
       ],
-      techStack: ["Flutter", "Python", "PyTorch", "Audio DSP", "Dart", "REST API"],
+      techStack: ["Flutter", "Android", "Dart", "Audio DSP", "ExoPlayer", "REST API"],
+      image: "/projects/a1-swaara.png",
       githubUrl: "https://github.com/varshuai",
+      apkUrl: "/downloads/A1_Swaara_v1.0.0.apk",
     },
     {
       id: "fluxa",
-      index: "SYS_02",
+      index: "02",
       title: "FLUXA",
-      tagline: "High-Throughput State & Data Synchronization Engine",
-      category: "Full-Stack • Distributed Systems",
+      tagline: "Native Android Video Application",
+      category: "Android · Kotlin · Jetpack Compose",
       status: "Active",
       description:
-        "A reactive data processing framework built to orchestrate concurrent pipelines, manage volatile application states, and provide bidirectional streaming feeds.",
+        "A native Android video application built with Kotlin and Jetpack Compose. Engineered for smooth playback pipelines, low memory footprint, and reactive state management.",
       architectureHighlights: [
-        "Structured asynchronous event bus with decoupled producer-consumer queues",
-        "Optimized client state reconciliation reducing render churn across active streams",
-        "Designed resilient error handling and automatic backpressure alleviation",
+        "Declarative Jetpack Compose UI architecture with zero unnecessary recompositions",
+        "Custom ExoPlayer media controller handling adaptive HLS video streaming",
+        "Structured concurrency with Kotlin Coroutines and asynchronous StateFlow feeds",
       ],
-      techStack: ["TypeScript", "Next.js", "Node.js", "WebSockets", "Redis", "Tailwind CSS"],
+      techStack: ["Kotlin", "Jetpack Compose", "ExoPlayer/Media3", "HLS Streaming", "Coroutines", "Material 3"],
+      image: "/projects/fluxa.png",
       githubUrl: "https://github.com/varshuai",
     },
     {
       id: "veloriolabs",
-      index: "SYS_03",
+      index: "03",
       title: "VelorioLabs",
-      tagline: "Engineering Research & Open-Source Tooling Suite",
-      category: "Open Source • Developer Tooling",
-      status: "Active",
+      tagline: "Open-Source Systems & Developer Collective",
+      category: "Open Source · Software · AI",
+      status: "Open Source",
       description:
-        "An experimental engineering collective and toolkit developing foundational software utilities, algorithmic experiments, and modern developer infrastructure.",
+        "An open-source space for building and experimenting with software projects. Developing foundational developer utilities, security tools, and algorithmic systems.",
       architectureHighlights: [
-        "Modular monorepo architecture with reusable shared utility packages",
-        "Strict automated CI/CD pipeline enforcing semantic versioning and linting",
+        "Modular open-source tooling collective with automated continuous integration",
         "High test coverage across critical algorithmic paths and computational modules",
+        "Active ecosystem spanning telemetry radar, media transcoders, and privacy utilities",
       ],
-      techStack: ["Open Source", "TypeScript", "Android", "Next.js", "GitHub Actions"],
+      techStack: ["Open Source", "TypeScript", "Python", "Systems Tooling", "AI/ML Experiments"],
       githubUrl: "https://github.com/varshuai",
+      ecosystem: [
+        {
+          name: "AetherEye",
+          tagline: "Tactical Global Satellite & ADS-B Flight Radar Terminal",
+          stack: "TypeScript • Radar Telemetry",
+          url: "https://github.com/varshuai",
+        },
+        {
+          name: "TeleVortex",
+          tagline: "Universal Media Decompiler & Transcoder Engine",
+          stack: "Python • Media Pipelines",
+          url: "https://github.com/varshuai",
+        },
+        {
+          name: "Termux-Vault",
+          tagline: "DoD 5220.22-M Multi-Pass File Shredder & Privacy Utility",
+          stack: "Shell • Cryptographic Erase",
+          url: "https://github.com/varshuai",
+        },
+      ],
     },
   ],
 };

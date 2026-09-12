@@ -6,7 +6,9 @@ import { Button } from "@/components/primitives/Button";
 import { Badge } from "@/components/primitives/Badge";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/primitives/Card";
 import { SectionHeader } from "@/components/primitives/SectionHeader";
-import { ProjectCard } from "@/components/primitives/ProjectCard";
+import { FeaturedProjectCard } from "@/components/showcase/FeaturedProjectCard";
+import { SecondaryProjectCard } from "@/components/showcase/SecondaryProjectCard";
+import { OpenSourceProjectCard } from "@/components/showcase/OpenSourceProjectCard";
 import { SystemsConsole } from "@/components/hero/SystemsConsole";
 import { PROFILE } from "@/data/profile";
 import { ArrowRight, ArrowUpRight, Mail, Terminal, Cpu, Layers, Code } from "lucide-react";
@@ -120,13 +122,13 @@ export default function HomePage() {
           </Container>
         </section>
 
-        {/* FEATURED PROJECTS / SYSTEMS */}
+        {/* SELECTED WORK / PROJECTS */}
         <section id="projects" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
           <Container size="wide">
             <SectionHeader
               kicker="01 // ARCHITECTURE & SYSTEMS"
-              title="Selected Engineering Projects"
-              description="Real software projects architected with intentional technical trade-offs, clean interfaces, and resilient infrastructure."
+              title="SELECTED WORK"
+              description="Things I've built, shipped, and continue to improve."
               action={
                 <a
                   href="https://github.com/varshuai"
@@ -140,16 +142,15 @@ export default function HomePage() {
               }
             />
 
-            {/* Asymmetric Project Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Featured Card: A1 Swaara */}
-              <ProjectCard project={PROFILE.projects[0]} featured={true} />
+            {/* Visual Hierarchy: Flagship Featured Project */}
+            <div className="space-y-8">
+              <FeaturedProjectCard project={PROFILE.projects[0]} />
 
-              {/* FLUXA */}
-              <ProjectCard project={PROFILE.projects[1]} />
-
-              {/* VelorioLabs */}
-              <ProjectCard project={PROFILE.projects[2]} />
+              {/* Secondary Substantial Project + Open Source Collective */}
+              <div id="secondary-projects" className="grid grid-cols-1 lg:grid-cols-2 gap-8 scroll-mt-24">
+                <SecondaryProjectCard project={PROFILE.projects[1]} />
+                <OpenSourceProjectCard project={PROFILE.projects[2]} />
+              </div>
             </div>
           </Container>
         </section>
