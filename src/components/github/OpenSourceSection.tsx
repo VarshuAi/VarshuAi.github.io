@@ -91,8 +91,8 @@ export function OpenSourceSection({
         </div>
 
         {/* Action Controls & Telemetry Status */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="font-mono text-xs px-3 py-1.5 rounded-full bg-[#121212] border border-[rgba(245,240,232,0.08)] flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+          <div className="font-mono text-xs px-3 py-2 min-h-[36px] rounded-full bg-[#121212] border border-[rgba(245,240,232,0.08)] flex items-center gap-2">
             <span
               className={`w-2 h-2 rounded-full ${
                 data.isLive
@@ -108,7 +108,7 @@ export function OpenSourceSection({
               disabled={isLoading}
               title="Refresh GitHub telemetry"
               aria-label="Refresh telemetry data"
-              className="text-[#68635B] hover:text-[#F5F0E8] transition-colors ml-1"
+              className="text-[#68635B] hover:text-[#F5F0E8] transition-colors ml-1 p-1 inline-flex items-center justify-center"
             >
               <RefreshCw
                 className={`w-3 h-3 ${isLoading ? "animate-spin text-[#C8FF00]" : ""}`}

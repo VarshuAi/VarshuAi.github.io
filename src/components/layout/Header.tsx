@@ -31,6 +31,18 @@ export function Header() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
+  // Prevent background scrolling when mobile navigation is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
@@ -44,7 +56,7 @@ export function Header() {
           {/* Brand Identity */}
           <Link
             href="/"
-            className="font-mono text-sm tracking-widest uppercase font-semibold text-[#F5F0E8] hover:text-[#C8FF00] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]"
+            className="font-mono text-sm tracking-widest uppercase font-semibold text-[#F5F0E8] hover:text-[#C8FF00] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] py-1.5"
             aria-label="Varshan Home"
           >
             VARSHAN
@@ -93,12 +105,12 @@ export function Header() {
             </a>
           </nav>
 
-          {/* Mobile Menu Trigger */}
+          {/* Mobile Menu Trigger (44px min touch target) */}
           <div className="md:hidden flex items-center">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 rounded-md text-[#9E988F] hover:text-[#F5F0E8] hover:bg-[#141414] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]"
+              className="min-w-[44px] min-h-[44px] inline-flex items-center justify-center rounded-md text-[#9E988F] hover:text-[#F5F0E8] hover:bg-[#141414] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]"
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileMenuOpen}
             >
@@ -108,28 +120,28 @@ export function Header() {
         </div>
       </Container>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer with Backdrop Overlay & 44px Touch Targets */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-[56px] border-b border-[rgba(245,240,232,0.08)] bg-[#0A0A0A]/95 backdrop-blur-xl px-6 py-6 transition-all duration-200 shadow-2xl">
-          <nav className="flex flex-col space-y-4 font-mono text-sm tracking-wider uppercase">
+        <div className="md:hidden fixed inset-x-0 top-[57px] bottom-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-2xl flex flex-col justify-between p-6 overflow-y-auto">
+          <nav className="flex flex-col font-mono text-sm tracking-wider uppercase divide-y divide-[rgba(245,240,232,0.06)]">
             <a
               href="#projects"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-[#9E988F] hover:text-[#F5F0E8] py-2 border-b border-[rgba(245,240,232,0.04)]"
+              className="text-[#9E988F] hover:text-[#F5F0E8] active:text-[#C8FF00] min-h-[48px] flex items-center transition-colors"
             >
               Work
             </a>
             <a
               href="#open-source"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-[#9E988F] hover:text-[#F5F0E8] py-2 border-b border-[rgba(245,240,232,0.04)]"
+              className="text-[#9E988F] hover:text-[#F5F0E8] active:text-[#C8FF00] min-h-[48px] flex items-center transition-colors"
             >
               Open Source
             </a>
             <a
               href="#about"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-[#9E988F] hover:text-[#F5F0E8] py-2 border-b border-[rgba(245,240,232,0.04)]"
+              className="text-[#9E988F] hover:text-[#F5F0E8] active:text-[#C8FF00] min-h-[48px] flex items-center transition-colors"
             >
               About
             </a>
@@ -138,7 +150,7 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between text-[#9E988F] hover:text-[#F5F0E8] py-2 border-b border-[rgba(245,240,232,0.04)]"
+              className="flex items-center justify-between text-[#9E988F] hover:text-[#F5F0E8] active:text-[#C8FF00] min-h-[48px] transition-colors"
             >
               <span>GitHub</span>
               <ArrowUpRight className="w-4 h-4 text-[#9E988F]" />
@@ -148,12 +160,29 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between text-[#C8FF00] py-2"
+              className="flex items-center justify-between text-[#C8FF00] min-h-[48px] transition-colors"
             >
               <span>Resume</span>
               <ArrowUpRight className="w-4 h-4 text-[#C8FF00]" />
             </a>
           </nav>
+
+          {/* Bottom Telemetry Info in Mobile Drawer */}
+          <div className="pt-6 mt-6 border-t border-[rgba(245,240,232,0.08)] font-mono text-xs text-[#68635B] space-y-2">
+            <div className="flex items-center justify-between">
+              <span>LOCATION</span>
+              <span className="text-[#F5F0E8]">Bangalore, IN (UTC+5:30)</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>DIRECT CHANNEL</span>
+              <a
+                href="mailto:contact@varshan.dev"
+                className="text-[#C8FF00] hover:underline"
+              >
+                contact@varshan.dev
+              </a>
+            </div>
+          </div>
         </div>
       )}
     </header>

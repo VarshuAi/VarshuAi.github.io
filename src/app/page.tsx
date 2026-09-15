@@ -81,7 +81,7 @@ export default function HomePage() {
                     icon={<ArrowUpRight className="w-4 h-4 text-[#9E988F]" />}
                     iconPosition="right"
                   >
-                    GitHub ↗
+                    GitHub
                   </Button>
 
                   <Button
@@ -97,20 +97,20 @@ export default function HomePage() {
                 </div>
 
                 {/* Micro Telemetry Bar */}
-                <div className="pt-6 mt-6 border-t border-[rgba(245,240,232,0.06)] grid grid-cols-2 sm:grid-cols-3 gap-4 font-mono text-xs animate-reveal-5">
-                  <div>
+                <div className="pt-6 mt-6 border-t border-[rgba(245,240,232,0.06)] flex flex-wrap gap-x-8 gap-y-4 font-mono text-xs animate-reveal-5">
+                  <div className="min-w-[140px]">
                     <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Location</div>
-                    <div className="text-[#F5F0E8] mt-0.5">Bangalore, IN (UTC+5:30)</div>
+                    <div className="text-[#F5F0E8] mt-0.5 whitespace-nowrap">Bangalore, IN (UTC+5:30)</div>
                   </div>
-                  <div>
+                  <div className="min-w-[160px]">
                     <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Core Stack</div>
-                    <div className="text-[#F5F0E8] mt-0.5">Next.js • Flutter • PyTorch</div>
+                    <div className="text-[#F5F0E8] mt-0.5 whitespace-nowrap">Next.js • Flutter • PyTorch</div>
                   </div>
-                  <div className="col-span-2 sm:col-span-1">
+                  <div className="min-w-[160px]">
                     <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Direct Channel</div>
                     <a
                       href="mailto:contact@varshan.dev"
-                      className="text-[#C8FF00] hover:underline mt-0.5 inline-block"
+                      className="text-[#C8FF00] hover:underline mt-0.5 inline-block whitespace-nowrap"
                     >
                       contact@varshan.dev
                     </a>

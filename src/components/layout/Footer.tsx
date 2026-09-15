@@ -35,12 +35,12 @@ export function Footer() {
             </div>
 
             {/* Links: GitHub, LinkedIn, Email */}
-            <div className="flex flex-wrap items-center gap-6 font-mono text-xs">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-6 font-mono text-xs">
               <a
                 href={PROFILE.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[#9E988F] hover:text-[#F5F0E8] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]"
+                className="inline-flex items-center gap-1.5 text-[#9E988F] hover:text-[#F5F0E8] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] min-h-[44px] px-2 py-2"
               >
                 <span>GitHub</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-[#68635B]" />
@@ -50,7 +50,7 @@ export function Footer() {
                 href={PROFILE.linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[#9E988F] hover:text-[#F5F0E8] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]"
+                className="inline-flex items-center gap-1.5 text-[#9E988F] hover:text-[#F5F0E8] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] min-h-[44px] px-2 py-2"
               >
                 <span>LinkedIn</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-[#68635B]" />
@@ -58,17 +58,17 @@ export function Footer() {
 
               <a
                 href={`mailto:${PROFILE.email}`}
-                className="inline-flex items-center gap-1 text-[#9E988F] hover:text-[#C8FF00] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]"
+                className="inline-flex items-center gap-1.5 text-[#9E988F] hover:text-[#C8FF00] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] min-h-[44px] px-2 py-2"
               >
                 <span>Email</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-[#68635B]" />
               </a>
 
-              {/* Back to top subtle button */}
+              {/* Back to top subtle button (44px min touch target) */}
               <button
                 type="button"
                 onClick={scrollToTop}
-                className="inline-flex items-center gap-1.5 text-[#9E988F] hover:text-[#C8FF00] px-2.5 py-1 rounded bg-[#121212] hover:bg-[#181818] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.18)] transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]"
+                className="inline-flex items-center gap-1.5 text-[#9E988F] hover:text-[#C8FF00] px-3.5 py-2 min-h-[44px] rounded bg-[#121212] hover:bg-[#181818] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.18)] transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] cursor-pointer"
                 aria-label="Scroll back to top of page"
               >
                 <span>Back to top</span>

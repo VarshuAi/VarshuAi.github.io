@@ -78,13 +78,13 @@ export function ContributionGraph({
               })}
             </span>
           ) : (
-            <span className="text-[#68635B] text-[11px]">Hover over nodes to inspect daily activity</span>
+            <span className="text-[#68635B] text-[11px]">Hover or tap nodes to inspect daily activity</span>
           )}
         </div>
       </div>
 
-      {/* Grid Canvas with Horizontal Scroll for Mobile */}
-      <div className="overflow-x-auto pb-2 scrollbar-thin">
+      {/* Grid Canvas with Smooth Horizontal Scroll for Mobile */}
+      <div className="overflow-x-auto pb-2 scrollbar-thin overscroll-x-contain">
         <div className="inline-flex gap-1.5 min-w-max p-1">
           {weeks.map((week, weekIdx) => (
             <div key={weekIdx} className="flex flex-col gap-1.5">
@@ -93,7 +93,9 @@ export function ContributionGraph({
                   key={`${weekIdx}-${dayIdx}`}
                   onMouseEnter={() => day.date && setHoveredDay(day)}
                   onMouseLeave={() => setHoveredDay(null)}
-                  className={`w-3.5 h-3.5 rounded-[2px] border transition-transform duration-100 hover:scale-125 cursor-pointer ${
+                  onClick={() => day.date && setHoveredDay(day)}
+                  onTouchStart={() => day.date && setHoveredDay(day)}
+                  className={`w-3.5 h-3.5 rounded-[2px] border transition-transform duration-100 hover:scale-125 cursor-pointer active:scale-125 ${
                     levelStyles[day.level] || levelStyles[0]
                   }`}
                   aria-label={

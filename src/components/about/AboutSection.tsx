@@ -119,7 +119,7 @@ export function AboutSection() {
                   href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 py-2 px-3 rounded bg-[#141414] hover:bg-[#1A1A1A] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.2)] text-center text-[#F5F0E8] hover:text-[#C8FF00] transition-colors inline-flex items-center justify-center gap-1.5"
+                  className="flex-1 py-2.5 px-3 min-h-[44px] rounded bg-[#141414] hover:bg-[#1A1A1A] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.2)] text-center text-[#F5F0E8] hover:text-[#C8FF00] transition-colors inline-flex items-center justify-center gap-1.5"
                 >
                   <span>View Resume</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
@@ -129,7 +129,7 @@ export function AboutSection() {
                   href="https://github.com/varshuai"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 py-2 px-3 rounded bg-[#141414] hover:bg-[#1A1A1A] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.2)] text-center text-[#F5F0E8] hover:text-[#C8FF00] transition-colors inline-flex items-center justify-center gap-1.5"
+                  className="flex-1 py-2.5 px-3 min-h-[44px] rounded bg-[#141414] hover:bg-[#1A1A1A] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.2)] text-center text-[#F5F0E8] hover:text-[#C8FF00] transition-colors inline-flex items-center justify-center gap-1.5"
                 >
                   <GithubIcon className="w-3.5 h-3.5" />
                   <span>GitHub</span>

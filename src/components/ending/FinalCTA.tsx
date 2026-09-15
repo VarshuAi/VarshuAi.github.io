@@ -47,7 +47,7 @@ export function FinalCTA() {
         </p>
 
         {/* Buttons / Actions */}
-        <div className="pt-2 flex flex-wrap items-center gap-3.5">
+        <div className="pt-2 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
           {/* Primary Action: Email */}
           <Button
             variant="accent"
@@ -55,6 +55,7 @@ export function FinalCTA() {
             href={`mailto:${PROFILE.email}`}
             icon={<Mail className="w-4 h-4 text-[#0A0A0A]" />}
             iconPosition="left"
+            className="w-full sm:w-auto justify-center"
           >
             Email Me
           </Button>
@@ -67,6 +68,7 @@ export function FinalCTA() {
             isExternal
             icon={<GithubIcon className="w-4 h-4" />}
             iconPosition="left"
+            className="w-full sm:w-auto justify-center"
           >
             GitHub
           </Button>
@@ -79,6 +81,7 @@ export function FinalCTA() {
             isExternal
             icon={<LinkedinIcon className="w-4 h-4" />}
             iconPosition="left"
+            className="w-full sm:w-auto justify-center"
           >
             LinkedIn
           </Button>
@@ -87,7 +90,7 @@ export function FinalCTA() {
           <button
             type="button"
             onClick={handleCopyEmail}
-            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-md font-mono text-xs text-[#9E988F] hover:text-[#F5F0E8] bg-[#141414] hover:bg-[#1A1A1A] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.18)] transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]"
+            className="inline-flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-md font-mono text-xs text-[#9E988F] hover:text-[#F5F0E8] bg-[#141414] hover:bg-[#1A1A1A] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.18)] transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] w-full sm:w-auto cursor-pointer"
             aria-label="Copy email address to clipboard"
           >
             {copied ? (
