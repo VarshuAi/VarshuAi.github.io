@@ -1,0 +1,195 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 3299 >>
+stream
+BT
+/F2 22 Tf
+40 790 Td
+(VARSHAN GOWDA S R) Tj
+ET
+BT
+/F1 10 Tf
+40 772 Td
+(CSE • AI/ML • FULL-STACK DEVELOPER  |  Bangalore, India) Tj
+ET
+BT
+/F1 9 Tf
+40 756 Td
+(GitHub: github.com/varshuai   |   LinkedIn: linkedin.com/in/varshansr   |   Email: contact@varshan.dev) Tj
+ET
+q
+0.2 0.2 0.2 RG
+0.75 w
+40 746 m
+555 746 l
+S
+Q
+BT
+/F2 11 Tf
+40 726 Td
+(ENGINEERING MANIFESTO) Tj
+ET
+BT
+/F1 9 Tf
+40 710 Td
+(Computer Science & Engineering student focused on engineering high-throughput backend services, modern machine) Tj
+ET
+BT
+/F1 9 Tf
+40 698 Td
+(learning inference pipelines, and responsive client architectures from first principles. Most of what I learn becomes a project.) Tj
+ET
+BT
+/F2 11 Tf
+40 672 Td
+(TECHNICAL STACK & CAPABILITIES) Tj
+ET
+BT
+/F2 9 Tf
+40 656 Td
+(Languages:) Tj
+/F1 9 Tf
+100 656 Td
+(Python, Java, C++, Dart, Kotlin, TypeScript, SQL) Tj
+ET
+BT
+/F2 9 Tf
+40 642 Td
+(Engineering:) Tj
+/F1 9 Tf
+100 642 Td
+(Flutter, Android, Jetpack Compose, React, Next.js, Node.js, Git, GitHub) Tj
+ET
+BT
+/F2 9 Tf
+40 628 Td
+(Core Areas:) Tj
+/F1 9 Tf
+100 628 Td
+(AI/ML, GenAI, Model Inference, Data Structures & Algorithms, Systems Architecture) Tj
+ET
+BT
+/F2 11 Tf
+40 600 Td
+(FEATURED SYSTEMS & PROJECTS) Tj
+ET
+BT
+/F2 10 Tf
+40 582 Td
+(A1 Swaara  -  Modern Sovereign Android Music Player) Tj
+/F1 8.5 Tf
+350 582 Td
+(Flutter • Android • Audio DSP • Dart) Tj
+ET
+BT
+/F1 8.5 Tf
+45 568 Td
+(- High-fidelity Android audio streaming client engineered for zero telemetry and low-latency buffer control.) Tj
+ET
+BT
+/F1 8.5 Tf
+45 556 Td
+(- Supports unthrottled audio stream resolution up to 320 kbps with custom equalizer DSP shaping.) Tj
+ET
+BT
+/F1 8.5 Tf
+45 544 Td
+(- Offline caching engine with resilient local database state storage. Production APK shipped.) Tj
+ET
+BT
+/F2 10 Tf
+40 520 Td
+(FLUXA  -  Native Android Video Application) Tj
+/F1 8.5 Tf
+350 520 Td
+(Kotlin • Jetpack Compose • ExoPlayer/Media3) Tj
+ET
+BT
+/F1 8.5 Tf
+45 506 Td
+(- Native Android video application engineered with Jetpack Compose for zero-jank declarative rendering.) Tj
+ET
+BT
+/F1 8.5 Tf
+45 494 Td
+(- Custom ExoPlayer/Media3 playback controller handling adaptive HLS video streaming pipelines.) Tj
+ET
+BT
+/F1 8.5 Tf
+45 482 Td
+(- Structured concurrency with Kotlin Coroutines and asynchronous StateFlow data feeds.) Tj
+ET
+BT
+/F2 10 Tf
+40 458 Td
+(VelorioLabs  -  Open-Source Systems & Developer Collective) Tj
+/F1 8.5 Tf
+350 458 Td
+(Open Source • TypeScript • Python • Systems) Tj
+ET
+BT
+/F1 8.5 Tf
+45 444 Td
+(- Open-source developer collective researching and developing foundational developer utilities and security tools.) Tj
+ET
+BT
+/F1 8.5 Tf
+45 432 Td
+(- Projects include AetherEye (ADS-B telemetry), TeleVortex (media pipelines), and Termux-Vault.) Tj
+ET
+BT
+/F2 11 Tf
+40 404 Td
+(EDUCATION & CONTINUOUS EXPLORATION) Tj
+ET
+BT
+/F2 9.5 Tf
+40 388 Td
+(Bachelor of Engineering  -  Computer Science & Engineering (CSE)) Tj
+ET
+BT
+/F1 8.5 Tf
+45 374 Td
+(- Core Coursework: Data Structures & Algorithms, Operating Systems, Database Management Systems, System Design.) Tj
+ET
+BT
+/F1 8.5 Tf
+45 362 Td
+(- Active Exploration: AI/ML, GenAI, Full-Stack Architecture, Distributed Systems, Open Source Engineering.) Tj
+ET
+BT
+/F1 8 Tf
+40 40 Td
+(Verified Portfolio: https://varshuai.github.io  |  GitHub: @varshuai  |  Generated for Production Review) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000257 00000 n 
+0000003588 00000 n 
+0000003658 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3733
+%%EOF

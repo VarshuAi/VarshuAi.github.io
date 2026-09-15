@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | Varshan Gowda S R",
   },
   description:
-    "Personal portfolio and engineering systems built by Varshan Gowda S R. Specializing in CSE, AI/ML, Full-Stack Architecture, and Mobile Engineering.",
+    "Engineering portfolio of Varshan Gowda S R. Building high-performance software across AI/ML, distributed web systems, and native mobile clients.",
   keywords: [
     "Varshan Gowda S R",
     "Software Engineer",
@@ -37,25 +37,35 @@ export const metadata: Metadata = {
     "VelorioLabs",
     "Next.js",
     "Flutter",
+    "Kotlin",
+    "Jetpack Compose",
+    "PyTorch",
     "Systems Engineer",
   ],
   authors: [{ name: "Varshan Gowda S R", url: "https://github.com/varshuai" }],
   creator: "Varshan Gowda S R",
   metadataBase: new URL("https://varshuai.github.io"),
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+    ],
+    apple: "/apple-icon.svg",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://varshuai.github.io",
     title: "Varshan Gowda S R — CSE • AI/ML • Full-Stack Developer",
     description:
-      "Engineering portfolio of Varshan Gowda S R. Focused on high-leverage software across AI/ML, distributed systems, and mobile platforms.",
+      "Engineering portfolio of Varshan Gowda S R. Building high-performance software across AI/ML, distributed web systems, and native mobile clients.",
     siteName: "Varshan Gowda S R Portfolio",
   },
   twitter: {
     card: "summary_large_image",
     title: "Varshan Gowda S R — CSE • AI/ML • Full-Stack Developer",
     description:
-      "Engineering portfolio of Varshan Gowda S R. Focused on high-leverage software across AI/ML, distributed systems, and mobile platforms.",
+      "Engineering portfolio of Varshan Gowda S R. Building high-performance software across AI/ML, distributed web systems, and native mobile clients.",
   },
   robots: {
     index: true,
