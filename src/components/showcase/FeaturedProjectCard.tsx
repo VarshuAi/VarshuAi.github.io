@@ -100,7 +100,7 @@ export function FeaturedProjectCard({ project }: { project: ProjectItem }) {
 
         {/* Right Column: Mobile Screenshot Showcase */}
         <div className="lg:col-span-5 flex justify-center items-center">
-          <div className="relative w-full max-w-[340px] rounded-2xl p-2 bg-[#161616] border border-[rgba(245,240,232,0.12)] shadow-[0_16px_48px_rgba(0,0,0,0.8)] overflow-hidden group-hover:border-[rgba(200,255,0,0.3)] transition-all duration-300">
+          <div className="relative w-full max-w-[340px] rounded-2xl p-2 bg-[#161616] border border-[rgba(245,240,232,0.12)] shadow-[0_16px_48px_rgba(0,0,0,0.8)] overflow-hidden group-hover:border-[rgba(200,255,0,0.3)] group-hover:-translate-y-1.5 transition-all duration-300 ease-out">
             {/* Top Phone Speaker Notch Sim */}
             <div className="w-full flex justify-center py-1">
               <div className="w-16 h-1 rounded-full bg-[#262626]" />
@@ -113,7 +113,7 @@ export function FeaturedProjectCard({ project }: { project: ProjectItem }) {
                   src={project.image}
                   alt="A1 Swaara Android Music Player UI Screenshot"
                   fill
-                  className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                  className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                   sizes="(max-width: 768px) 100vw, 340px"
                   priority
                 />

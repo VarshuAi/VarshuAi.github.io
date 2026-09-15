@@ -8,7 +8,7 @@ import { ProjectItem } from "@/data/profile";
 
 export function SecondaryProjectCard({ project }: { project: ProjectItem }) {
   return (
-    <article className="group relative rounded-xl bg-[#0D0D0D] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.22)] transition-all duration-300 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col justify-between">
+    <article className="group relative rounded-xl bg-[#0D0D0D] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.22)] hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col justify-between">
       {/* Visual Header / 16:9 Video Canvas Frame */}
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#0A0A0A] border-b border-[rgba(245,240,232,0.08)]">
         {project.image ? (
@@ -16,7 +16,7 @@ export function SecondaryProjectCard({ project }: { project: ProjectItem }) {
             src={project.image}
             alt="FLUXA Native Video Player Interface"
             fill
-            className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.02]"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
         ) : (

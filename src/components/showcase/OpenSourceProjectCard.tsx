@@ -7,7 +7,7 @@ import { ProjectItem } from "@/data/profile";
 
 export function OpenSourceProjectCard({ project }: { project: ProjectItem }) {
   return (
-    <article className="group relative rounded-xl bg-[#0D0D0D] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.22)] transition-all duration-300 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col justify-between">
+    <article className="group relative rounded-xl bg-[#0D0D0D] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.22)] hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col justify-between">
       {/* Top Terminal / Repository Explorer Header */}
       <div className="bg-[#121212] border-b border-[rgba(245,240,232,0.08)] p-4 sm:p-5 flex items-center justify-between font-mono text-xs">
         <div className="flex items-center gap-2 text-[#F5F0E8]">
@@ -58,11 +58,11 @@ export function OpenSourceProjectCard({ project }: { project: ProjectItem }) {
               {project.ecosystem?.map((repo) => (
                 <div
                   key={repo.name}
-                  className="rounded-md bg-[#121212] p-3 border border-[rgba(245,240,232,0.06)] hover:border-[rgba(200,255,0,0.25)] transition-colors flex items-center justify-between"
+                  className="group/repo rounded-md bg-[#121212] p-3 border border-[rgba(245,240,232,0.06)] hover:border-[rgba(200,255,0,0.25)] hover:bg-[#151515] transition-all duration-150 flex items-center justify-between"
                 >
                   <div className="space-y-0.5">
                     <div className="text-[#F5F0E8] font-medium text-xs flex items-center gap-1.5">
-                      <span className="text-[#C8FF00]">›</span>
+                      <span className="text-[#C8FF00] transition-transform duration-150 group-hover/repo:translate-x-0.5">›</span>
                       <span>{repo.name}</span>
                     </div>
                     <div className="text-[11px] text-[#9E988F] font-sans">

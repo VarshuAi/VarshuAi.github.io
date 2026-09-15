@@ -83,6 +83,52 @@ body {
   background: #363636;
 }
 
+/* Professional Motion System: Linear / Raycast Stagger Keyframes */
+@keyframes reveal-fade-up {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes reveal-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Hero Stagger utility classes */
+.animate-reveal-1 {
+  animation: reveal-fade-up 480ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both;
+}
+
+.animate-reveal-2 {
+  animation: reveal-fade-up 480ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+}
+
+.animate-reveal-3 {
+  animation: reveal-fade-up 480ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+}
+
+.animate-reveal-4 {
+  animation: reveal-fade-up 480ms cubic-bezier(0.16, 1, 0.3, 1) 280ms both;
+}
+
+.animate-reveal-5 {
+  animation: reveal-fade-up 480ms cubic-bezier(0.16, 1, 0.3, 1) 360ms both;
+}
+
+.animate-reveal-6 {
+  animation: reveal-fade-up 520ms cubic-bezier(0.16, 1, 0.3, 1) 440ms both;
+}
+
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -92,5 +138,16 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .animate-reveal-1,
+  .animate-reveal-2,
+  .animate-reveal-3,
+  .animate-reveal-4,
+  .animate-reveal-5,
+  .animate-reveal-6 {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

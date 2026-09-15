@@ -14,6 +14,7 @@ import { CurrentlyBuilding } from "@/components/about/CurrentlyBuilding";
 import { AboutSection } from "@/components/about/AboutSection";
 import { FinalCTA } from "@/components/ending/FinalCTA";
 import { SystemsConsole } from "@/components/hero/SystemsConsole";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { PROFILE } from "@/data/profile";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
@@ -30,7 +31,7 @@ export default function HomePage() {
               {/* Left Column: Typography & Intent */}
               <div className="lg:col-span-7 space-y-6 sm:space-y-7">
                 {/* Micro Details: Currently Building Status */}
-                <div className="flex flex-wrap items-center gap-2.5">
+                <div className="flex flex-wrap items-center gap-2.5 animate-reveal-1">
                   <Badge variant="live" size="sm" className="bg-[#121212] text-[#F5F0E8] border-[rgba(245,240,232,0.1)]">
                     CURRENTLY BUILDING
                   </Badge>
@@ -41,7 +42,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Name & Positioning */}
-                <div className="space-y-3">
+                <div className="space-y-3 animate-reveal-2">
                   <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-[50px] font-medium tracking-tight text-[#F5F0E8] leading-[1.08]">
                     VARSHAN GOWDA S R
                   </h1>
@@ -51,7 +52,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Stance & Manifesto */}
-                <div className="space-y-3 max-w-xl">
+                <div className="space-y-3 max-w-xl animate-reveal-3">
                   <p className="text-lg sm:text-xl lg:text-2xl text-[#F5F0E8] font-normal leading-snug">
                     &ldquo;I build software, explore AI/ML, and contribute to open source.&rdquo;
                   </p>
@@ -61,7 +62,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Call To Actions */}
-                <div className="pt-2 flex flex-wrap items-center gap-3">
+                <div className="pt-2 flex flex-wrap items-center gap-3 animate-reveal-4">
                   <Button
                     variant="primary"
                     size="md"
@@ -96,7 +97,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Micro Telemetry Bar */}
-                <div className="pt-6 mt-6 border-t border-[rgba(245,240,232,0.06)] grid grid-cols-2 sm:grid-cols-3 gap-4 font-mono text-xs">
+                <div className="pt-6 mt-6 border-t border-[rgba(245,240,232,0.06)] grid grid-cols-2 sm:grid-cols-3 gap-4 font-mono text-xs animate-reveal-5">
                   <div>
                     <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Location</div>
                     <div className="text-[#F5F0E8] mt-0.5">Bangalore, IN (UTC+5:30)</div>
@@ -118,7 +119,7 @@ export default function HomePage() {
               </div>
 
               {/* Right Column: Visual Systems Console */}
-              <div className="lg:col-span-5 w-full">
+              <div className="lg:col-span-5 w-full animate-reveal-6">
                 <SystemsConsole />
               </div>
             </div>
@@ -126,7 +127,7 @@ export default function HomePage() {
         </section>
 
         {/* SELECTED WORK / PROJECTS */}
-        <section id="projects" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
+        <ScrollReveal as="section" id="projects" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
           <Container size="wide">
             <SectionHeader
               kicker="01 // ARCHITECTURE & SYSTEMS"
@@ -156,10 +157,10 @@ export default function HomePage() {
               </div>
             </div>
           </Container>
-        </section>
+        </ScrollReveal>
 
         {/* WHAT I BUILD — TECHNICAL IDENTITY */}
-        <section id="capabilities" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
+        <ScrollReveal as="section" id="capabilities" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
           <Container size="wide">
             <SectionHeader
               kicker="02 // TECHNICAL SCOPE"
@@ -172,17 +173,17 @@ export default function HomePage() {
               compactStack={PROFILE.technicalIdentity.compactStack}
             />
           </Container>
-        </section>
+        </ScrollReveal>
 
         {/* OPEN SOURCE / GITHUB IDENTITY */}
-        <section id="open-source" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
+        <ScrollReveal as="section" id="open-source" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
           <Container size="wide">
             <OpenSourceSection />
           </Container>
-        </section>
+        </ScrollReveal>
 
         {/* CURRENTLY BUILDING & ABOUT SECTION */}
-        <section id="about" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
+        <ScrollReveal as="section" id="about" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
           <Container size="wide">
             <div className="space-y-20 sm:space-y-24">
               {/* SECTION 1: CURRENTLY BUILDING */}
@@ -194,10 +195,10 @@ export default function HomePage() {
               <AboutSection />
             </div>
           </Container>
-        </section>
+        </ScrollReveal>
 
         {/* PHILOSOPHY & STANCE */}
-        <section id="philosophy" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
+        <ScrollReveal as="section" id="philosophy" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">
           <Container size="wide">
             <SectionHeader
               kicker="05 // ENGINEERING DISCIPLINE"
@@ -239,14 +240,14 @@ export default function HomePage() {
               </div>
             </div>
           </Container>
-        </section>
+        </ScrollReveal>
 
         {/* FINAL CTA / ENDING EXPERIENCE */}
-        <section id="contact" className="py-16 sm:py-24">
+        <ScrollReveal as="section" id="contact" className="py-16 sm:py-24">
           <Container size="wide">
             <FinalCTA />
           </Container>
-        </section>
+        </ScrollReveal>
       </main>
 
       <Footer />
