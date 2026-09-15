@@ -36,6 +36,7 @@ export interface ProfileData {
   status: string;
   githubUsername: string;
   githubUrl: string;
+  linkedinUrl: string;
   email: string;
   manifesto: string[];
   technicalIdentity: {
@@ -61,6 +62,7 @@ export const PROFILE: ProfileData = {
   status: "Actively building & open for select engineering roles",
   githubUsername: "varshuai",
   githubUrl: "https://github.com/varshuai",
+  linkedinUrl: "https://linkedin.com/in/varshansr",
   email: "contact@varshan.dev",
   manifesto: [
     "I am an engineer who actually builds software — taking systems from first-principles architectural reasoning to resilient, production implementations.",

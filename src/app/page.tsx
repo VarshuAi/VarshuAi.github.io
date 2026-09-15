@@ -12,10 +12,10 @@ import { TechnicalManifesto } from "@/components/identity/TechnicalManifesto";
 import { OpenSourceSection } from "@/components/github/OpenSourceSection";
 import { CurrentlyBuilding } from "@/components/about/CurrentlyBuilding";
 import { AboutSection } from "@/components/about/AboutSection";
+import { FinalCTA } from "@/components/ending/FinalCTA";
 import { SystemsConsole } from "@/components/hero/SystemsConsole";
 import { PROFILE } from "@/data/profile";
-import { ArrowRight, ArrowUpRight, Mail } from "lucide-react";
-import { GithubIcon } from "@/components/icons/GithubIcon";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -241,48 +241,10 @@ export default function HomePage() {
           </Container>
         </section>
 
-        {/* DIRECT TRANSMISSION / CONTACT */}
+        {/* FINAL CTA / ENDING EXPERIENCE */}
         <section id="contact" className="py-16 sm:py-24">
           <Container size="wide">
-            <div className="rounded-lg bg-[#121212] border border-[rgba(245,240,232,0.08)] p-6 sm:p-10 relative overflow-hidden">
-              <div className="max-w-2xl space-y-6">
-                <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#9E988F]">
-                  <span className="text-[#C8FF00] font-semibold">{"//"}</span>
-                  <span>Direct Communication</span>
-                </div>
-
-                <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-[#F5F0E8]">
-                  Let&apos;s build something durable together.
-                </h3>
-
-                <p className="text-sm sm:text-base text-[#9E988F] leading-relaxed">
-                  Whether discussing high-leverage engineering roles, collaborating on open-source systems,
-                  or exploring technical ideas across AI/ML and distributed platforms.
-                </p>
-
-                <div className="pt-2 flex flex-wrap items-center gap-3">
-                  <Button
-                    variant="accent"
-                    size="md"
-                    href="mailto:contact@varshan.dev"
-                    icon={<Mail className="w-4 h-4 text-[#0A0A0A]" />}
-                    iconPosition="left"
-                  >
-                    Transmit Message
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="md"
-                    href="https://github.com/varshuai"
-                    isExternal
-                    icon={<GithubIcon className="w-4 h-4" />}
-                    iconPosition="left"
-                  >
-                    GitHub Profile
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <FinalCTA />
           </Container>
         </section>
       </main>
