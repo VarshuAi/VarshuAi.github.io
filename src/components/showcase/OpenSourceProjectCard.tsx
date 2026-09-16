@@ -1,5 +1,5 @@
 import React from "react";
-import { FolderGit2, Terminal, Layers } from "lucide-react";
+import { FolderGit2, Terminal, Layers, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/primitives/Badge";
 import { Button } from "@/components/primitives/Button";
 import { GithubIcon } from "@/components/icons/GithubIcon";
@@ -91,8 +91,18 @@ export function OpenSourceProjectCard({ project }: { project: ProjectItem }) {
             ))}
           </div>
 
-          {project.githubUrl && (
-            <div>
+          <div className="flex flex-wrap items-center gap-2.5 pt-1">
+            <Button
+              variant="primary"
+              size="sm"
+              href={`/work/${project.id}`}
+              icon={<ArrowRight className="w-3.5 h-3.5" />}
+              iconPosition="right"
+            >
+              Case Study
+            </Button>
+
+            {project.githubUrl && (
               <Button
                 variant="secondary"
                 size="sm"
@@ -101,10 +111,10 @@ export function OpenSourceProjectCard({ project }: { project: ProjectItem }) {
                 icon={<GithubIcon className="w-3.5 h-3.5" />}
                 iconPosition="left"
               >
-                Explore GitHub Org (@varshuai)
+                GitHub
               </Button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </article>

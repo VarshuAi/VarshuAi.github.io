@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Download, Radio, GitBranch } from "lucide-react";
+import { Download, Radio, GitBranch, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/primitives/Badge";
 import { Button } from "@/components/primitives/Button";
 import { GithubIcon } from "@/components/icons/GithubIcon";
@@ -68,11 +68,21 @@ export function FeaturedProjectCard({ project }: { project: ProjectItem }) {
             ))}
           </div>
 
-          {/* Action CTAs: APK Download + GitHub */}
+          {/* Action CTAs: Case Study + APK Download + GitHub */}
           <div className="pt-2 flex flex-wrap items-center gap-3">
+            <Button
+              variant="primary"
+              size="md"
+              href={`/work/${project.id}`}
+              icon={<ArrowRight className="w-4 h-4" />}
+              iconPosition="right"
+            >
+              Case Study
+            </Button>
+
             {project.apkUrl && (
               <Button
-                variant="primary"
+                variant="secondary"
                 size="md"
                 href={project.apkUrl}
                 isExternal
@@ -85,14 +95,14 @@ export function FeaturedProjectCard({ project }: { project: ProjectItem }) {
 
             {project.githubUrl && (
               <Button
-                variant="secondary"
+                variant="ghost"
                 size="md"
                 href={project.githubUrl}
                 isExternal
                 icon={<GithubIcon className="w-3.5 h-3.5" />}
                 iconPosition="left"
               >
-                GitHub Repository
+                GitHub
               </Button>
             )}
           </div>

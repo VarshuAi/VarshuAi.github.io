@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Video, GitBranch, Play } from "lucide-react";
+import { Video, GitBranch, Play, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/primitives/Badge";
 import { Button } from "@/components/primitives/Button";
 import { GithubIcon } from "@/components/icons/GithubIcon";
@@ -94,8 +94,18 @@ export function SecondaryProjectCard({ project }: { project: ProjectItem }) {
             ))}
           </div>
 
-          {project.githubUrl && (
-            <div>
+          <div className="flex flex-wrap items-center gap-2.5 pt-1">
+            <Button
+              variant="primary"
+              size="sm"
+              href={`/work/${project.id}`}
+              icon={<ArrowRight className="w-3.5 h-3.5" />}
+              iconPosition="right"
+            >
+              Case Study
+            </Button>
+
+            {project.githubUrl && (
               <Button
                 variant="secondary"
                 size="sm"
@@ -104,10 +114,10 @@ export function SecondaryProjectCard({ project }: { project: ProjectItem }) {
                 icon={<GithubIcon className="w-3.5 h-3.5" />}
                 iconPosition="left"
               >
-                Source Repository
+                GitHub
               </Button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </article>
