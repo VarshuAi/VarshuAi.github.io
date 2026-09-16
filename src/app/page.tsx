@@ -15,6 +15,7 @@ import { AboutSection } from "@/components/about/AboutSection";
 import { FinalCTA } from "@/components/ending/FinalCTA";
 import { SystemsConsole } from "@/components/hero/SystemsConsole";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { LabEntryBanner } from "@/components/lab/LabEntryBanner";
 import { PROFILE } from "@/data/profile";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
@@ -158,6 +159,9 @@ export default function HomePage() {
             </div>
           </Container>
         </ScrollReveal>
+
+        {/* ENGINEERING LAB ENTRY POINT */}
+        <LabEntryBanner />
 
         {/* WHAT I BUILD — TECHNICAL IDENTITY */}
         <ScrollReveal as="section" id="capabilities" className="py-16 sm:py-24 border-b border-[rgba(245,240,232,0.06)]">

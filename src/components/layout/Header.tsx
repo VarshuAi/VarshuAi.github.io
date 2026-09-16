@@ -67,24 +67,24 @@ export function Header() {
             className="hidden md:flex items-center gap-8 text-xs font-mono tracking-wider uppercase"
             aria-label="Main Navigation"
           >
-            <a
-              href="#projects"
+            <Link
+              href="/#projects"
               className="text-[#9E988F] hover:text-[#F5F0E8] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] py-1"
             >
               Work
-            </a>
-            <a
-              href="#open-source"
-              className="text-[#9E988F] hover:text-[#F5F0E8] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] py-1"
+            </Link>
+            <Link
+              href="/lab"
+              className="text-[#9E988F] hover:text-[#C8FF00] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] py-1"
             >
-              Open Source
-            </a>
-            <a
-              href="#about"
+              Lab
+            </Link>
+            <Link
+              href="/#about"
               className="text-[#9E988F] hover:text-[#F5F0E8] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] py-1"
             >
               About
-            </a>
+            </Link>
             <a
               href="https://github.com/varshuai"
               target="_blank"
@@ -124,27 +124,27 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-x-0 top-[57px] bottom-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-2xl flex flex-col justify-between p-6 overflow-y-auto">
           <nav className="flex flex-col font-mono text-sm tracking-wider uppercase divide-y divide-[rgba(245,240,232,0.06)]">
-            <a
-              href="#projects"
+            <Link
+              href="/#projects"
               onClick={() => setMobileMenuOpen(false)}
               className="text-[#9E988F] hover:text-[#F5F0E8] active:text-[#C8FF00] min-h-[48px] flex items-center transition-colors"
             >
               Work
-            </a>
-            <a
-              href="#open-source"
+            </Link>
+            <Link
+              href="/lab"
               onClick={() => setMobileMenuOpen(false)}
               className="text-[#9E988F] hover:text-[#F5F0E8] active:text-[#C8FF00] min-h-[48px] flex items-center transition-colors"
             >
-              Open Source
-            </a>
-            <a
-              href="#about"
+              Lab
+            </Link>
+            <Link
+              href="/#about"
               onClick={() => setMobileMenuOpen(false)}
               className="text-[#9E988F] hover:text-[#F5F0E8] active:text-[#C8FF00] min-h-[48px] flex items-center transition-colors"
             >
               About
-            </a>
+            </Link>
             <a
               href="https://github.com/varshuai"
               target="_blank"
