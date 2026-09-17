@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ResumeModal } from "@/components/resume/ResumeModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -108,6 +109,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         {children}
+        <ResumeModal />
       </body>
     </html>
   );

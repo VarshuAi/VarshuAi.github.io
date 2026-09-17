@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowUpRight, BookOpen, Terminal } from "lucide-react";
 import { GithubIcon } from "@/components/icons/GithubIcon";
+import { ResumeButton } from "@/components/resume/ResumeButton";
 
 const CURRENTLY_LEARNING = [
   { topic: "DSA", focus: "Algorithms & complexity" },
@@ -115,15 +116,12 @@ export function AboutSection() {
 
               {/* Quick Actions */}
               <div className="pt-2 flex items-center gap-3">
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <ResumeButton
                   className="flex-1 py-2.5 px-3 min-h-[44px] rounded bg-[#141414] hover:bg-[#1A1A1A] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.2)] text-center text-[#F5F0E8] hover:text-[#C8FF00] transition-colors inline-flex items-center justify-center gap-1.5"
                 >
                   <span>View Resume</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
+                </ResumeButton>
 
                 <a
                   href="https://github.com/varshuai"

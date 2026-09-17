@@ -18,6 +18,7 @@ import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { LabEntryBanner } from "@/components/lab/LabEntryBanner";
 import { PROFILE } from "@/data/profile";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ResumeButton } from "@/components/resume/ResumeButton";
 
 export default function HomePage() {
   return (
@@ -85,16 +86,12 @@ export default function HomePage() {
                     GitHub
                   </Button>
 
-                  <Button
-                    variant="ghost"
-                    size="md"
-                    href="/resume.pdf"
-                    isExternal
-                    icon={<ArrowUpRight className="w-3.5 h-3.5 text-[#68635B]" />}
-                    iconPosition="right"
+                  <ResumeButton
+                    className="inline-flex items-center justify-center font-sans tracking-tight transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A] bg-transparent text-[#9E988F] hover:text-[#F5F0E8] hover:bg-[#141414]/80 active:scale-[0.98] text-sm px-4 py-2.5 min-h-[42px] sm:min-h-[44px] rounded-md gap-2"
                   >
-                    Resume
-                  </Button>
+                    <span>Resume</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-[#68635B]" />
+                  </ResumeButton>
                 </div>
 
                 {/* Micro Telemetry Bar */}

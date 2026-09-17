@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/primitives/Container";
+import { openResumeModal } from "@/components/resume/ResumeModal";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -94,15 +95,14 @@ export function Header() {
               <span>GitHub</span>
               <ArrowUpRight className="w-3 h-3 opacity-70" />
             </a>
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#F5F0E8] px-2.5 py-1 rounded bg-[#141414] border border-[rgba(245,240,232,0.1)] hover:border-[rgba(245,240,232,0.25)] hover:bg-[#1A1A1A] transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]"
+            <button
+              type="button"
+              onClick={() => openResumeModal()}
+              className="inline-flex items-center gap-1 text-[#F5F0E8] px-2.5 py-1 rounded bg-[#141414] border border-[rgba(245,240,232,0.1)] hover:border-[rgba(245,240,232,0.25)] hover:bg-[#1A1A1A] transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00] cursor-pointer"
             >
               <span>Resume</span>
               <ArrowUpRight className="w-3 h-3 text-[#C8FF00]" />
-            </a>
+            </button>
           </nav>
 
           {/* Mobile Menu Trigger (44px min touch target) */}
@@ -155,16 +155,17 @@ export function Header() {
               <span>GitHub</span>
               <ArrowUpRight className="w-4 h-4 text-[#9E988F]" />
             </a>
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between text-[#C8FF00] min-h-[48px] transition-colors"
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openResumeModal();
+              }}
+              className="w-full flex items-center justify-between text-[#C8FF00] min-h-[48px] transition-colors cursor-pointer text-left"
             >
               <span>Resume</span>
               <ArrowUpRight className="w-4 h-4 text-[#C8FF00]" />
-            </a>
+            </button>
           </nav>
 
           {/* Bottom Telemetry Info in Mobile Drawer */}
