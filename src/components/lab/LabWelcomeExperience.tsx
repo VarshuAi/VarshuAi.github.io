@@ -38,7 +38,7 @@ export function LabWelcomeExperience({ onEnter, isExiting }: LabWelcomeExperienc
 
   return (
     <div
-      className={`fixed inset-0 z-50 bg-[#0A0A0A] text-[#F5F0E8] overflow-y-auto overflow-x-hidden flex flex-col justify-between transition-all ${
+      className={`min-h-screen w-full bg-[#0A0A0A] text-[#F5F0E8] flex flex-col justify-between relative transition-all ${
         reducedMotion
           ? isExiting
             ? "opacity-0 pointer-events-none"
