@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/primitives/Container";
 import { openResumeModal } from "@/components/resume/ResumeModal";
+import { PROFILE } from "@/data/profile";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -177,10 +178,10 @@ export function Header() {
             <div className="flex items-center justify-between">
               <span>DIRECT CHANNEL</span>
               <a
-                href="mailto:contact@varshan.dev"
+                href={`mailto:${PROFILE.email}`}
                 className="text-[#C8FF00] hover:underline"
               >
-                contact@varshan.dev
+                {PROFILE.email}
               </a>
             </div>
           </div>

@@ -107,10 +107,10 @@ export default function HomePage() {
                   <div className="min-w-[160px]">
                     <div className="text-[#68635B] uppercase tracking-wider text-[10px]">Direct Channel</div>
                     <a
-                      href="mailto:contact@varshan.dev"
+                      href={`mailto:${PROFILE.email}`}
                       className="text-[#C8FF00] hover:underline mt-0.5 inline-block whitespace-nowrap"
                     >
-                      contact@varshan.dev
+                      {PROFILE.email}
                     </a>
                   </div>
                 </div>

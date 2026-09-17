@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Sparkles, Terminal, Mail, ArrowUpRight, Copy, Check, Flame } from "lucide-react";
 import { GithubIcon } from "@/components/icons/GithubIcon";
+import { PROFILE } from "@/data/profile";
 
 export const GEN_Z_EXCUSES = [
   "Bro really thought there was an ATS-formatted 1-page PDF in 2026 💀",
@@ -26,7 +27,7 @@ export function ResumeView() {
   };
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText("contact@varshan.dev");
+    navigator.clipboard.writeText(PROFILE.email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -120,7 +121,7 @@ export function ResumeView() {
       {/* Action CTAs */}
       <div className="pt-2 flex flex-wrap items-center gap-3 font-mono text-xs">
         <a
-          href="mailto:contact@varshan.dev?subject=Hey%20Varshan%20-%20Need%20your%20actual%20resume"
+          href={`mailto:${PROFILE.email}?subject=Hey%20Varshan%20-%20Need%20your%20actual%20resume`}
           className="flex-1 min-h-[46px] px-5 py-3 rounded-xl bg-[#C8FF00] text-[#0A0A0A] hover:bg-[#D4FF33] font-bold inline-flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg hover:shadow-[#C8FF00]/10"
         >
           <Mail className="w-4 h-4" />

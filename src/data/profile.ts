@@ -62,8 +62,8 @@ export const PROFILE: ProfileData = {
   status: "Actively building & open for select engineering roles",
   githubUsername: "varshuai",
   githubUrl: "https://github.com/varshuai",
-  linkedinUrl: "https://linkedin.com/in/varshansr",
-  email: "contact@varshan.dev",
+  linkedinUrl: "https://www.linkedin.com/in/varshan-gowda-sr",
+  email: "gowdavarshan466@gmail.com",
   manifesto: [
     "I am an engineer who actually builds software — taking systems from first-principles architectural reasoning to resilient, production implementations.",
     "My focus is where high-throughput backend services, modern machine learning models, and uncompromising client experiences converge.",
