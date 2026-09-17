@@ -32,14 +32,14 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               {/* Left Column: Typography & Intent */}
               <div className="lg:col-span-7 space-y-6 sm:space-y-7">
-                {/* Micro Details: Currently Building Status */}
+                {/* Micro Details: Active Ecosystem Status */}
                 <div className="flex flex-wrap items-center gap-2.5 animate-reveal-1">
                   <Badge variant="live" size="sm" className="bg-[#121212] text-[#F5F0E8] border-[rgba(245,240,232,0.1)]">
-                    CURRENTLY BUILDING
+                    ACTIVE ECOSYSTEM
                   </Badge>
                   <span className="text-[#68635B] font-mono text-xs hidden sm:inline">•</span>
                   <span className="font-mono text-xs text-[#9E988F] tracking-wide">
-                    A1 Swaara · FLUXA · VelorioLabs
+                    A1 Swaara (Built) · FLUXA (Building) · VelorioLabs (Active Org)
                   </span>
                 </div>
 

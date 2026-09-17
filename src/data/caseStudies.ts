@@ -1,4 +1,4 @@
-﻿export interface ProjectFeature {
+export interface ProjectFeature {
   title: string;
   description: string;
 }
@@ -73,10 +73,10 @@ export const CASE_STUDIES: Record<string, CaseStudyData> = {
   'a1-swaara': {
     slug: 'a1-swaara',
     title: 'A1 SWAARA',
-    tagline: 'Modern Sovereign Android Music Experience',
+    tagline: 'High-Performance Sovereign Android & PC Music Suite',
     category: 'Mobile · Flutter · Android',
     year: '2024–2025',
-    status: 'Production Shipped',
+    status: 'Built (Production v1.0.0)',
     role: 'Lead Mobile Architect & Systems Engineer',
     heroImage: '/projects/a1-swaara.png',
     heroImageAlt: 'A1 Swaara Android Music Player UI Screenshot',
@@ -236,8 +236,9 @@ export const CASE_STUDIES: Record<string, CaseStudyData> = {
       'Learned the performance nuances of image downsampling and asynchronous bitmap analysis for dynamic UI adaptation.',
     ],
     links: {
-      githubUrl: 'https://github.com/varshuai',
-      downloadUrl: '/downloads/A1_Swaara_v1.0.0.apk',
+      githubUrl: 'https://github.com/VarshuAi/A1Swaara_apk',
+      downloadUrl: 'https://github.com/VarshuAi/A1Swaara_apk/raw/main/A1_Swaara_v1.0.0.apk',
+      liveUrl: 'https://github.com/VarshuAi/a1raaga-web',
     },
     navigation: {
       prev: null,
@@ -247,17 +248,17 @@ export const CASE_STUDIES: Record<string, CaseStudyData> = {
   'fluxa': {
     slug: 'fluxa',
     title: 'FLUXA',
-    tagline: 'Native Android Video Streaming Platform',
+    tagline: 'Native Android Video Player & Streaming Platform (In Development)',
     category: 'Android · Kotlin · Jetpack Compose',
-    year: '2024–2025',
-    status: 'Active Engineering',
+    year: '2024–Present',
+    status: 'Building (In Active Development)',
     role: 'Native Android Engineer',
     heroImage: '/projects/fluxa.png',
     heroImageAlt: 'FLUXA Native Android Video Player Interface',
     heroType: 'video-landscape',
     overview: {
-      what: 'FLUXA is a high-performance native Android video application built with Kotlin and Jetpack Compose. Engineered for smooth adaptive HLS streaming, low memory consumption, and clean declarative state management using Android Jetpack\'s latest architecture guidelines.',
-      why: 'Many Android media clients are sluggish web wrappers or laden with complex legacy XML view hierarchies and intrusive telemetry libraries. FLUXA was created to explore the bleeding edge of AndroidX Media3 ExoPlayer, Jetpack Compose declarative UI, and Kotlin Coroutines/StateFlow for optimal hardware acceleration.',
+      what: 'FLUXA is a native Android video application currently in active development with Kotlin and Jetpack Compose. Engineered for adaptive HLS streaming, multi-audio track switching across Indian regional & international dubs, and low-latency hardware acceleration.',
+      why: 'Many Android media clients are sluggish web wrappers or laden with complex legacy XML view hierarchies and intrusive telemetry libraries. FLUXA is being built to explore the bleeding edge of AndroidX Media3 ExoPlayer, Jetpack Compose declarative UI, and Kotlin Coroutines/StateFlow with zero tracking overhead.',
     },
     features: [
       {
@@ -404,7 +405,8 @@ export const CASE_STUDIES: Record<string, CaseStudyData> = {
       'Learned low-level Android hardware acceleration trade-offs between TextureView and SurfaceView for media rendering.',
     ],
     links: {
-      githubUrl: 'https://github.com/Varshuai/movie',
+      githubUrl: 'https://github.com/VarshuAi/movie',
+      downloadUrl: 'https://raw.githubusercontent.com/VarshuAi/movie/main/VeloraCinema.apk',
     },
     navigation: {
       prev: { slug: 'a1-swaara', title: 'A1 Swaara' },
@@ -414,34 +416,34 @@ export const CASE_STUDIES: Record<string, CaseStudyData> = {
   'veloriolabs': {
     slug: 'veloriolabs',
     title: 'VelorioLabs',
-    tagline: 'Open-Source Systems & Developer Collective',
-    category: 'Open Source · Software · Systems',
+    tagline: 'Open-Source Systems & Developer Organization',
+    category: 'Open-Source Organization · 43 Repositories',
     year: '2024–Present',
-    status: 'Active Collective',
+    status: 'Active Organization (43 Repos)',
     role: 'Founder & Core Maintainer',
     heroImage: '/projects/a1-swaara.png',
     heroImageAlt: 'VelorioLabs Systems Monorepo Architecture',
     heroType: 'systems-hud',
     overview: {
-      what: 'VelorioLabs is an independent open-source engineering initiative created for researching, experimenting with, and releasing sovereign developer utilities, telemetry systems, and security tools. It operates as a public engineering lab where software is built from first principles.',
+      what: 'VelorioLabs is an independent open-source engineering organization founded by Varshan for researching, experimenting with, and releasing sovereign developer utilities, telemetry systems, and security tools. Housing 43 public repositories on GitHub, it operates as an active collective where software is built from first principles.',
       why: 'Modern software tooling is increasingly bloated, telemetry-heavy, and vendor-locked. VelorioLabs was established as a counterweight: building self-hosted, lightweight, and high-performance tools that developers can inspect, understand, run locally, and own completely.',
     },
     features: [
       {
+        title: 'PhishGuard-AI Threat Registry',
+        description: 'SIH-25159 real-time AI/ML phishing detection and prevention system with decentralized threat registry.',
+      },
+      {
         title: 'AetherEye Telemetry Radar',
-        description: 'Tactical satellite tracking and ADS-B flight radar terminal processing low-latency positional data feeds.',
+        description: 'Tactical global satellite tracking, maritime AIS, and ADS-B flight radar terminal processing low-latency positional feeds.',
       },
       {
-        title: 'TeleVortex Media Engine',
-        description: 'High-throughput universal media extraction and transcoding pipeline with concurrent worker queues.',
+        title: 'SubVortex AI Subtitle Studio',
+        description: 'Zero-cloud AI auto-subtitle studio, timeline editor, and viral reel caption styler powered by local Whisper inference.',
       },
       {
-        title: 'Termux-Vault Security Utility',
-        description: 'DoD 5220.22-M compliant multi-pass cryptographic file shredder and storage hygiene suite for mobile Linux environments.',
-      },
-      {
-        title: 'Public Code Architecture',
-        description: '100% open-source repositories with strict continuous integration, linting, and automated testing.',
+        title: '43 Public Repositories',
+        description: '100% open-source organization spanning security, transcoders, terminal sandboxes, and developer tooling.',
       },
     ],
     techStack: [

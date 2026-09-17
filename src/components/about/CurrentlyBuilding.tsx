@@ -5,7 +5,7 @@ interface ActiveProjectItem {
   name: string;
   category: string;
   description: string;
-  status: "ACTIVE";
+  status: "BUILT" | "BUILDING" | "ACTIVE ORG";
   href: string;
   isExternal?: boolean;
   highlightTag: string;
@@ -14,30 +14,30 @@ interface ActiveProjectItem {
 const ACTIVE_PROJECTS: ActiveProjectItem[] = [
   {
     name: "A1 Swaara",
-    category: "Flutter · Android",
-    description: "Modern high-fidelity music streaming client with custom local audio routing and zero telemetry overhead.",
-    status: "ACTIVE",
-    href: "#projects",
+    category: "Flutter · Android · Next.js",
+    description: "Modern high-fidelity Android and PC music streaming studio with 320 kbps audio engine, synchronized lyrics, and zero telemetry.",
+    status: "BUILT",
+    href: "/work/a1-swaara",
     isExternal: false,
-    highlightTag: "FLAGSHIP APP",
+    highlightTag: "SHIPPED V1.0.0",
   },
   {
     name: "FLUXA",
-    category: "Kotlin · Jetpack Compose",
-    description: "Native video streaming platform built for Android with Kotlin Coroutines and smooth hardware-accelerated playback.",
-    status: "ACTIVE",
-    href: "https://github.com/Varshuai/movie",
-    isExternal: true,
-    highlightTag: "NATIVE CLIENT",
+    category: "Kotlin · Jetpack Compose · Media3",
+    description: "Native Android video streaming application in active development with ExoPlayer, adaptive HLS, and multi-audio track switching.",
+    status: "BUILDING",
+    href: "/work/fluxa",
+    isExternal: false,
+    highlightTag: "IN ACTIVE DEV",
   },
   {
     name: "VelorioLabs",
-    category: "Open Source · Software · AI",
-    description: "Independent collective researching and developing foundational developer utilities, security tools, and algorithmic engines.",
-    status: "ACTIVE",
-    href: "https://github.com/VelorioLabs",
-    isExternal: true,
-    highlightTag: "OPEN SOURCE",
+    category: "Open Source Collective · 43 Repos",
+    description: "Open-source developer organization with 43 public repositories on GitHub across security (PhishGuard-AI), telemetry radar, and AI tools.",
+    status: "ACTIVE ORG",
+    href: "/work/veloriolabs",
+    isExternal: false,
+    highlightTag: "ORGANIZATION",
   },
 ];
 

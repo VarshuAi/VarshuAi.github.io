@@ -154,7 +154,7 @@ export function ResumeModal() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
             <div className="p-3 rounded-lg bg-[#111111] border border-[rgba(245,240,232,0.06)] space-y-1">
               <div className="text-[#C8FF00] font-semibold">+10,000 AURA</div>
-              <p className="text-[#9E988F]">Shipping real Android apps (A1 Swaara &amp; FLUXA) with zero telemetry bloat.</p>
+              <p className="text-[#9E988F]">Shipped A1 Swaara (v1.0.0 Built), building FLUXA, and founded VelorioLabs (43 repos) with zero tracking bloat.</p>
             </div>
             <div className="p-3 rounded-lg bg-[#111111] border border-[rgba(245,240,232,0.06)] space-y-1">
               <div className="text-[#F5F0E8] font-semibold">PROOF &gt; PAPER</div>

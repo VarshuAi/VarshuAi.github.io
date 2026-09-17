@@ -99,7 +99,7 @@ export function ResumeView() {
               <span>+10,000 AURA</span>
             </div>
             <p className="text-[#9E988F] font-sans text-xs sm:text-[13px] leading-relaxed">
-              Shipped real Android and systems apps (A1 Swaara &amp; FLUXA) with zero telemetry bloat and high performance.
+              Shipped A1 Swaara (v1.0.0 Built), currently building FLUXA, and founded VelorioLabs (43 public open-source repos) with zero tracking bloat.
             </p>
           </div>
           <div className="p-4 rounded-xl bg-[#111111] border border-[rgba(245,240,232,0.06)] space-y-1.5">

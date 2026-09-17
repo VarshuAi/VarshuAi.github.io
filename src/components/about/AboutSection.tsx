@@ -101,7 +101,7 @@ export function AboutSection() {
 
               <div className="flex items-start justify-between pb-3 border-b border-[rgba(245,240,232,0.05)]">
                 <span className="text-[#68635B]">ACTIVE PIPELINES</span>
-                <span className="text-[#F5F0E8] text-right">A1 Swaara · FLUXA · VelorioLabs</span>
+                <span className="text-[#F5F0E8] text-right">A1 Swaara (Built) · FLUXA (Building) · VelorioLabs (Active Org)</span>
               </div>
 
               <div className="flex items-start justify-between pb-3 border-b border-[rgba(245,240,232,0.05)]">

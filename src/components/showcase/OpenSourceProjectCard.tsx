@@ -13,7 +13,7 @@ export function OpenSourceProjectCard({ project }: { project: ProjectItem }) {
         <div className="flex items-center gap-2 text-[#F5F0E8]">
           <FolderGit2 className="w-4 h-4 text-[#C8FF00]" />
           <span className="font-semibold text-[11px] tracking-wider uppercase">
-            OPEN-SOURCE MONOREPO & COLLECTIVE
+            OPEN-SOURCE ORGANIZATION
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -111,7 +111,7 @@ export function OpenSourceProjectCard({ project }: { project: ProjectItem }) {
                 icon={<GithubIcon className="w-3.5 h-3.5" />}
                 iconPosition="left"
               >
-                GitHub
+                GitHub Org
               </Button>
             )}
           </div>
