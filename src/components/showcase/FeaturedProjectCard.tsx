@@ -108,32 +108,84 @@ export function FeaturedProjectCard({ project }: { project: ProjectItem }) {
           </div>
         </div>
 
-        {/* Right Column: Mobile Screenshot Showcase */}
+        {/* Right Column: Audio Pipeline & Systems Architecture HUD */}
         <div className="lg:col-span-5 flex justify-center items-center">
-          <div className="relative w-full max-w-[260px] sm:max-w-[300px] lg:max-w-[340px] rounded-2xl p-2 bg-[#161616] border border-[rgba(245,240,232,0.12)] shadow-[0_16px_48px_rgba(0,0,0,0.8)] overflow-hidden group-hover:border-[rgba(200,255,0,0.3)] group-hover:-translate-y-1.5 transition-all duration-300 ease-out">
-            {/* Top Phone Speaker Notch Sim */}
-            <div className="w-full flex justify-center py-1">
-              <div className="w-16 h-1 rounded-full bg-[#262626]" />
-            </div>
-
-            {/* Screenshot Container */}
-            <div className="relative aspect-[9/16] w-full rounded-xl overflow-hidden bg-[#0A0A0A]">
-              {project.image ? (
+          {project.image ? (
+            <div className="relative w-full max-w-[260px] sm:max-w-[300px] lg:max-w-[340px] rounded-2xl p-2 bg-[#161616] border border-[rgba(245,240,232,0.12)] shadow-[0_16px_48px_rgba(0,0,0,0.8)] overflow-hidden group-hover:border-[rgba(200,255,0,0.3)] group-hover:-translate-y-1.5 transition-all duration-300 ease-out">
+              <div className="w-full flex justify-center py-1">
+                <div className="w-16 h-1 rounded-full bg-[#262626]" />
+              </div>
+              <div className="relative aspect-[9/16] w-full rounded-xl overflow-hidden bg-[#0A0A0A]">
                 <Image
                   src={project.image}
-                  alt="A1 Swaara Android Music Player UI Screenshot"
+                  alt={project.title}
                   fill
                   className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                   sizes="(max-width: 768px) 100vw, 340px"
                   priority
                 />
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full p-6 text-center text-[#68635B] font-mono text-xs">
-                  <span>INTERFACE PREVIEW</span>
-                </div>
-              )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="w-full rounded-2xl bg-[#090909] border border-[rgba(245,240,232,0.1)] p-5 sm:p-6 space-y-5 font-mono shadow-[0_16px_48px_rgba(0,0,0,0.8)] group-hover:border-[rgba(200,255,0,0.25)] transition-all duration-300 select-none">
+              {/* Terminal Titlebar */}
+              <div className="flex items-center justify-between pb-3 border-b border-[rgba(245,240,232,0.08)]">
+                <div className="flex items-center gap-2 text-xs text-[#F5F0E8]">
+                  <Radio className="w-3.5 h-3.5 text-[#C8FF00]" />
+                  <span className="font-semibold tracking-wider text-[11px] uppercase">
+                    AUDIO_DSP // ARCHITECTURE
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] text-[#C8FF00]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF00] animate-pulse" />
+                  <span>320 KBPS ENGINE</span>
+                </div>
+              </div>
+
+              {/* Pipeline Nodes */}
+              <div className="space-y-2 text-xs">
+                <div className="p-2.5 rounded-lg bg-[#111111] border border-[rgba(245,240,232,0.06)] flex items-center justify-between">
+                  <span className="text-[#9E988F] text-[11px]">Stream Ingestion</span>
+                  <span className="text-[#F5F0E8] font-bold text-[11px]">Direct 320 kbps Stream</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-[#111111] border border-[rgba(245,240,232,0.06)] flex items-center justify-between">
+                  <span className="text-[#9E988F] text-[11px]">Parametric EQ</span>
+                  <span className="text-[#C8FF00] font-bold text-[11px]">5-Band Hardware DSP</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-[#111111] border border-[rgba(245,240,232,0.06)] flex items-center justify-between">
+                  <span className="text-[#9E988F] text-[11px]">Lyrics Engine</span>
+                  <span className="text-[#F5F0E8] font-bold text-[11px]">Sub-ms LRC Sync</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-[#111111] border border-[rgba(245,240,232,0.06)] flex items-center justify-between">
+                  <span className="text-[#9E988F] text-[11px]">Local Cache</span>
+                  <span className="text-[#F5F0E8] font-bold text-[11px]">Drift / SQLite Store</span>
+                </div>
+              </div>
+
+              {/* Frequency Spectrum Visualizer */}
+              <div className="pt-2 border-t border-[rgba(245,240,232,0.06)] space-y-2">
+                <div className="flex items-center justify-between text-[10px] text-[#68635B]">
+                  <span>FREQUENCY SPECTRUM [60Hz - 14kHz]</span>
+                  <span className="text-[#9E988F]">0.00% TELEMETRY</span>
+                </div>
+                <div className="h-10 flex items-end justify-between gap-1 px-1">
+                  {[35, 55, 80, 95, 75, 60, 85, 90, 70, 50, 65, 85, 45].map((h, i) => (
+                    <div
+                      key={i}
+                      className="flex-1 bg-[rgba(245,240,232,0.12)] rounded-t-sm hover:bg-[#C8FF00] transition-colors"
+                      style={{ height: `${h}%` }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Footer Metric Line */}
+              <div className="pt-2 border-t border-[rgba(245,240,232,0.06)] flex items-center justify-between text-[10px] text-[#68635B]">
+                <span>SOVEREIGN CLIENT</span>
+                <span className="text-[#C8FF00]">ZERO TRACKERS DETECTED</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </article>

@@ -32,9 +32,9 @@ export interface CaseStudyData {
   year: string;
   status: string;
   role: string;
-  heroImage: string;
+  heroImage?: string;
   heroImageAlt: string;
-  heroType: 'mobile-portrait' | 'video-landscape' | 'systems-hud';
+  heroType: 'mobile-portrait' | 'video-landscape' | 'systems-hud' | 'audio-dsp' | 'video-pipeline';
   overview: {
     what: string;
     why: string;
@@ -78,9 +78,9 @@ export const CASE_STUDIES: Record<string, CaseStudyData> = {
     year: '2024–2025',
     status: 'Built (Production v1.0.0)',
     role: 'Lead Mobile Architect & Systems Engineer',
-    heroImage: '/projects/a1-swaara.png',
-    heroImageAlt: 'A1 Swaara Android Music Player UI Screenshot',
-    heroType: 'mobile-portrait',
+    heroImage: '',
+    heroImageAlt: 'A1 Swaara Audio DSP Architecture',
+    heroType: 'audio-dsp',
     overview: {
       what: 'A1 Swaara is a modern Android music player engineered for high-fidelity audio playback, local caching, and zero telemetry overhead. Built from the ground up with Flutter and Dart, it provides unthrottled streaming up to 320 kbps with dynamic audio routing and an offline-first state machine.',
       why: 'Most mainstream streaming apps are cluttered with intrusive advertisements, background trackers, heavy memory footprints, and restrictive offline listening models. A1 Swaara was engineered to deliver a sovereign, low-latency client with native-speed UI rendering and complete listener privacy.',
@@ -188,38 +188,7 @@ export const CASE_STUDIES: Record<string, CaseStudyData> = {
         result: 'Zero frame drops during track transitions while preserving real-time adaptive UI color schemes.',
       },
     ],
-    screenshots: [
-      {
-        src: '/projects/a1-swaara.png',
-        alt: 'A1 Swaara Full Player Interface with Equalizer',
-        caption: 'Full-screen playback view featuring hardware-accelerated equalizer shaping and real-time spectrum feedback.',
-        aspectRatio: '9/16',
-      },
-      {
-        src: '/projects/a1-swaara-home.png',
-        alt: 'A1 Swaara Home View with Categorized Feeds',
-        caption: 'Material 3 home surface showing localized music indexing, quick resumes, and curated collections.',
-        aspectRatio: '9/16',
-      },
-      {
-        src: '/projects/a1-swaara-playing.png',
-        alt: 'A1 Swaara Adaptive UI Color Tinting',
-        caption: 'Now Playing interface dynamically tinting controls using palette extraction from the active album cover.',
-        aspectRatio: '9/16',
-      },
-      {
-        src: '/projects/a1-swaara-fullplayer.png',
-        alt: 'A1 Swaara Scrubbing and Audio Quality Controls',
-        caption: 'Detailed audio format badge, unthrottled stream resolution switcher, and precise seek bar.',
-        aspectRatio: '9/16',
-      },
-      {
-        src: '/projects/a1-swaara-search.png',
-        alt: 'A1 Swaara Query Autocomplete and Search',
-        caption: 'Real-time asynchronous search interface with instant track discovery and queue addition.',
-        aspectRatio: '9/16',
-      },
-    ],
+    screenshots: [],
     technicalDeepDive: {
       title: 'Isolate-Based Audio Architecture & Offline Caching',
       description: 'How A1 Swaara achieves reliable audio playback and instant local responsiveness.',
@@ -253,9 +222,9 @@ export const CASE_STUDIES: Record<string, CaseStudyData> = {
     year: '2024–Present',
     status: 'Building (In Active Development)',
     role: 'Native Android Engineer',
-    heroImage: '/projects/fluxa.png',
-    heroImageAlt: 'FLUXA Native Android Video Player Interface',
-    heroType: 'video-landscape',
+    heroImage: '',
+    heroImageAlt: 'FLUXA Media3 Video Streaming Architecture',
+    heroType: 'video-pipeline',
     overview: {
       what: 'FLUXA is a native Android video application currently in active development with Kotlin and Jetpack Compose. Engineered for adaptive HLS streaming, multi-audio track switching across Indian regional & international dubs, and low-latency hardware acceleration.',
       why: 'Many Android media clients are sluggish web wrappers or laden with complex legacy XML view hierarchies and intrusive telemetry libraries. FLUXA is being built to explore the bleeding edge of AndroidX Media3 ExoPlayer, Jetpack Compose declarative UI, and Kotlin Coroutines/StateFlow with zero tracking overhead.',
@@ -363,32 +332,7 @@ export const CASE_STUDIES: Record<string, CaseStudyData> = {
         result: 'Maintained solid 60/120 FPS scrolling with total app heap footprint under 85 MB.',
       },
     ],
-    screenshots: [
-      {
-        src: '/projects/fluxa.png',
-        alt: 'FLUXA 16:9 Landscape Video Playback Interface',
-        caption: 'Full-screen landscape player featuring custom seek bar, playback rate selector, and audio track switching.',
-        aspectRatio: '16/9',
-      },
-      {
-        src: '/projects/fluxa-clean.png',
-        alt: 'FLUXA Media Catalog Grid',
-        caption: 'Material 3 video catalog with high-density poster grids and responsive layout scaling.',
-        aspectRatio: '16/9',
-      },
-      {
-        src: '/projects/fluxa-player.png',
-        alt: 'FLUXA ExoPlayer Video Canvas',
-        caption: 'ExoPlayer surface rendering high-definition HLS video with hardware acceleration.',
-        aspectRatio: '16/9',
-      },
-      {
-        src: '/projects/fluxa-live.png',
-        alt: 'FLUXA Adaptive Quality Stream Overlay',
-        caption: 'Detailed telemetry overlay displaying current resolution, buffer duration, and dropped frame counts.',
-        aspectRatio: '16/9',
-      },
-    ],
+    screenshots: [],
     technicalDeepDive: {
       title: 'Media3 ExoPlayer & Jetpack Compose Integration',
       description: 'Key technical insights behind FLUXA\'s native media playback pipeline.',
@@ -421,7 +365,7 @@ export const CASE_STUDIES: Record<string, CaseStudyData> = {
     year: '2024–Present',
     status: 'Active Organization (43 Repos)',
     role: 'Founder & Core Maintainer',
-    heroImage: '/projects/a1-swaara.png',
+    heroImage: '',
     heroImageAlt: 'VelorioLabs Systems Monorepo Architecture',
     heroType: 'systems-hud',
     overview: {

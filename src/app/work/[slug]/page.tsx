@@ -51,12 +51,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: project.tagline,
       url: `https://varshuai.github.io/work/${project.slug}`,
       type: 'article',
-      images: [
-        {
-          url: project.heroImage,
-          alt: project.heroImageAlt,
-        },
-      ],
+      images: project.heroImage
+        ? [
+            {
+              url: project.heroImage,
+              alt: project.heroImageAlt,
+            },
+          ]
+        : ['/opengraph-image'],
     },
     twitter: {
       card: 'summary_large_image',

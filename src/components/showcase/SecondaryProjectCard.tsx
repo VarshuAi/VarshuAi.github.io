@@ -9,36 +9,46 @@ import { ProjectItem } from "@/data/profile";
 export function SecondaryProjectCard({ project }: { project: ProjectItem }) {
   return (
     <article className="group relative rounded-xl bg-[#0D0D0D] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.22)] hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col justify-between">
-      {/* Visual Header / 16:9 Video Canvas Frame */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#0A0A0A] border-b border-[rgba(245,240,232,0.08)]">
-        {project.image ? (
+      {/* Visual Header / 16:9 Video Canvas Frame or Terminal Header */}
+      {project.image ? (
+        <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#0A0A0A] border-b border-[rgba(245,240,232,0.08)]">
           <Image
             src={project.image}
-            alt="FLUXA Native Video Player Interface"
+            alt={project.title}
             fill
             className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.02]"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
-        ) : (
-          <div className="flex flex-col items-center justify-center h-full p-6 text-center text-[#68635B] font-mono text-xs">
-            <span>VIDEO INTERFACE FRAME</span>
+
+          {/* Video Overlay Specs Badges */}
+          <div className="absolute top-3 left-3 flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0A0A0A]/80 backdrop-blur-md text-[11px] font-mono text-[#F5F0E8] border border-[rgba(245,240,232,0.1)]">
+              <Play className="w-2.5 h-2.5 fill-[#C8FF00] text-[#C8FF00]" />
+              1080p HLS Engine
+            </span>
           </div>
-        )}
 
-        {/* Video Overlay Specs Badges */}
-        <div className="absolute top-3 left-3 flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0A0A0A]/80 backdrop-blur-md text-[11px] font-mono text-[#F5F0E8] border border-[rgba(245,240,232,0.1)]">
-            <Play className="w-2.5 h-2.5 fill-[#C8FF00] text-[#C8FF00]" />
-            1080p HLS Engine
-          </span>
+          <div className="absolute top-3 right-3">
+            <Badge variant="live" size="sm">
+              {project.status}
+            </Badge>
+          </div>
         </div>
-
-        <div className="absolute top-3 right-3">
-          <Badge variant="live" size="sm">
-            {project.status}
-          </Badge>
+      ) : (
+        <div className="bg-[#121212] border-b border-[rgba(245,240,232,0.08)] p-4 sm:p-5 flex items-center justify-between font-mono text-xs">
+          <div className="flex items-center gap-2 text-[#F5F0E8]">
+            <Video className="w-4 h-4 text-[#C8FF00]" />
+            <span className="font-semibold text-[11px] tracking-wider uppercase">
+              NATIVE MEDIA CLIENT
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="live" size="sm">
+              {project.status}
+            </Badge>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Content Body */}
       <div className="p-6 sm:p-7 space-y-5 flex-1 flex flex-col justify-between">

@@ -158,7 +158,6 @@ export const PROFILE: ProfileData = {
         "Instagram Notes 60-char vibe status, 1-tap Spotify/YouTube playlist importer & web companion",
       ],
       techStack: ["Flutter", "Dart", "Android SDK", "Next.js", "Media3 Audio", "320 kbps Engine"],
-      image: "/projects/a1-swaara.png",
       githubUrl: "https://github.com/VarshuAi/A1Swaara_apk",
       apkUrl: "/downloads/A1_Swaara_v1.0.0.apk",
     },
@@ -177,7 +176,6 @@ export const PROFILE: ProfileData = {
         "Declarative Jetpack Compose UI architecture with Smart TV touch remote & PIN pairing",
       ],
       techStack: ["Kotlin", "Jetpack Compose", "ExoPlayer (Media3)", "HLS Streaming", "Coroutines", "Multi-Audio Engine"],
-      image: "/projects/fluxa.png",
       githubUrl: "https://github.com/VarshuAi/movie",
     },
     {
