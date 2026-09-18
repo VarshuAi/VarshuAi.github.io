@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, ArrowLeft } from "lucide-react";
 import { Container } from "@/components/primitives/Container";
 
 interface LabHeaderProps {
@@ -16,7 +16,10 @@ export function LabHeader({ onShowWelcome }: LabHeaderProps) {
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Brand / Lab Identity */}
           <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2 text-[#F5F0E8] font-medium tracking-tight hover:text-[#C8FF00] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]">
+            <Link
+              href="/lab"
+              className="flex items-center gap-2 text-[#F5F0E8] font-medium tracking-tight hover:text-[#C8FF00] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#C8FF00]"
+            >
               <span className="text-[#C8FF00] font-bold">{'//'}</span>
               <span className="tracking-wider text-sm font-semibold">LAB</span>
               <span className="text-[#68635B] hidden sm:inline">•</span>
@@ -45,23 +48,32 @@ export function LabHeader({ onShowWelcome }: LabHeaderProps) {
             </a>
           </nav>
 
-          {/* Right Action: Re-open Welcome Screen & Telemetry */}
-          <div className="flex items-center gap-3 text-[11px]">
+          {/* Right Action: Back to Portfolio, Re-open Welcome Screen & Telemetry */}
+          <div className="flex items-center gap-2.5 sm:gap-3 text-[11px]">
+            <Link
+              href="/"
+              className="px-2.5 py-1.5 rounded-md text-[#9E988F] hover:text-[#F5F0E8] hover:bg-[#141414] border border-transparent hover:border-[rgba(245,240,232,0.1)] transition-all inline-flex items-center gap-1.5"
+              title="Return to Main Portfolio"
+            >
+              <ArrowLeft className="w-3 h-3 text-[#9E988F]" />
+              <span className="hidden sm:inline">PORTFOLIO</span>
+            </Link>
+
             {onShowWelcome ? (
               <button
                 type="button"
                 onClick={onShowWelcome}
                 className="px-2.5 py-1.5 rounded-md bg-[#141414] hover:bg-[#1A1A1A] border border-[rgba(245,240,232,0.1)] hover:border-[rgba(245,240,232,0.2)] text-[#9E988F] hover:text-[#F5F0E8] transition-all cursor-pointer inline-flex items-center gap-1.5"
-                title="Return to Welcome Screen"
+                title="Open Welcome Workspace Screen"
               >
                 <RefreshCw className="w-3 h-3 text-[#C8FF00]" />
                 <span className="hidden sm:inline">ENTRY SCREEN</span>
               </button>
             ) : (
               <Link
-                href="/"
+                href="/lab/welcome"
                 className="px-2.5 py-1.5 rounded-md bg-[#141414] hover:bg-[#1A1A1A] border border-[rgba(245,240,232,0.1)] hover:border-[rgba(245,240,232,0.2)] text-[#9E988F] hover:text-[#F5F0E8] transition-all cursor-pointer inline-flex items-center gap-1.5"
-                title="Return to Welcome Screen"
+                title="Open Welcome Workspace Screen"
               >
                 <RefreshCw className="w-3 h-3 text-[#C8FF00]" />
                 <span className="hidden sm:inline">ENTRY SCREEN</span>

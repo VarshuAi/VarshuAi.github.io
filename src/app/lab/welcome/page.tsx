@@ -1,7 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
-import { EXPERIMENTS, EXPERIMENTS_LIST } from "@/data/experiments";
-import { LabWorkspaceView } from "@/components/lab/LabWorkspaceView";
+import { WelcomeRootEntry } from "@/components/lab/WelcomeRootEntry";
 
 export const metadata: Metadata = {
   title: "Engineering Lab // Experimental Workspace",
@@ -10,17 +9,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Engineering Lab // Experimental Workspace",
     description: "Interactive algorithm visualizers, prototypes, and systems engineering playground.",
-    url: "https://varshuai.github.io/lab",
+    url: "https://varshuai.github.io/lab/welcome",
   },
 };
 
-export default function LabPage() {
-  const featuredExperiment = EXPERIMENTS["sorting-lab"];
-
-  return (
-    <LabWorkspaceView
-      featuredExperiment={featuredExperiment}
-      experimentsList={EXPERIMENTS_LIST}
-    />
-  );
+export default function LabWelcomePage() {
+  return <WelcomeRootEntry />;
 }

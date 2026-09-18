@@ -20,12 +20,13 @@ export function LabWorkspaceView({
   featuredExperiment,
   experimentsList,
 }: LabWorkspaceViewProps) {
+  // When visitor clicks "Enter The Lab" from portfolio, show the Welcome Screen first
   const [hasEntered, setHasEntered] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {
       const params = new URLSearchParams(window.location.search);
-      if (params.get("welcome") === "1" || params.get("intro") === "1") return false;
-      return localStorage.getItem("lab_workspace_entered") === "true";
+      if (params.get("workspace") === "1") return true;
+      return false;
     } catch {
       return false;
     }
@@ -40,17 +41,11 @@ export function LabWorkspaceView({
     if (prefersReducedMotion) {
       setHasEntered(true);
       setIsExiting(false);
-      try {
-        localStorage.setItem("lab_workspace_entered", "true");
-      } catch {}
     } else {
       setIsExiting(true);
       setTimeout(() => {
         setHasEntered(true);
         setIsExiting(false);
-        try {
-          localStorage.setItem("lab_workspace_entered", "true");
-        } catch {}
       }, 550);
     }
   }, []);
@@ -62,7 +57,7 @@ export function LabWorkspaceView({
 
   return (
     <div className="relative min-h-screen bg-[#0A0A0A] text-[#F5F0E8] flex flex-col">
-      {/* Welcome Entry Overlay Screen */}
+      {/* Welcome Entry Overlay Screen — shows when someone clicks Enter to the Lab */}
       {!hasEntered && (
         <LabWelcomeExperience onEnter={handleEnter} isExiting={isExiting} />
       )}

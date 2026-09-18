@@ -1,18 +1,19 @@
 import React from "react";
 import { Metadata } from "next";
-import { WelcomeRootEntry } from "@/components/lab/WelcomeRootEntry";
+import { PortfolioView } from "@/components/portfolio/PortfolioView";
 
 export const metadata: Metadata = {
-  title: "Engineering Lab // Experimental Workspace",
+  title: "Varshan Gowda S R — Systems & AI/ML Engineer",
   description:
-    "Interactive algorithm visualizations, systems experiments, and technical prototypes built to understand how things work.",
+    "Personal portfolio of Varshan Gowda S R. Exploring systems architecture, algorithms, and applied machine learning.",
   openGraph: {
-    title: "Engineering Lab // Experimental Workspace",
-    description: "Interactive algorithm visualizers, prototypes, and systems engineering playground.",
+    title: "Varshan Gowda S R — Systems & AI/ML Engineer",
+    description:
+      "Personal portfolio of Varshan Gowda S R. Exploring systems architecture, algorithms, and applied machine learning.",
     url: "https://varshuai.github.io",
   },
 };
 
-export default function RootPage() {
-  return <WelcomeRootEntry />;
+export default function HomePage() {
+  return <PortfolioView />;
 }
