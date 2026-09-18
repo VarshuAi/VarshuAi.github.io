@@ -1,6 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
-import { PortfolioView } from "@/components/portfolio/PortfolioView";
+import { PortfolioRootView } from "@/components/portfolio/PortfolioRootView";
 
 export const metadata: Metadata = {
   title: "Varshan Gowda S R — Systems & AI/ML Engineer",
@@ -15,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <PortfolioView />;
+  return <PortfolioRootView />;
 }
