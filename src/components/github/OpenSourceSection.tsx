@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { GitHubTelemetryData } from "@/types/github";
 import { GITHUB_FALLBACK_DATA } from "@/data/githubFallback";
 import { ContributionGraph } from "./ContributionGraph";
@@ -8,7 +8,7 @@ import { ActivityFeed } from "./ActivityFeed";
 import { RepoCard } from "./RepoCard";
 import { GithubIcon } from "@/components/icons/GithubIcon";
 import { Button } from "@/components/primitives/Button";
-import { ArrowUpRight, RefreshCw, AlertCircle } from "lucide-react";
+import { ArrowUpRight, RefreshCw, AlertCircle, Radio } from "lucide-react";
 
 interface OpenSourceSectionProps {
   initialData?: GitHubTelemetryData;
@@ -20,35 +20,84 @@ export function OpenSourceSection({
   const [data, setData] = useState<GitHubTelemetryData>(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState<string>("Cached baseline");
+  const [lastSyncTimestamp, setLastSyncTimestamp] = useState<number>(() => Date.now());
+  const [currentTimestamp, setCurrentTimestamp] = useState<number>(() => Date.now());
+  const [repoFilter, setRepoFilter] = useState<"recent" | "flagship" | "all">("recent");
 
+  // Format relative seconds/minutes since last automated sync
+  const formatSyncAge = useCallback((lastTime: number, nowTime: number): string => {
+    const diffSec = Math.max(0, Math.floor((nowTime - lastTime) / 1000));
+    if (diffSec < 5) return "Just updated";
+    if (diffSec < 60) return `${diffSec}s ago`;
+    const diffMin = Math.floor(diffSec / 60);
+    return `${diffMin}m ago`;
+  }, []);
+
+  // Update clock tick every 5s for the relative sync counter
+  useEffect(() => {
+    const tick = setInterval(() => {
+      setCurrentTimestamp(Date.now());
+    }, 5000);
+    return () => clearInterval(tick);
+  }, []);
+
+  // Automated background polling & visibility-change revalidation
   useEffect(() => {
     let isCancelled = false;
 
-    async function loadData() {
+    const executeFetch = async (isManual = false) => {
+      if (isManual) {
+        setIsLoading(true);
+      }
       try {
-        const res = await fetch("/api/github", {
+        const res = await fetch(`/api/github?refresh=1&t=${Date.now()}`, {
           headers: { Accept: "application/json" },
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const freshData: GitHubTelemetryData = await res.json();
         if (!isCancelled) {
           setData(freshData);
-          setLastSyncTime(new Date().toLocaleTimeString());
+          setLastSyncTimestamp(Date.now());
+          setHasError(false);
         }
       } catch (err) {
-        console.warn("Falling back to verified GitHub baseline:", err);
+        console.warn("Automated GitHub telemetry sync issue:", err);
         if (!isCancelled) {
-          setHasError(true);
-          setLastSyncTime("Offline fallback");
+          setData((prev) => {
+            if (!prev.isLive) setHasError(true);
+            return prev;
+          });
+        }
+      } finally {
+        if (!isCancelled && isManual) {
+          setIsLoading(false);
         }
       }
-    }
+    };
 
-    loadData();
+    // Initial automated background fetch (no synchronous setState)
+    executeFetch(false);
+
+    // Automated background interval: every 60s
+    const pollInterval = setInterval(() => {
+      executeFetch(false);
+    }, 60_000);
+
+    // Automated focus / visibility revalidation
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        executeFetch(false);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleVisibilityChange);
 
     return () => {
       isCancelled = true;
+      clearInterval(pollInterval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleVisibilityChange);
     };
   }, []);
 
@@ -56,13 +105,13 @@ export function OpenSourceSection({
     setIsLoading(true);
     setHasError(false);
     try {
-      const res = await fetch("/api/github", {
+      const res = await fetch(`/api/github?refresh=1&t=${Date.now()}`, {
         headers: { Accept: "application/json" },
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const freshData: GitHubTelemetryData = await res.json();
       setData(freshData);
-      setLastSyncTime(new Date().toLocaleTimeString());
+      setLastSyncTimestamp(Date.now());
     } catch (err) {
       console.warn("Manual refresh failed:", err);
       setHasError(true);
@@ -70,6 +119,36 @@ export function OpenSourceSection({
       setIsLoading(false);
     }
   };
+
+  // Filtered & sorted repositories
+  const displayedRepos = useMemo(() => {
+    const list = [...data.repositories];
+
+    if (repoFilter === "recent") {
+      // Sort strictly by most recently updated/pushed
+      return list.sort((a, b) => {
+        const timeA = new Date(a.updatedAt).getTime();
+        const timeB = new Date(b.updatedAt).getTime();
+        return timeB - timeA;
+      });
+    }
+
+    if (repoFilter === "flagship") {
+      // Prioritize flagship / established systems
+      return list.filter(
+        (r) =>
+          r.fullName.includes("A1Swaara") ||
+          r.fullName.includes("movie") ||
+          r.fullName.includes("PhishGuard") ||
+          r.fullName.includes("AetherEye") ||
+          r.fullName.includes("SubVortex")
+      );
+    }
+
+    return list;
+  }, [data.repositories, repoFilter]);
+
+  const syncAgeText = formatSyncAge(lastSyncTimestamp, currentTimestamp);
 
   return (
     <div className="space-y-10">
@@ -90,25 +169,27 @@ export function OpenSourceSection({
           </p>
         </div>
 
-        {/* Action Controls & Telemetry Status */}
+        {/* Action Controls & Automated Telemetry Status */}
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-          <div className="font-mono text-xs px-3 py-2 min-h-[36px] rounded-full bg-[#121212] border border-[rgba(245,240,232,0.08)] flex items-center gap-2">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                data.isLive
-                  ? "bg-[#C8FF00] animate-pulse shadow-[0_0_8px_#C8FF00]"
-                  : "bg-yellow-400"
-              }`}
-            />
-            <span className="text-[#9E988F]">
-              {data.isLive ? "LIVE TELEMETRY" : "VERIFIED CACHE"}
+          {/* Automated Live Sync Status Badge */}
+          <div className="font-mono text-xs px-3 py-1.5 rounded-full bg-[#121212] border border-[rgba(245,240,232,0.08)] flex items-center gap-2 select-none shadow-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C8FF00] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C8FF00]" />
+            </span>
+            <span className="text-[#C8FF00] font-semibold text-[11px] tracking-wider uppercase">
+              AUTO-SYNC ON
+            </span>
+            <span className="text-[#68635B] text-[10px] hidden sm:inline">•</span>
+            <span className="text-[#9E988F] text-[11px] hidden sm:inline">
+              {isLoading ? "Syncing..." : syncAgeText}
             </span>
             <button
               onClick={handleManualRefresh}
               disabled={isLoading}
-              title="Refresh GitHub telemetry"
-              aria-label="Refresh telemetry data"
-              className="text-[#68635B] hover:text-[#F5F0E8] transition-colors ml-1 p-1 inline-flex items-center justify-center"
+              title="Force sync now"
+              aria-label="Force sync telemetry"
+              className="text-[#68635B] hover:text-[#C8FF00] transition-colors ml-1 p-0.5 inline-flex items-center justify-center cursor-pointer"
             >
               <RefreshCw
                 className={`w-3 h-3 ${isLoading ? "animate-spin text-[#C8FF00]" : ""}`}
@@ -151,7 +232,7 @@ export function OpenSourceSection({
           </div>
           <button
             onClick={handleManualRefresh}
-            className="underline hover:text-white transition-colors ml-4 shrink-0"
+            className="underline hover:text-white transition-colors ml-4 shrink-0 cursor-pointer"
           >
             Retry Sync
           </button>
@@ -220,20 +301,62 @@ export function OpenSourceSection({
         {/* Left Column: Live Terminal Stream (5 cols) */}
         <div className="lg:col-span-5 space-y-4">
           <div className="flex items-center justify-between font-mono text-xs">
-            <span className="text-[#68635B] uppercase tracking-wider">
+            <span className="text-[#68635B] uppercase tracking-wider flex items-center gap-1.5">
+              <Radio className="w-3.5 h-3.5 text-[#C8FF00]" />
               {"//"} RECENT TRANSMISSIONS
             </span>
-            <span className="text-[#9E988F] text-[11px]">Synced: {lastSyncTime}</span>
+            <span className="text-[#9E988F] text-[11px] font-mono">
+              Auto-sync: {syncAgeText}
+            </span>
           </div>
           <ActivityFeed events={data.recentEvents} />
         </div>
 
-        {/* Right Column: Selected Public Repositories (7 cols) */}
+        {/* Right Column: Automated Repositories (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="flex items-center justify-between font-mono text-xs">
-            <span className="text-[#68635B] uppercase tracking-wider">
-              {"//"} CURATED PUBLIC REPOSITORIES
-            </span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono text-xs">
+            <div className="flex items-center gap-2">
+              <span className="text-[#68635B] uppercase tracking-wider">
+                {"//"} REPOSITORIES
+              </span>
+              {/* Automated View Selector */}
+              <div className="flex items-center gap-1 p-0.5 rounded-lg bg-[#141414] border border-[rgba(245,240,232,0.08)]">
+                <button
+                  type="button"
+                  onClick={() => setRepoFilter("recent")}
+                  className={`px-2 py-0.5 rounded text-[10px] tracking-wider transition-all cursor-pointer ${
+                    repoFilter === "recent"
+                      ? "bg-[#202020] text-[#C8FF00] font-semibold border border-[rgba(200,255,0,0.3)] shadow-sm"
+                      : "text-[#9E988F] hover:text-[#F5F0E8]"
+                  }`}
+                >
+                  RECENT
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRepoFilter("flagship")}
+                  className={`px-2 py-0.5 rounded text-[10px] tracking-wider transition-all cursor-pointer ${
+                    repoFilter === "flagship"
+                      ? "bg-[#202020] text-[#C8FF00] font-semibold border border-[rgba(200,255,0,0.3)] shadow-sm"
+                      : "text-[#9E988F] hover:text-[#F5F0E8]"
+                  }`}
+                >
+                  FLAGSHIP
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRepoFilter("all")}
+                  className={`px-2 py-0.5 rounded text-[10px] tracking-wider transition-all cursor-pointer ${
+                    repoFilter === "all"
+                      ? "bg-[#202020] text-[#C8FF00] font-semibold border border-[rgba(200,255,0,0.3)] shadow-sm"
+                      : "text-[#9E988F] hover:text-[#F5F0E8]"
+                  }`}
+                >
+                  ALL
+                </button>
+              </div>
+            </div>
+
             <a
               href="https://github.com/varshuai?tab=repositories"
               target="_blank"
@@ -246,7 +369,7 @@ export function OpenSourceSection({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            {data.repositories.map((repo) => (
+            {displayedRepos.map((repo) => (
               <RepoCard key={repo.fullName} repo={repo} />
             ))}
           </div>

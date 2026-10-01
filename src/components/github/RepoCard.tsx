@@ -10,6 +10,7 @@ function getLanguageColor(lang: string | null): string {
   const lower = lang.toLowerCase();
   if (lower.includes("dart") || lower.includes("flutter")) return "bg-[#02569B]";
   if (lower.includes("kotlin")) return "bg-[#7F52FF]";
+  if (lower.includes("java")) return "bg-[#B07219]";
   if (lower.includes("python")) return "bg-[#3572A5]";
   if (lower.includes("typescript")) return "bg-[#3178C6]";
   if (lower.includes("javascript")) return "bg-[#F1E05A]";
@@ -19,26 +20,53 @@ function getLanguageColor(lang: string | null): string {
 
 function formatUpdated(dateStr: string): string {
   try {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+    const then = new Date(dateStr).getTime();
+    const now = Date.now();
+    const diffHours = Math.floor((now - then) / (1000 * 60 * 60));
+    if (diffHours < 1) return "Pushed just now";
+    if (diffHours < 24) return `Pushed ${diffHours}h ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays === 1) return "Pushed yesterday";
+    if (diffDays < 7) return `Pushed ${diffDays}d ago`;
+    if (diffDays < 30) return `Pushed ${Math.floor(diffDays / 7)}w ago`;
+    return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
   } catch {
     return "Recent";
   }
 }
 
 export function RepoCard({ repo }: RepoCardProps) {
+  const isRecent = repo.tag === "RECENTLY PUSHED";
+
   return (
     <a
       href={repo.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group p-5 rounded-lg bg-[#0F0F0F] hover:bg-[#141414] border border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.18)] transition-all duration-200 flex flex-col justify-between space-y-4 relative"
+      className={`group p-5 rounded-lg bg-[#0F0F0F] hover:bg-[#141414] border transition-all duration-200 flex flex-col justify-between space-y-4 relative ${
+        isRecent
+          ? "border-[rgba(200,255,0,0.25)] hover:border-[rgba(200,255,0,0.45)] shadow-[0_4px_20px_rgba(200,255,0,0.03)]"
+          : "border-[rgba(245,240,232,0.08)] hover:border-[rgba(245,240,232,0.18)]"
+      }`}
     >
       <div className="space-y-2.5">
         {/* Top Header: Tag & External Link */}
         <div className="flex items-center justify-between gap-2">
           {repo.tag ? (
-            <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-[rgba(245,240,232,0.04)] border border-[rgba(245,240,232,0.08)] text-[#9E988F] group-hover:text-[#F5F0E8] group-hover:border-[rgba(245,240,232,0.15)] transition-colors">
+            <span
+              className={`font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded border transition-colors inline-flex items-center gap-1.5 ${
+                isRecent
+                  ? "bg-[#C8FF00]/10 border-[#C8FF00]/30 text-[#C8FF00] font-semibold"
+                  : repo.tag === "ACTIVE DEV"
+                  ? "bg-blue-500/10 border-blue-500/25 text-blue-400 font-medium"
+                  : repo.tag === "ORG REPO"
+                  ? "bg-purple-500/10 border-purple-500/25 text-purple-300 font-medium"
+                  : "bg-[rgba(245,240,232,0.04)] border-[rgba(245,240,232,0.08)] text-[#9E988F]"
+              }`}
+            >
+              {isRecent && (
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF00] animate-pulse" />
+              )}
               {repo.tag}
             </span>
           ) : (
@@ -87,7 +115,9 @@ export function RepoCard({ repo }: RepoCardProps) {
             </div>
           )}
 
-          <span>{formatUpdated(repo.updatedAt)}</span>
+          <span className={isRecent ? "text-[#C8FF00]" : ""}>
+            {formatUpdated(repo.updatedAt)}
+          </span>
         </div>
       </div>
     </a>
